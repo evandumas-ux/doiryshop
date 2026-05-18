@@ -1,0 +1,210 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    @apply bg-background text-text font-sans antialiased;
+    selection {
+      @apply bg-primary text-white;
+    }
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-text tracking-wide;
+  }
+
+  /* Gold text utility */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #e8d5a3, #C9A84C, #e8d5a3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-red-gradient {
+    background: linear-gradient(135deg, #c9354d, #A8192B, #7d1220);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Custom scrollbar – dark luxury theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2A2A;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A8192B;
+}
+
+/* Hieroglyphic background pattern */
+.bg-hieroglyphs-overlay {
+  position: relative;
+}
+.bg-hieroglyphs-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/bg_texture.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Gold shimmer border */
+.border-gold-shimmer {
+  border: 1px solid transparent;
+  background-image: linear-gradient(#1A1A1A, #1A1A1A), 
+                    linear-gradient(135deg, #C9A84C 0%, #e8d5a3 50%, #C9A84C 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Glow effects */
+.glow-red {
+  box-shadow: 0 0 40px rgba(168, 25, 43, 0.12), 0 0 80px rgba(168, 25, 43, 0.06);
+}
+
+.glow-gold {
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.08), 0 0 80px rgba(201, 168, 76, 0.04);
+}
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+/* Pricing Premium & Comparison */
+.product-price-container {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.product-price-current {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.product-price-current::after {
+  content: 'TTC';
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+
+.product-price-competitor-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #bdbdbd;
+  margin-bottom: 0.25rem;
+}
+
+.product-price-competitor-label {
+  color: #a0a0a0;
+  font-weight: 400;
+}
+
+.product-price-competitor {
+  text-decoration: line-through;
+  color: #888;
+  font-weight: 600;
+}
+
+.product-price-savings {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: 9999px;
+  color: #4ade80; /* Soft green */
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: fit-content;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.price-comparison-note {
+  font-size: 0.7rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(150%) skewX(-20deg); }
+}
+
+/* Premium Hero Animations */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+.animate-fade-slide-up {
+  animation: fadeSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.delay-200 { animation-delay: 200ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-600 { animation-delay: 600ms; }
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.btn-primary-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 26, 26, 0.4); /* Matching primary color #8b1a1a */
+  transition: all 0.3s ease;
+}
+
+.btn-secondary-glow:hover {
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}

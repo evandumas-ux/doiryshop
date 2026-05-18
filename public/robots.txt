@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /callback
+Disallow: /profil
+Sitemap: https://doiryshop.fr/sitemap.xml
