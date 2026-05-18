@@ -22,6 +22,9 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const { jwtVerify, createRemoteJWKSet } = require('jose');
 const db = require('./database');
+const { seedDatabase } = require('./seed');
+seedDatabase();
+
 const { sendOrderConfirmation, sendWelcomeEmail, sendOrderShippedEmail } = require('./emails');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
