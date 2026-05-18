@@ -143,6 +143,15 @@ db.serialize(() => {
       is_best_value INTEGER DEFAULT 0,
       unit_label TEXT,
       images TEXT DEFAULT '[]',
+      competitor_price REAL,
+      competitor_label TEXT,
+      savings_label TEXT,
+      weight_g INTEGER DEFAULT 50,
+      thickness_mm INTEGER DEFAULT 10,
+      length_cm INTEGER DEFAULT 20,
+      width_cm INTEGER DEFAULT 15,
+      height_cm INTEGER DEFAULT 5,
+      weight INTEGER DEFAULT 50,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);

@@ -355,9 +355,9 @@ function seedDatabase() {
           created_at, categorie, short_description, composition, mode_utilisation,
           weight_grams, width_mm, height_mm, depth_mm, status, is_active, slug,
           unit_label, price_per_unit, is_best_value, tags, reference_market_price,
-          images, competitor_price, competitor_label, tagline_subtitle, use_cases,
+          images, competitor_price, competitor_label, savings_label, tagline_subtitle, use_cases,
           weight_g, height_cm, width_cm, length_cm, weight, thickness_mm
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       products.forEach((p) => {
@@ -366,7 +366,7 @@ function seedDatabase() {
           p.created_at, p.categorie, p.short_description, p.composition, p.mode_utilisation,
           p.weight_grams, p.width_mm, p.height_mm, p.depth_mm, p.status, p.is_active, p.slug,
           p.unit_label, p.price_per_unit, p.is_best_value, p.tags, p.reference_market_price,
-          p.images, p.competitor_price, p.competitor_label, p.tagline_subtitle, p.use_cases,
+          p.images, p.competitor_price, p.competitor_label, p.savings_label || null, p.tagline_subtitle, p.use_cases,
           p.weight_g, p.height_cm, p.width_cm, p.length_cm, p.weight, p.thickness_mm
         );
       });
