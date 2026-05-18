@@ -99,11 +99,11 @@ const ProductCard = ({ product, onAddToCart }) => {
           {product.competitor_price && Number(product.competitor_price) > Number(product.price) && (
             <div className="competitor-block mb-4 p-3 rounded-xl border border-surface-border bg-surface-light text-xs">
               <div className="flex justify-between text-text-muted mb-1">
-                <span>Moyenne observée ailleurs :</span>
+                <span>{product.competitor_label || 'Moyenne observée ailleurs :'}</span>
                 <span className="line-through">{formatPrice(product.competitor_price)}</span>
               </div>
               <div className="flex justify-between text-green-400 font-medium">
-                <span>Économie estimée :</span>
+                <span>{product.savings_label || 'Économie estimée :'}</span>
                 <span className="savings">{formatPrice(Number(product.competitor_price) - Number(product.price))} (-{Math.round((1 - product.price/product.competitor_price) * 100)}%)</span>
               </div>
             </div>
