@@ -1095,12 +1095,14 @@ app.post('/api/checkout/create-session', verifyToken, authLimiter, async (req, r
       quantity: 1,
     }];
 
+    const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
-      success_url: 'http://localhost:3000/commande/succes?orderId=' + orderId,
-      cancel_url: 'http://localhost:3000/commande/annulation',
+      success_url: `${FRONTEND_URL}/commande/succes?orderId=${orderId}`,
+      cancel_url: `${FRONTEND_URL}/commande/annulation`,
       metadata: { orderId: orderId.toString() },
     });
 
