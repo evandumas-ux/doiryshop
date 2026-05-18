@@ -466,7 +466,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 (() => {
                   if (!product.competitor_price) {
                     return (
-                      <div className="mb-8 p-5 rounded-2xl border border-surface-border bg-surface/30 backdrop-blur-sm">
+                      <div className="mb-6 p-5 rounded-2xl border border-surface-border bg-surface/30 backdrop-blur-sm">
                          <p className="text-sm text-[#e8e8e8] font-medium leading-relaxed">{product.competitor_label}</p>
                       </div>
                     );
@@ -480,7 +480,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   if (!isCheaper) return null;
 
                   return (
-                    <div className="mb-8 p-5 rounded-2xl border border-surface-border bg-surface/30 backdrop-blur-sm">
+                    <div className="mb-6 p-5 rounded-2xl border border-surface-border bg-surface/30 backdrop-blur-sm">
                       <div className="product-price-competitor-container">
                         <span className="product-price-competitor-label">Moyenne observée ailleurs :</span>
                         <span className="product-price-competitor">{formatPrice(product.competitor_price)}</span>
@@ -499,7 +499,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 })()
               )}
 
-              <div className="flex flex-col gap-6 mb-8 mt-4">
+              <div className="flex flex-col gap-5 mb-6 mt-2">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center border-2 border-surface-border rounded-xl overflow-hidden bg-surface">
                     <button onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="px-4 py-3 text-text hover:bg-surface-light hover:text-accent transition-colors">
@@ -535,8 +535,8 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 </div>
               </div>
 
-              <div className="text-text-light font-light leading-relaxed text-base mb-8">
-                <UseCasePills useCases={product.use_cases} className="mb-5" />
+              <div className="text-text-light font-light leading-relaxed text-base mb-6">
+                <UseCasePills useCases={product.use_cases} className="mb-4" />
                 {isCoffretDescription ? formatCoffretDescription(product.short_description || product.description) : (product.short_description || product.description)}
               </div>
               

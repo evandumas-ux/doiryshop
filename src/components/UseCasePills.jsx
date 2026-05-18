@@ -41,7 +41,7 @@ export default function UseCasePills({ useCases, limit = null, className = '' })
       variants={{ show: { transition: { staggerChildren: 0.08 } } }}
       className={`w-full overflow-x-auto scrollbar-hide md:overflow-visible ${className}`.trim()}
     >
-      <div className="flex flex-nowrap gap-2 min-w-max md:min-w-0 md:flex-wrap md:max-h-[56px] md:overflow-hidden">
+      <div className="flex flex-wrap gap-2">
         {pills.map((pill) => (
           <motion.span
             key={pill}
