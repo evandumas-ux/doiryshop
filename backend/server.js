@@ -1305,7 +1305,11 @@ app.get('/api/products', (req, res) => {
 
 // Récupérer un produit par son ID (Public)
 app.get('/api/products/:id', (req, res) => {
-  db.get('SELECT * FROM products WHERE id = ?', [req.params.id], (err, row) => {
+  const param = req.params.id;
+  const isNumeric = /^\d+$/.test(param);
+  const query = isNumeric ? 'SELECT * FROM products WHERE id = ?' : 'SELECT * FROM products WHERE slug = ?';
+
+  db.get(query, [param], (err, row) => {
     if (err) return res.status(500).json({ error: 'Erreur serveur.' });
     if (!row) return res.status(404).json({ error: 'Produit introuvable.' });
     res.json({

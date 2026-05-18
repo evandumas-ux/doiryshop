@@ -477,6 +477,8 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   const savingsAmount = Number(product.competitor_price) - Number(targetPrice);
                   const isCheaper = savingsAmount > 0;
                   
+                  if (!isCheaper) return null;
+
                   return (
                     <div className="mb-8 p-5 rounded-2xl border border-surface-border bg-surface/30 backdrop-blur-sm">
                       <div className="product-price-competitor-container">
@@ -484,16 +486,14 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                         <span className="product-price-competitor">{formatPrice(product.competitor_price)}</span>
                       </div>
                       
-                      {isCheaper && (
-                        <div className="mt-3 flex flex-col gap-2">
-                          <div className="product-price-savings">
-                            Économie estimée : {formatPrice(savingsAmount)} (-{Math.round((savingsAmount / product.competitor_price) * 100)}%)
-                          </div>
-                          <p className="price-comparison-note">
-                            * {product.competitor_label} (comparaison indicative)
-                          </p>
+                      <div className="mt-3 flex flex-col gap-2">
+                        <div className="product-price-savings">
+                          Économie estimée : {formatPrice(savingsAmount)} (-{Math.round((savingsAmount / product.competitor_price) * 100)}%)
                         </div>
-                      )}
+                        <p className="price-comparison-note">
+                          * {product.competitor_label} (comparaison indicative)
+                        </p>
+                      </div>
                     </div>
                   );
                 })()
