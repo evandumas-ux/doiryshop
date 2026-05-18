@@ -119,7 +119,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://doiryshop.netlify.app'],,
+  origin: ['http://localhost:3000', 'https://doiryshop.netlify.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
