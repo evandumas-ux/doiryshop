@@ -439,7 +439,7 @@ app.post('/api/auth/login', authLimiter, (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
     });
 
@@ -562,7 +562,7 @@ app.post('/api/auth/sync-logto', (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
       });
 
@@ -595,7 +595,7 @@ app.post('/api/auth/sync-logto', (req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
         });
 
