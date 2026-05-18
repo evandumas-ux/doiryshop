@@ -52,6 +52,27 @@ const ProductCard = ({ product, onAddToCart }) => {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const compPrice = Number(product.competitor_price);
+  const pPrice = Number(product.price);
+  const pPriceUnit = Number(product.price_per_unit);
+
+  const hasUnitComparison = product.price_per_unit && product.competitor_price && compPrice > pPriceUnit;
+  const hasGlobalComparison = !product.price_per_unit && product.competitor_price && compPrice > pPrice;
+
+  let saving = 0;
+  let percent = 0;
+  let showComparison = false;
+
+  if (hasUnitComparison) {
+    saving = compPrice - pPriceUnit;
+    percent = Math.round((saving / compPrice) * 100);
+    showComparison = true;
+  } else if (hasGlobalComparison) {
+    saving = compPrice - pPrice;
+    percent = Math.round((saving / compPrice) * 100);
+    showComparison = true;
+  }
+
   return (
     <motion.div layout initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} className="group bg-surface rounded-[28px] overflow-hidden border border-surface-border hover:border-accent/20 transition-all duration-500 relative flex flex-col">
       {product.is_best_value && (
@@ -96,7 +117,7 @@ const ProductCard = ({ product, onAddToCart }) => {
             </div>
           </div>
 
-          {product.competitor_price && Number(product.competitor_price) > Number(product.price) && (
+          {showComparison && (
             <div className="competitor-block mb-4 p-3 rounded-xl border border-surface-border bg-surface-light text-xs">
               <div className="flex justify-between text-text-muted mb-1">
                 <span>{product.competitor_label || 'Moyenne observée ailleurs :'}</span>
@@ -104,7 +125,7 @@ const ProductCard = ({ product, onAddToCart }) => {
               </div>
               <div className="flex justify-between text-green-400 font-medium">
                 <span>{product.savings_label || 'Économie estimée :'}</span>
-                <span className="savings">{formatPrice(Number(product.competitor_price) - Number(product.price))} (-{Math.round((1 - product.price/product.competitor_price) * 100)}%)</span>
+                <span className="savings">{formatPrice(saving)} (-{percent}%)</span>
               </div>
             </div>
           )}
