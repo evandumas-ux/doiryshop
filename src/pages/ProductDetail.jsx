@@ -13,7 +13,7 @@ import Header from '../components/Header';
 import CartDrawer from '../components/CartDrawer';
 const Navbar = Header;
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 const ProductGallery = ({ images, productName }) => {
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -4,7 +4,7 @@ import { Star, Send, User, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { useLogto } from '@logto/react';
 import PhotoLightbox from './PhotoLightbox';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 const getPhotoUrl = (url) => {
   if (!url) return '';

@@ -306,7 +306,7 @@ function App() {
     setUser(null);
     try {
       await logout(); // Clear cookie on backend
-      await logtoSignOut('http://localhost:3000');
+      await logtoSignOut(`${window.location.origin}`);
     } catch {
       // Si Logto n'est pas configuré, on ignore l'erreur
     }

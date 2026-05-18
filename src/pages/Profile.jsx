@@ -147,7 +147,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
 
   const handleCopyReferralLink = async () => {
     if (!referralCode) return;
-    const link = `http://localhost:3000/register?ref=${referralCode}`;
+    const link = `${window.location.origin}/register?ref=${referralCode}`;
     try {
       await navigator.clipboard.writeText(link);
       setCopySuccess(true);

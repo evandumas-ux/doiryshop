@@ -28,7 +28,7 @@ export default function Login({ user, setUser }) {
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      await signIn('http://localhost:3000/callback', {
+      await signIn(`${window.location.origin}/callback`, {
         directSignIn: { method: 'social', target: 'google' },
         prompt: 'select_account'
       });
