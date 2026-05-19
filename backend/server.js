@@ -121,15 +121,22 @@ app.post('/api/webhook/stripe', express.raw({ type: 'application/json' }), async
 app.use(cookieParser());
 app.use(express.json());
 
-const corsOptions = {
-  origin: ['http://localhost:3000', 'https://doiryshop.netlify.app'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:3000'
+].filter(Boolean);
 
-app.use(cors(corsOptions));
-app.options(/^.*$/, cors(corsOptions));
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use('/uploads', express.static(path.resolve(__dirname, 'uploads')));
 
 app.use((req, res, next) => {
