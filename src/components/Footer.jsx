@@ -135,6 +135,12 @@ const Footer = () => {
 
         <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8">
           <Link
+            to="/arret-tabac"
+            className="text-sm font-medium text-text-light hover:text-primary transition-colors"
+          >
+            Arrêt du tabac
+          </Link>
+          <Link
             to="/mentions-legales"
             className="text-sm font-medium text-text-light hover:text-primary transition-colors"
           >

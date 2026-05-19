@@ -26,6 +26,7 @@ import About from './pages/About';
 import MyOrders from './pages/MyOrders';
 import OrderSuccess from './pages/OrderSuccess';
 import OrderCancel from './pages/OrderCancel';
+import ArretTabac from './pages/ArretTabac';
 
 // Composant Callback pour Logto (route /callback)
 const LogtoCallback = () => {
@@ -148,6 +149,17 @@ const AppRoutes = ({ cartItems, setCartItems, user, isInitializing, handleSetUse
           }
         />
         <Route path="/about" element={<About />} />
+        <Route
+          path="/arret-tabac"
+          element={
+            <ArretTabac
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+              user={user}
+              onLogout={handleLogout}
+            />
+          }
+        />
         <Route
           path="/checkout"
           element={<Checkout cartItems={cartItems} setCartItems={setCartItems} user={user} />}
