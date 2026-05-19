@@ -79,17 +79,17 @@ const TimelineItem = ({ time, title, description, index }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-100px" }}
     transition={{ duration: 0.5, delay: index * 0.1 }}
-    className="relative pl-10 md:pl-0"
+    className="relative pl-10 lg:pl-0 h-full"
   >
-    <div className="md:hidden absolute left-0 top-2 w-3 h-3 rounded-full bg-primary border-4 border-background z-10" />
-    <div className="md:hidden absolute left-1.5 top-5 bottom-[-40px] w-0.5 bg-surface-border" />
+    <div className="lg:hidden absolute left-0 top-2 w-3 h-3 rounded-full bg-primary border-4 border-background z-10" />
+    <div className="lg:hidden absolute left-1.5 top-5 bottom-[-40px] w-0.5 bg-surface-border" />
     
-    <div className="bg-surface border border-surface-border rounded-2xl p-6 hover:border-primary/30 transition-colors">
-      <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3">
+    <div className="bg-surface border border-surface-border rounded-2xl p-5 hover:border-primary/30 transition-colors h-full flex flex-col break-words overflow-hidden">
+      <span className="inline-block w-fit px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] sm:text-xs font-bold tracking-widest uppercase mb-3">
         {time}
       </span>
-      <h4 className="text-lg font-serif text-text mb-2">{title}</h4>
-      <p className="text-sm text-text-light leading-relaxed">{description}</p>
+      <h4 className="text-[17px] font-serif text-text mb-2 leading-snug">{title}</h4>
+      <p className="text-[13px] sm:text-sm text-text-light leading-relaxed flex-grow">{description}</p>
     </div>
   </motion.div>
 );
@@ -192,30 +192,30 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-5 gap-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
               <TimelineItem 
                 index={0}
                 time="72 Heures"
                 title="Respiration facilitée"
-                description="La respiration devient plus facile. Les bronches commencent à se relâcher et l'énergie globale augmente."
+                description="La respiration devient plus facile. Les bronches commencent à se relâcher et l'énergie augmente."
               />
               <TimelineItem 
                 index={1}
                 time="2 à 12 Semaines"
                 title="Circulation améliorée"
-                description="La circulation sanguine s'améliore significativement, rendant la marche et l'effort physique plus aisés."
+                description="La circulation sanguine s'améliore, rendant la marche et l'effort physique plus aisés."
               />
               <TimelineItem 
                 index={2}
                 time="3 à 9 Mois"
                 title="Moins de toux"
-                description="Diminution notable de la toux et de l'essoufflement. La fonction pulmonaire peut augmenter jusqu'à 10%."
+                description="Diminution notable de la toux et de l'essoufflement. La fonction pulmonaire augmente."
               />
               <TimelineItem 
                 index={3}
                 time="1 An"
-                title="Risque cardiovasculaire réduit"
-                description="Le risque excédentaire de maladie coronarienne est réduit de moitié par rapport à celui d'un fumeur."
+                title="Risque cardiaque réduit"
+                description="Le risque de crise cardiaque est réduit d'environ 50 % par rapport à un fumeur."
               />
               <TimelineItem 
                 index={4}
