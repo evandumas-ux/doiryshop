@@ -27,6 +27,7 @@ import MyOrders from './pages/MyOrders';
 import OrderSuccess from './pages/OrderSuccess';
 import OrderCancel from './pages/OrderCancel';
 import ArretTabac from './pages/ArretTabac';
+import ScrollToTop from './components/ScrollToTop';
 
 // Composant Callback pour Logto (route /callback)
 const LogtoCallback = () => {
@@ -326,6 +327,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <AgeVerification />
       <ProfileCheck user={user} isInitializing={isInitializing} />
       <AppRoutes
