@@ -15,10 +15,11 @@ const Navbar = Header;
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-const ProductGallery = ({ images, productName }) => {
+const ProductGallery = ({ images: rawImages, productName }) => {
+  const images = (rawImages || []).filter(img => typeof img === 'string' && img.trim() !== '');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  if (!images || images.length === 0) {
+  if (images.length === 0) {
     return (
       <div className="aspect-square bg-surface rounded-3xl overflow-hidden shadow-xl border border-surface-border relative">
         <img src="/placeholders/product-default.png" alt={productName} className="w-full h-full object-cover" />
@@ -402,7 +403,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         </div>
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-start">
+          <div className="grid lg:grid-cols-2 gap-5 lg:gap-16 items-start">
             <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }} className="relative">
               {product.is_best_value && (
                 <div className="absolute top-4 left-4 bg-[#8B7355] text-white text-xs font-bold px-4 py-1.5 rounded-md z-10 shadow-lg">
@@ -418,13 +419,13 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }} className="flex flex-col">
-              <div className="flex flex-wrap items-center gap-3 mb-5">
-                {stockMessage && (
+              {stockMessage && (
+                <div className="flex flex-wrap items-center gap-3 mb-5">
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-background border border-surface-border text-text-light">
                     {stockMessage}
                   </span>
-                )}
-              </div>
+                </div>
+              )}
 
               {product.tagline && (
                 <span className="text-accent text-sm font-semibold uppercase tracking-[0.2em] mb-2">
