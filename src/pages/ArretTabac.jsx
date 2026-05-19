@@ -251,19 +251,19 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
                 index={2}
                 time="3 à 9 Mois"
                 title="Moins de toux"
-                description="Diminution notable de la toux et de l'essoufflement. La fonction pulmonaire augmente."
+                description="Diminution de la toux et de l'essoufflement. La fonction pulmonaire peut augmenter jusqu'à 10 %."
               />
               <TimelineItem 
                 index={3}
                 time="1 An"
                 title="Risque cardiaque réduit"
-                description="Le risque de crise cardiaque est réduit d'environ 50 % par rapport à un fumeur."
+                description="Le risque de crise cardiaque est environ 50 % plus faible que chez un fumeur."
               />
               <TimelineItem 
                 index={4}
                 time="10 Ans"
                 title="Protection à long terme"
-                description="Le risque de cancer du poumon diminue environ de moitié par rapport à une personne qui continue de fumer."
+                description="Le risque de cancer du poumon est environ 50 % plus faible que chez une personne qui continue de fumer."
               />
             </div>
             
