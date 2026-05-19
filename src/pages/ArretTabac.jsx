@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronRight, ShieldCheck, Heart, Leaf, Calculator, ArrowRight, Info, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, ShieldCheck, Heart, Leaf, Calculator, ArrowRight, Info, CheckCircle2, HelpCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 import Header from '../components/Header';
 import CartDrawer from '../components/CartDrawer';
+import { trackEvent } from '../utils/tracking';
 
 // Section composant interactif
 const SavingsCalculator = () => {
   const [packsPerDay, setPacksPerDay] = useState(1);
   const [pricePerPack, setPricePerPack] = useState(13);
 
-  const dailySavings = packsPerDay * pricePerPack;
+  const dailySavings = (packsPerDay || 0) * (pricePerPack || 0);
   const weeklySavings = dailySavings * 7;
   const monthlySavings = dailySavings * 30;
   const yearlySavings = dailySavings * 365;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      trackEvent('arret_tabac_calculator_change', {
+        packs_per_day: packsPerDay,
+        pack_price: pricePerPack,
+        monthly_savings: monthlySavings,
+        annual_savings: yearlySavings
+      });
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [packsPerDay, pricePerPack, monthlySavings, yearlySavings]);
+
+  const formatPrice = (val) => val.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €';
 
   return (
     <div className="bg-surface border border-surface-border rounded-3xl p-8 shadow-2xl relative overflow-hidden">
@@ -57,17 +72,27 @@ const SavingsCalculator = () => {
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-background rounded-2xl p-5 border border-surface-border text-center">
           <p className="text-xs text-text-muted uppercase tracking-widest mb-2">Par semaine</p>
-          <p className="text-2xl md:text-3xl font-serif text-text">{weeklySavings.toFixed(0)} €</p>
+          <p className="text-2xl md:text-3xl font-serif text-text">{formatPrice(weeklySavings)}</p>
         </div>
-        <div className="bg-primary/5 rounded-2xl p-5 border border-primary/20 text-center relative overflow-hidden">
+        <div className="bg-primary/5 rounded-2xl p-5 border border-primary/20 text-center relative overflow-hidden shadow-[0_0_20px_rgba(139,26,26,0.05)]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
-          <p className="text-xs text-primary uppercase tracking-widest mb-2 relative z-10">Par mois</p>
-          <p className="text-2xl md:text-3xl font-serif text-primary relative z-10">{monthlySavings.toFixed(0)} €</p>
+          <p className="text-xs text-primary font-bold uppercase tracking-widest mb-2 relative z-10">Par mois</p>
+          <p className="text-2xl md:text-3xl font-serif text-primary relative z-10 font-bold">{formatPrice(monthlySavings)}</p>
         </div>
         <div className="bg-background rounded-2xl p-5 border border-surface-border text-center">
           <p className="text-xs text-text-muted uppercase tracking-widest mb-2">Par an</p>
-          <p className="text-2xl md:text-3xl font-serif text-text">{yearlySavings.toFixed(0)} €</p>
+          <p className="text-2xl md:text-3xl font-serif text-text">{formatPrice(yearlySavings)}</p>
         </div>
+      </div>
+
+      <div className="mt-10 text-center">
+        <a 
+          href="#doiryshop-alternative" 
+          onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Découvrir nos alternatives (calculator)', section: 'calculator' })}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-surface border border-primary/30 text-primary rounded-xl font-medium hover:bg-primary/5 transition-colors"
+        >
+          Découvrir nos alternatives sans nicotine <ArrowRight size={16} />
+        </a>
       </div>
     </div>
   );
@@ -96,9 +121,18 @@ const TimelineItem = ({ time, title, description, index }) => (
 
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    const newOpenState = !isOpen;
+    setIsOpen(newOpenState);
+    if (newOpenState) {
+      trackEvent('arret_tabac_faq_open', { question });
+    }
+  };
+
   return (
     <div className="border-b border-surface-border py-4">
-      <button onClick={() => setIsOpen(!isOpen)} className="w-full flex justify-between items-center text-left gap-4 hover:text-accent transition-colors">
+      <button onClick={handleToggle} aria-expanded={isOpen} aria-controls={`faq-answer-${question}`} className="w-full flex justify-between items-center text-left gap-4 hover:text-accent transition-colors">
         <span className="font-serif text-lg text-text">{question}</span>
         <ChevronRight className={`transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-90 text-accent' : 'text-text-muted'}`} size={20} />
       </button>
@@ -122,8 +156,8 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
   return (
     <>
       <SEO 
-        title="Ce que vous gagnez en arrêtant de fumer | DoiryShop"
-        description="Découvrez les bénéfices santé et financiers de l'arrêt du tabac. Calculez vos économies et entamez votre transition avec une alternative sans nicotine."
+        title="Arrêter de fumer : Les vrais bénéfices et économies | DoiryShop"
+        description="Découvrez les bénéfices concrets de l'arrêt du tabac : santé, souffle, et calculez vos économies. DoiryShop vous accompagne avec des alternatives sans nicotine."
         url="https://doiryshop.fr/arret-tabac"
       />
 
@@ -171,10 +205,18 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#benefices" className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-medium hover:bg-[#6e1515] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+                <a 
+                  href="#benefices" 
+                  onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Voir les bénéfices', section: 'hero' })}
+                  className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-medium hover:bg-[#6e1515] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+                >
                   Voir les bénéfices <ArrowRight size={18} />
                 </a>
-                <a href="#calculateur" className="w-full sm:w-auto px-8 py-4 bg-surface border border-surface-border text-text rounded-xl font-medium hover:border-accent/40 transition-colors flex items-center justify-center gap-2">
+                <a 
+                  href="#calculateur" 
+                  onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Calculer mes économies', section: 'hero' })}
+                  className="w-full sm:w-auto px-8 py-4 bg-surface border border-surface-border text-text rounded-xl font-medium hover:border-accent/40 transition-colors flex items-center justify-center gap-2"
+                >
                   <Calculator size={18} /> Calculer mes économies
                 </a>
               </div>
@@ -245,8 +287,22 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
           </div>
         </section>
 
+        {/* SECTION POURQUOI CETTE PAGE */}
+        <section className="py-16 bg-background">
+          <div className="max-w-3xl mx-auto px-6 text-center">
+            <HelpCircle className="w-10 h-10 text-primary/40 mx-auto mb-6" />
+            <h3 className="text-2xl font-serif text-text mb-4">Pourquoi parler de l'arrêt du tabac ici ?</h3>
+            <p className="text-text-light leading-relaxed">
+              Chez DoiryShop, nous refusons les fausses promesses. L'arrêt du tabac est un parcours personnel complexe. 
+              Cependant, nous savons que l'une des plus grandes difficultés réside dans la perte du "rituel" quotidien ou du simple geste. 
+              C'est pour cela que nous proposons une alternative douce et transparente, pour accompagner la transition gestuelle, sans la moindre trace de nicotine. 
+              La décision d'arrêter vous appartient. Si le geste vous manque, nous avons une solution.
+            </p>
+          </div>
+        </section>
+
         {/* SECTION DOIRYSHOP */}
-        <section className="py-24 bg-surface border-y border-surface-border relative overflow-hidden">
+        <section id="doiryshop-alternative" className="py-24 bg-surface border-y border-surface-border relative overflow-hidden">
           <div className="absolute inset-0 bg-hieroglyphs-overlay opacity-[0.02]" />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
             <Leaf className="w-12 h-12 text-accent mx-auto mb-6 opacity-80" />
@@ -273,7 +329,11 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               </div>
             </div>
 
-            <Link to="/boutique" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-medium hover:bg-[#6e1515] transition-all">
+            <Link 
+              to="/boutique" 
+              onClick={() => trackEvent('arret_tabac_shop_click', { section: 'doiryshop' })}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-medium hover:bg-[#6e1515] transition-all shadow-lg shadow-primary/20"
+            >
               Découvrir nos alternatives <ArrowRight size={18} />
             </Link>
 
