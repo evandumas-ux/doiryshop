@@ -56,19 +56,19 @@ const ProductCard = ({ product, onAddToCart }) => {
   const pPrice = Number(product.price);
   const pPriceUnit = Number(product.price_per_unit);
 
-  const hasUnitComparison = product.price_per_unit && product.competitor_price && compPrice > pPriceUnit;
-  const hasGlobalComparison = !product.price_per_unit && product.competitor_price && compPrice > pPrice;
+  const hasGlobalComparison = product.competitor_price && compPrice > pPrice;
+  const hasUnitComparison = !hasGlobalComparison && product.price_per_unit && product.competitor_price && compPrice > pPriceUnit;
 
   let saving = 0;
   let percent = 0;
   let showComparison = false;
 
-  if (hasUnitComparison) {
-    saving = compPrice - pPriceUnit;
+  if (hasGlobalComparison) {
+    saving = compPrice - pPrice;
     percent = Math.round((saving / compPrice) * 100);
     showComparison = true;
-  } else if (hasGlobalComparison) {
-    saving = compPrice - pPrice;
+  } else if (hasUnitComparison) {
+    saving = compPrice - pPriceUnit;
     percent = Math.round((saving / compPrice) * 100);
     showComparison = true;
   }

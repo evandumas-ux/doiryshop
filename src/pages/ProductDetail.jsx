@@ -472,10 +472,23 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                     );
                   }
                   
-                  const isPerUnit = product.competitor_label.toUpperCase().includes("D'UN") && !product.competitor_label.includes("50G");
-                  const targetPrice = isPerUnit && product.price_per_unit ? product.price_per_unit : product.price;
-                  const savingsAmount = Number(product.competitor_price) - Number(targetPrice);
-                  const isCheaper = savingsAmount > 0;
+                  const compPrice = Number(product.competitor_price);
+                  const pPrice = Number(product.price);
+                  const pPriceUnit = Number(product.price_per_unit);
+
+                  const hasGlobalComparison = product.competitor_price && compPrice > pPrice;
+                  const hasUnitComparison = !hasGlobalComparison && product.price_per_unit && product.competitor_price && compPrice > pPriceUnit;
+
+                  let savingsAmount = 0;
+                  let isCheaper = false;
+
+                  if (hasGlobalComparison) {
+                    savingsAmount = compPrice - pPrice;
+                    isCheaper = true;
+                  } else if (hasUnitComparison) {
+                    savingsAmount = compPrice - pPriceUnit;
+                    isCheaper = true;
+                  }
                   
                   if (!isCheaper) return null;
 

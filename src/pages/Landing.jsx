@@ -53,7 +53,7 @@ const Hero = () => (
       </h1>
 
       <p className="text-[1.1rem] text-[#ccc] leading-[1.6] max-w-[420px] animate-fade-slide-up delay-200">
-        Plantes séchées artisanales et rituels sans nicotine pour ralentir sereinement.
+        Une alternative végétale sans nicotine. Conservez votre rituel et entamez votre transition en douceur.
       </p>
 
       <div className="flex flex-col sm:flex-row items-center md:items-start gap-4 mt-2 w-full md:w-auto justify-center md:justify-start animate-fade-slide-up delay-400">
@@ -64,6 +64,12 @@ const Hero = () => (
           Voir nos gammes
         </a>
       </div>
+
+      <div className="mt-4 animate-fade-slide-up delay-500">
+        <Link to="/arret-tabac" className="inline-flex items-center gap-2 text-accent hover:text-accent-light transition-colors text-sm font-medium tracking-wide uppercase">
+          Découvrir pourquoi arrêter change tout <ArrowRight size={16} />
+        </Link>
+      </div>
     </div>
   </section>
 );
@@ -71,19 +77,19 @@ const Hero = () => (
 const WhyDoiryshop = () => {
   const items = [
     {
-      icon: <Leaf className="w-8 h-8 text-primary" />,
-      title: '100% plantes naturelles',
-      description: 'Aucune nicotine, aucun additif. Juste des plantes sélectionnées avec soin.',
-    },
-    {
       icon: <ShieldCheck className="w-8 h-8 text-primary" />,
-      title: 'Cultivé en France et en Europe',
-      description: 'Des plantes tracées, sans pesticides, récoltées dans le respect de la terre.',
+      title: 'Sans nicotine',
+      description: "Pour sortir d'un automatisme sans entretenir la dépendance physique. Une coupure nette avec les substances addictives.",
     },
     {
       icon: <Hand className="w-8 h-8 text-primary" />,
-      title: 'Fabriqué à la main',
-      description: 'Chaque pochon, chaque sachet assemblé avec soin dans notre atelier.',
+      title: 'Le rituel préservé',
+      description: "Parce que l'habitude gestuelle est souvent la plus dure à perdre, nous proposons une transition sans tout casser.",
+    },
+    {
+      icon: <Leaf className="w-8 h-8 text-primary" />,
+      title: 'Un choix transparent',
+      description: "Uniquement des plantes naturelles sélectionnées avec soin, pour une démarche plus saine et plus claire.",
     },
   ];
 
@@ -92,12 +98,15 @@ const WhyDoiryshop = () => {
       <div className="absolute inset-0 bg-[url('/bg_texture.png')] bg-cover bg-center opacity-[0.02] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Pourquoi Doiryshop</span>
-          <h2 className="text-4xl font-serif mb-4 text-text">Un comptoir de plantes pour les rituels d'aujourd'hui</h2>
-          <p className="text-text-light max-w-2xl mx-auto font-light">Des produits composés simplement, présentés clairement, et préparés avec la même attention du champ à l'atelier.</p>
+          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Notre démarche</span>
+          <h2 className="text-4xl md:text-5xl font-serif mb-6 text-text leading-tight">Plus qu’un produit :<br/>une aide pour changer d’habitude</h2>
+          <p className="text-text-light max-w-2xl mx-auto font-light leading-relaxed text-lg">
+            DoiryShop accompagne une prise de distance avec le tabac en vous offrant une alternative végétale. 
+            Retrouvez un autre rythme, à votre manière.
+          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
           {items.map((item, index) => (
             <motion.div key={item.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: index * 0.12 }} className="flex flex-col items-center text-center p-8 rounded-2xl bg-surface border border-surface-border hover:border-accent/20 transition-all duration-500">
               <div className="p-4 bg-primary/10 rounded-full mb-6">{item.icon}</div>
@@ -105,6 +114,15 @@ const WhyDoiryshop = () => {
               <p className="text-text-light font-light leading-relaxed">{item.description}</p>
             </motion.div>
           ))}
+        </div>
+
+        <div className="text-center">
+          <Link 
+            to="/arret-tabac" 
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-surface border border-primary/30 text-primary rounded-xl font-medium hover:bg-primary/5 transition-colors shadow-lg shadow-primary/5"
+          >
+            Découvrir notre démarche et les bénéfices de l'arrêt <ArrowRight size={18} />
+          </Link>
         </div>
       </div>
     </section>
