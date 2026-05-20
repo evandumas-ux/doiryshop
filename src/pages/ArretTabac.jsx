@@ -9,10 +9,50 @@ import { trackEvent } from '../utils/tracking';
 
 // Section composant interactif
 const SavingsCalculator = () => {
-  const [packsPerDay, setPacksPerDay] = useState(1);
-  const [pricePerPack, setPricePerPack] = useState(13);
+  const [inputs, setInputs] = useState({
+    packs: "1",
+    cigarettes: "20"
+  });
+  const [pricePerPack, setPricePerPack] = useState("13");
 
-  const dailySavings = (packsPerDay || 0) * (pricePerPack || 0);
+  const handlePacksChange = (e) => {
+    const val = e.target.value;
+    if (val === "") {
+      setInputs({ packs: "", cigarettes: "" });
+      return;
+    }
+    const num = parseFloat(val);
+    if (!isNaN(num)) {
+      setInputs({
+        packs: val,
+        cigarettes: String(+(num * 20).toFixed(2))
+      });
+    } else {
+      setInputs(prev => ({ ...prev, packs: val }));
+    }
+  };
+
+  const handleCigarettesChange = (e) => {
+    const val = e.target.value;
+    if (val === "") {
+      setInputs({ packs: "", cigarettes: "" });
+      return;
+    }
+    const num = parseFloat(val);
+    if (!isNaN(num)) {
+      setInputs({
+        cigarettes: val,
+        packs: String(+(num / 20).toFixed(3))
+      });
+    } else {
+      setInputs(prev => ({ ...prev, cigarettes: val }));
+    }
+  };
+
+  const packsPerDayNum = parseFloat(inputs.packs) || 0;
+  const priceNum = parseFloat(pricePerPack) || 0;
+
+  const dailySavings = packsPerDayNum * priceNum;
   const weeklySavings = dailySavings * 7;
   const monthlySavings = dailySavings * 30;
   const yearlySavings = dailySavings * 365;
@@ -20,14 +60,15 @@ const SavingsCalculator = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       trackEvent('arret_tabac_calculator_change', {
-        packs_per_day: packsPerDay,
-        pack_price: pricePerPack,
+        packs_per_day: packsPerDayNum,
+        cigarettes_per_day: parseFloat(inputs.cigarettes) || 0,
+        pack_price: priceNum,
         monthly_savings: monthlySavings,
         annual_savings: yearlySavings
       });
     }, 1200);
     return () => clearTimeout(timer);
-  }, [packsPerDay, pricePerPack, monthlySavings, yearlySavings]);
+  }, [inputs.packs, inputs.cigarettes, pricePerPack, monthlySavings, yearlySavings]);
 
   const formatPrice = (val) => val.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €';
 
@@ -42,32 +83,45 @@ const SavingsCalculator = () => {
         <h3 className="text-2xl font-serif text-text">Calculez vos économies</h3>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-8 mb-8">
-        <div className="space-y-4">
-          <label className="block text-sm text-text-light font-medium mb-1">Paquets fumés par jour</label>
+      <div className="grid md:grid-cols-3 gap-4 mb-3">
+        <div className="space-y-3">
+          <label className="block text-sm text-text-light font-medium">Cigarettes / jour</label>
           <div className="flex items-center bg-background border border-surface-border rounded-xl px-4 py-3">
             <input 
               type="number" 
-              min="0.5" step="0.5"
-              value={packsPerDay} 
-              onChange={(e) => setPacksPerDay(Number(e.target.value) || 0)}
+              min="0" step="1"
+              value={inputs.cigarettes} 
+              onChange={handleCigarettesChange}
               className="bg-transparent w-full outline-none text-text text-lg font-serif"
             />
           </div>
         </div>
-        <div className="space-y-4">
-          <label className="block text-sm text-text-light font-medium mb-1">Prix moyen du paquet (€)</label>
+        <div className="space-y-3">
+          <label className="block text-sm text-text-light font-medium">Paquets / jour</label>
+          <div className="flex items-center bg-background border border-surface-border rounded-xl px-4 py-3">
+            <input 
+              type="number" 
+              min="0" step="0.1"
+              value={inputs.packs} 
+              onChange={handlePacksChange}
+              className="bg-transparent w-full outline-none text-text text-lg font-serif"
+            />
+          </div>
+        </div>
+        <div className="space-y-3">
+          <label className="block text-sm text-text-light font-medium">Prix du paquet (€)</label>
           <div className="flex items-center bg-background border border-surface-border rounded-xl px-4 py-3">
             <input 
               type="number" 
               min="1" step="0.1"
               value={pricePerPack} 
-              onChange={(e) => setPricePerPack(Number(e.target.value) || 0)}
+              onChange={(e) => setPricePerPack(e.target.value)}
               className="bg-transparent w-full outline-none text-text text-lg font-serif"
             />
           </div>
         </div>
       </div>
+      <p className="text-[13px] text-text-muted mb-8 italic">Base de calcul : 1 paquet = 20 cigarettes</p>
 
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-background rounded-2xl p-5 border border-surface-border text-center">
