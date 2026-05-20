@@ -333,32 +333,38 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
       <div className="text-text-light font-light leading-relaxed space-y-4">
         {isCoffretDescription ? formatCoffretDescription(product.description) : (
           <div className="space-y-4">
-            <p>Une expérience pensée pour s'intégrer naturellement à votre quotidien. Ce produit a été conçu pour accompagner vos moments de pause avec une approche sobre et sans artifice.</p>
-            <p>Idéal pour ceux qui recherchent un rituel alternatif, il offre un geste familier tout en se détachant des habitudes classiques. Chaque détail, du choix des éléments à leur préparation, vise à vous offrir une utilisation simple, agréable et transparente.</p>
-            <p>Que ce soit pour une fin de journée calme ou un moment partagé, il se distingue par sa justesse et son équilibre.</p>
+            <p className="font-medium text-text text-lg">{product.short_description || product.name}</p>
+            <p>{product.description || "Un assemblage végétal conçu pour offrir une alternative claire."}</p>
+            <p>Ce produit se présente sous un format optimisé pour garantir une conservation idéale et une prise en main immédiate. À l'usage, la texture se veut homogène et la sensation maîtrisée, pour accompagner vos moments de détente sans les inconvénients de la nicotine.</p>
+            <p>Pensé aussi bien pour une fin de journée apaisée que pour un usage régulier, il s'adresse à ceux qui souhaitent maintenir un geste familier tout en optant pour une composition transparente.</p>
           </div>
         )}
       </div>
     ),
     composition: (
       <div className="text-text-light font-light leading-relaxed space-y-4">
-        {product.composition && <p>{product.composition}</p>}
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="p-4 bg-surface rounded-xl border border-surface-border">
-            <h4 className="font-serif text-text font-medium mb-2 flex items-center gap-2">
-              <Leaf size={16} className="text-green-400" /> Ingrédients
+            <h4 className="font-serif text-text font-medium mb-3 flex items-center gap-2">
+              <Leaf size={16} className="text-green-400" /> Détail de la composition
             </h4>
-            <p className="text-sm">{isSubstitut ? 'Base végétale pensée pour le roulage, avec une composition courte et lisible.' : 'Mélange de plantes sélectionnées avec soin pour une infusion simple et nette.'}</p>
+            {product.composition_details ? (
+              <p className="text-sm">{product.composition_details}</p>
+            ) : (
+              <ul className="text-sm space-y-2">
+                <li>• Base : {isSubstitut ? 'Feuilles de framboisier et plantes douces' : 'Plantes à infusion'}</li>
+                <li>• Additifs : Aucun</li>
+                <li>• Nicotine : 0mg</li>
+                <li>• Traitement : Séchage naturel</li>
+              </ul>
+            )}
           </div>
           <div className="p-4 bg-surface rounded-xl border border-surface-border">
-            <h4 className="font-serif text-text font-medium mb-2 flex items-center gap-2">
-              <Package size={16} className="text-accent" /> Fabrication
+            <h4 className="font-serif text-text font-medium mb-3 flex items-center gap-2">
+              <Package size={16} className="text-accent" /> Préparation
             </h4>
-            <p className="text-sm">Assemblé et conditionné avec soin, dans une démarche de qualité et de transparence totale.</p>
+            <p className="text-sm">Chaque composant est sélectionné pour garantir l'absence de résidus inutiles, assurant ainsi une texture homogène et une utilisation stable.</p>
           </div>
-        </div>
-        <div className="p-4 bg-green-500/5 rounded-xl border border-green-500/10">
-          <p className="text-sm text-green-400 font-medium">100% sans nicotine • Sélection rigoureuse • Préparé avec soin</p>
         </div>
       </div>
     ),
@@ -366,20 +372,20 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
       <div className="text-text-light font-light leading-relaxed space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="p-4 border border-surface-border rounded-xl">
-            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Format</span>
-            <span className="text-text font-medium">{product.unit_label ? product.unit_label : 'Standard'}</span>
+            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Format physique</span>
+            <span className="text-text font-medium">{product.unit_label ? product.unit_label : 'Conditionnement standard'}</span>
           </div>
           <div className="p-4 border border-surface-border rounded-xl">
             <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Poids net</span>
-            <span className="text-text font-medium">{product.weight_grams ? `${product.weight_grams} g` : 'Non spécifié'}</span>
+            <span className="text-text font-medium">{product.weight_grams ? `${product.weight_grams} g` : 'Donnée à compléter'}</span>
+          </div>
+          <div className="p-4 border border-surface-border rounded-xl">
+            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Rythme d'usage suggéré</span>
+            <span className="text-text font-medium">{product.usage_indication || 'Adaptable selon vos besoins réguliers.'}</span>
           </div>
           <div className="p-4 border border-surface-border rounded-xl">
             <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Conservation</span>
             <span className="text-text font-medium">{product.conservation_tips || 'À conserver au sec et à l\'abri de la lumière.'}</span>
-          </div>
-          <div className="p-4 border border-surface-border rounded-xl">
-            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Repères d'usage</span>
-            <span className="text-text font-medium">{product.usage_indication || 'Idéal pour une utilisation régulière.'}</span>
           </div>
         </div>
       </div>
@@ -501,55 +507,17 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 )}
               </div>
 
-              {product.competitor_label && (
-                (() => {
-                  if (!product.competitor_price) {
-                    return (
-                      <div className="mb-6 p-5 rounded-2xl border border-surface-border bg-surface/30 backdrop-blur-sm">
-                         <p className="text-sm text-[#e8e8e8] font-medium leading-relaxed">{product.competitor_label}</p>
-                      </div>
-                    );
-                  }
-                  
-                  const compPrice = Number(product.competitor_price);
-                  const pPrice = Number(product.price);
-                  const pPriceUnit = Number(product.price_per_unit);
-
-                  const hasGlobalComparison = product.competitor_price && compPrice > pPrice;
-                  const hasUnitComparison = !hasGlobalComparison && product.price_per_unit && product.competitor_price && compPrice > pPriceUnit;
-
-                  let savingsAmount = 0;
-                  let isCheaper = false;
-
-                  if (hasGlobalComparison) {
-                    savingsAmount = compPrice - pPrice;
-                    isCheaper = true;
-                  } else if (hasUnitComparison) {
-                    savingsAmount = compPrice - pPriceUnit;
-                    isCheaper = true;
-                  }
-                  
-                  if (!isCheaper) return null;
-
-                  return (
-                    <div className="mb-6 p-5 rounded-2xl border border-surface-border bg-surface/30 backdrop-blur-sm">
-                      <div className="product-price-competitor-container">
-                        <span className="product-price-competitor-label">Moyenne observée ailleurs :</span>
-                        <span className="product-price-competitor">{formatPrice(product.competitor_price)}</span>
-                      </div>
-                      
-                      <div className="mt-3 flex flex-col gap-2">
-                        <div className="product-price-savings">
-                          Économie estimée : {formatPrice(savingsAmount)} (-{Math.round((savingsAmount / product.competitor_price) * 100)}%)
-                        </div>
-                        <p className="price-comparison-note">
-                          * {product.competitor_label} (comparaison indicative)
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })()
-              )}
+              <div className="flex flex-wrap gap-2 mb-6 mt-4">
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
+                  <ShieldCheck size={14} className="mr-1.5 text-accent" /> Sans nicotine
+                </span>
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
+                  <Leaf size={14} className="mr-1.5 text-primary" /> Assemblé avec soin
+                </span>
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
+                  <Package size={14} className="mr-1.5 text-accent" /> Prêt à l'emploi
+                </span>
+              </div>
 
               <div className="flex flex-col gap-5 mb-6 mt-2">
                 <div className="flex flex-col gap-1">
@@ -595,7 +563,11 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
               </div>
 
               <div className="text-text-light font-light leading-relaxed text-base mb-6">
-                <UseCasePills useCases={product.use_cases} className="mb-4" />
+                <UseCasePills useCases={
+                  isSubstitut ? ["Alternative végétale", "Séchage naturel", "Format adapté"] :
+                  isTea ? ["Infusion douce", "Sans excitant"] :
+                  ["Prêt à l'emploi", "Soin et qualité"]
+                } className="mb-4" />
                 {isCoffretDescription ? formatCoffretDescription(product.short_description || product.description) : (product.short_description || product.description)}
               </div>
               
@@ -764,24 +736,20 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
           <h2 className="text-2xl md:text-3xl font-serif text-text mb-8 text-center">Questions fréquentes</h2>
           <div className="space-y-2">
             <ProductFAQItem 
-              question="Le produit est-il légal ?"
-              answer="Oui, tous nos produits sont 100% légaux et respectent strictement la réglementation en vigueur. Ils ne contiennent ni tabac, ni nicotine, ni aucune substance réglementée ou interdite."
+              question="Ce produit est-il légal ?"
+              answer="Oui. La totalité de notre gamme respecte le cadre légal en vigueur. Nos produits ne contiennent aucune substance prohibée, ni tabac, ni CBD au-delà des normes autorisées le cas échéant, ni nicotine."
             />
             <ProductFAQItem 
-              question="Que contient-il exactement ?"
-              answer="Nos produits sont composés de plantes naturelles sélectionnées avec soin. La composition est claire, transparente et exempte d'additifs inutiles pour vous garantir une expérience saine et authentique."
+              question="Que contient concrètement ce produit ?"
+              answer={`Ce produit est constitué à 100% de plantes naturelles. Il n'y a aucun agent de texture, de saveur ou de conservation artificiel. Juste la plante, séchée et préparée.`}
             />
             <ProductFAQItem 
-              question="Comment le conserver ?"
-              answer="Pour préserver toutes ses qualités, nous vous conseillons de conserver le produit dans son emballage d'origine bien fermé, à l'abri de l'humidité, de la chaleur et de la lumière directe."
+              question="À quelle fréquence puis-je l'utiliser ?"
+              answer="L'utilisation dépend de vos besoins personnels. Étant donné l'absence de nicotine, ce produit ne crée pas de dépendance physique. Vous pouvez l'utiliser pour remplacer progressivement un ancien rituel ou pour une pause ponctuelle."
             />
             <ProductFAQItem 
-              question="À quoi correspond le format / le poids ?"
-              answer="Le poids net et le format de chaque produit sont étudiés pour vous offrir une quantité adaptée à un usage régulier, garantissant ainsi une bonne conservation et une expérience optimale sur la durée."
-            />
-            <ProductFAQItem 
-              question="En combien de temps la commande est-elle expédiée ?"
-              answer="Toutes les commandes sont préparées et expédiées sous 24h ouvrées. Vous recevrez un numéro de suivi dès que votre colis quittera notre atelier."
+              question="Combien de temps se conserve-t-il ?"
+              answer="S'il est maintenu dans son emballage d'origine, à l'abri de la lumière et de l'humidité, le produit conserve ses propriétés et sa texture optimale pendant plusieurs mois."
             />
           </div>
         </section>
