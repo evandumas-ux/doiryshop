@@ -146,6 +146,20 @@ const formatCoffretDescription = (description) => {
     </div>
   );
 };
+const ProductFAQItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border-b border-surface-border py-4">
+      <button onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen} className="w-full flex justify-between items-center text-left gap-4 hover:text-accent transition-colors">
+        <span className="font-serif text-lg text-text">{question}</span>
+        <ChevronRight className={`transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-90 text-accent' : 'text-text-muted'}`} size={20} />
+      </button>
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+        <p className="text-text-light font-light leading-relaxed">{answer}</p>
+      </div>
+    </div>
+  );
+};
 
 const ProductDetail = ({ cartItems, setCartItems, user }) => {
   const { id } = useParams();
@@ -317,11 +331,13 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
   const tabContent = {
     description: (
       <div className="text-text-light font-light leading-relaxed space-y-4">
-        {isCoffretDescription ? formatCoffretDescription(product.description) : <p>{product.description}</p>}
-        <p>
-          Doiryshop compose chaque référence pour offrir une lecture claire du produit, une utilisation simple et
-          un rendu soigné, sans surcharge inutile.
-        </p>
+        {isCoffretDescription ? formatCoffretDescription(product.description) : (
+          <div className="space-y-4">
+            <p>Une expérience pensée pour s'intégrer naturellement à votre quotidien. Ce produit a été conçu pour accompagner vos moments de pause avec une approche sobre et sans artifice.</p>
+            <p>Idéal pour ceux qui recherchent un rituel alternatif, il offre un geste familier tout en se détachant des habitudes classiques. Chaque détail, du choix des éléments à leur préparation, vise à vous offrir une utilisation simple, agréable et transparente.</p>
+            <p>Que ce soit pour une fin de journée calme ou un moment partagé, il se distingue par sa justesse et son équilibre.</p>
+          </div>
+        )}
       </div>
     ),
     composition: (
@@ -330,19 +346,41 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="p-4 bg-surface rounded-xl border border-surface-border">
             <h4 className="font-serif text-text font-medium mb-2 flex items-center gap-2">
-              <Leaf size={16} className="text-green-400" /> Composition
+              <Leaf size={16} className="text-green-400" /> Ingrédients
             </h4>
             <p className="text-sm">{isSubstitut ? 'Base végétale pensée pour le roulage, avec une composition courte et lisible.' : 'Mélange de plantes sélectionnées avec soin pour une infusion simple et nette.'}</p>
           </div>
           <div className="p-4 bg-surface rounded-xl border border-surface-border">
             <h4 className="font-serif text-text font-medium mb-2 flex items-center gap-2">
-              <Package size={16} className="text-accent" /> Conditionnement
+              <Package size={16} className="text-accent" /> Fabrication
             </h4>
-            <p className="text-sm">{product.unit_label ? `${product.unit_label} - ${product.weight_grams || 0}g` : 'Conditionnement artisanal et propre.'}</p>
+            <p className="text-sm">Assemblé et conditionné avec soin, dans une démarche de qualité et de transparence totale.</p>
           </div>
         </div>
         <div className="p-4 bg-green-500/5 rounded-xl border border-green-500/10">
-          <p className="text-sm text-green-400 font-medium">Sans nicotine - composition transparente - atelier soigne</p>
+          <p className="text-sm text-green-400 font-medium">100% sans nicotine • Sélection rigoureuse • Préparé avec soin</p>
+        </div>
+      </div>
+    ),
+    informations: (
+      <div className="text-text-light font-light leading-relaxed space-y-4">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="p-4 border border-surface-border rounded-xl">
+            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Format</span>
+            <span className="text-text font-medium">{product.unit_label ? product.unit_label : 'Standard'}</span>
+          </div>
+          <div className="p-4 border border-surface-border rounded-xl">
+            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Poids net</span>
+            <span className="text-text font-medium">{product.weight_grams ? `${product.weight_grams} g` : 'Non spécifié'}</span>
+          </div>
+          <div className="p-4 border border-surface-border rounded-xl">
+            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Conservation</span>
+            <span className="text-text font-medium">{product.conservation_tips || 'À conserver au sec et à l\'abri de la lumière.'}</span>
+          </div>
+          <div className="p-4 border border-surface-border rounded-xl">
+            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Repères d'usage</span>
+            <span className="text-text font-medium">{product.usage_indication || 'Idéal pour une utilisation régulière.'}</span>
+          </div>
         </div>
       </div>
     ),
@@ -514,15 +552,22 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
               )}
 
               <div className="flex flex-col gap-5 mb-6 mt-2">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center border-2 border-surface-border rounded-xl overflow-hidden bg-surface">
-                    <button onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="px-4 py-3 text-text hover:bg-surface-light hover:text-accent transition-colors">
-                      <Minus size={16} />
-                    </button>
-                    <span className="px-6 py-3 font-medium text-lg min-w-[56px] text-center text-text font-serif">{quantity}</span>
-                    <button onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))} className="px-4 py-3 text-text hover:bg-surface-light hover:text-accent transition-colors">
-                      <Plus size={16} />
-                    </button>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center border-2 border-surface-border rounded-xl overflow-hidden bg-surface">
+                      <button onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="px-4 py-3 text-text hover:bg-surface-light hover:text-accent transition-colors">
+                        <Minus size={16} />
+                      </button>
+                      <span className="px-6 py-3 font-medium text-lg min-w-[56px] text-center text-text font-serif">{quantity}</span>
+                      <button onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))} className="px-4 py-3 text-text hover:bg-surface-light hover:text-accent transition-colors">
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                    {quantity === 2 && (
+                      <span className="text-xs text-accent/80 font-medium bg-accent/10 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        Format souvent choisi
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -583,6 +628,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
               {[
                 { key: 'description', label: 'Description' },
                 { key: 'composition', label: 'Composition' },
+                { key: 'informations', label: 'Informations' },
                 { key: 'utilisation', label: 'Utilisation' },
                 ...(reviewStats.total > 0 ? [{ key: 'reviews', label: `Avis clients (${reviewStats.total})` }] : []),
               ].map((tab) => (
@@ -711,6 +757,32 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="max-w-3xl mx-auto px-6 py-20 mt-10 border-t border-surface-border">
+          <h2 className="text-2xl md:text-3xl font-serif text-text mb-8 text-center">Questions fréquentes</h2>
+          <div className="space-y-2">
+            <ProductFAQItem 
+              question="Le produit est-il légal ?"
+              answer="Oui, tous nos produits sont 100% légaux et respectent strictement la réglementation en vigueur. Ils ne contiennent ni tabac, ni nicotine, ni aucune substance réglementée ou interdite."
+            />
+            <ProductFAQItem 
+              question="Que contient-il exactement ?"
+              answer="Nos produits sont composés de plantes naturelles sélectionnées avec soin. La composition est claire, transparente et exempte d'additifs inutiles pour vous garantir une expérience saine et authentique."
+            />
+            <ProductFAQItem 
+              question="Comment le conserver ?"
+              answer="Pour préserver toutes ses qualités, nous vous conseillons de conserver le produit dans son emballage d'origine bien fermé, à l'abri de l'humidité, de la chaleur et de la lumière directe."
+            />
+            <ProductFAQItem 
+              question="À quoi correspond le format / le poids ?"
+              answer="Le poids net et le format de chaque produit sont étudiés pour vous offrir une quantité adaptée à un usage régulier, garantissant ainsi une bonne conservation et une expérience optimale sur la durée."
+            />
+            <ProductFAQItem 
+              question="En combien de temps la commande est-elle expédiée ?"
+              answer="Toutes les commandes sont préparées et expédiées sous 24h ouvrées. Vous recevrez un numéro de suivi dès que votre colis quittera notre atelier."
+            />
           </div>
         </section>
 
