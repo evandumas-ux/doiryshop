@@ -48,6 +48,19 @@ const adminLimiter = rateLimit({
 });
 
 const app = express();
+
+// ============================================================
+// ROUTE HEALTH CHECK (UptimeRobot, etc.)
+// Doit être avant les middlewares lourds pour répondre vite
+// ============================================================
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    ok: true,
+    service: "doiryshop-api",
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.set('trust proxy', 1);
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -2221,6 +2234,8 @@ app.put('/api/admin/loyalty/:userId', verifyToken, requireAdmin, async (req, res
 // Lancement du serveur
 const server = app.listen(3001, () => {
   console.log('=== Backend démarré sur http://localhost:3001 ===');
+  console.log('=== Health Check URL: http://localhost:3001/health ===');
+  console.log('=== Prêt pour UptimeRobot ! ===');
 });
 
 server.on('error', (err) => {
