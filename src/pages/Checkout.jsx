@@ -487,7 +487,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               )}
             </button>
             <p className="text-center text-xs text-text-muted mt-3">
-              Paiement chiffre, expedition discrete, accompagnement humain : votre commande est protégée à chaque étape.
+              En passant commande, vous acceptez nos <Link to="/cgv" className="underline hover:text-primary transition-colors">CGV</Link> et notre <Link to="/politique-remboursement" className="underline hover:text-primary transition-colors">politique de remboursement</Link>.
             </p>
           </form>
         </div>
@@ -644,6 +644,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
         <span> | </span>
         <Link to="/cgv" className="hover:text-primary transition-colors">
           CGV
+        </Link>
+        <span> | </span>
+        <Link to="/politique-remboursement" className="hover:text-primary transition-colors">
+          Politique de remboursement
         </Link>
       </footer>
     </div>

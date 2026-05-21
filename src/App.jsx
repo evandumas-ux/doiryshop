@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import MentionsLegales from './pages/legal/MentionsLegales';
 import CGV from './pages/legal/CGV';
 import PolitiqueConfidentialite from './pages/legal/PolitiqueConfidentialite';
+import PolitiqueRemboursement from './pages/legal/PolitiqueRemboursement';
 import CookieBanner from './components/CookieBanner';
 import AgeVerification from './components/AgeVerification';
 import Footer from './components/Footer';
@@ -200,6 +201,7 @@ const AppRoutes = ({ cartItems, setCartItems, user, isInitializing, handleSetUse
         <Route path="/mentions-legales" element={<MentionsLegales />} />
         <Route path="/cgv" element={<CGV />} />
         <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+        <Route path="/politique-remboursement" element={<PolitiqueRemboursement />} />
         <Route path="/produit/:id" element={<ProductDetail cartItems={cartItems} setCartItems={setCartItems} user={user} />} />
         {/* Redirection pour les routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />

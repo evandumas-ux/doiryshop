@@ -155,6 +155,12 @@ const Footer = () => {
           >
             Politique de confidentialité
           </Link>
+          <Link
+            to="/politique-remboursement"
+            className="text-sm font-medium text-text-light hover:text-primary transition-colors"
+          >
+            Politique de remboursement
+          </Link>
         </div>
 
         <div className="flex items-center gap-6 mb-8">
