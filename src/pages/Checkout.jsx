@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ShieldCheck, Lock, Heart, CheckCircle2, X, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogto } from '@logto/react';
-import { createOrder, getUserProfile, getLoyaltyPoints, verifyCoupon, createCheckoutSession, getShippingOptions } from '../services/api';
+import { createOrder, getUserProfile, getLoyaltyPoints, verifyCoupon, getShippingOptions } from '../services/api';
 import PaymentBadges from '../components/PaymentBadges';
 import SEO from '../components/SEO';
 const Checkout = ({ cartItems, setCartItems, user }) => {
@@ -211,37 +211,19 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       console.log('[CHECKOUT] clic bouton');
       console.log('[CHECKOUT] orderData =', orderData);
 
-      // 1. Créer la commande en attente
+      // 1. Créer la commande en attente dans la BDD (génère aussi le RIB en backend)
       const orderResponse = await createOrder(orderData);
       const orderId = orderResponse.orderId;
+      const reference = orderResponse.reference || `DRY-${orderId}`;
       console.log('[CHECKOUT] orderId créé =', orderId);
 
-      // 2. Créer la session Stripe
-      const sessionPayload = {
-        items: cartItems.map(item => ({ id: item.id, quantity: item.quantity })),
-        orderId,
-        couponCode: appliedCoupon ? appliedCoupon.code : undefined,
-        shippingZip: formData.zip,
-        shippingServiceId: selectedShipping.id
-      };
-      console.log('[CHECKOUT] création session Stripe, payload =', sessionPayload);
+      // 2. Nettoyer le panier local
+      setCartItems([]);
+      localStorage.removeItem('cartItems');
 
-      const session = await createCheckoutSession(
-        sessionPayload.items,
-        sessionPayload.orderId,
-        sessionPayload.couponCode,
-        sessionPayload.shippingZip,
-        sessionPayload.shippingServiceId
-      );
-
-      console.log('[CHECKOUT] session Stripe reçue =', session);
-
-      // 3. Rediriger vers Stripe
-      if (session && session.url) {
-        window.location.href = session.url;
-      } else {
-        throw new Error("URL de paiement manquante");
-      }
+      // 3. Rediriger directement vers la page de succès/virement
+      // On passe les paramètres dans l'URL pour la récupération immédiate par OrderSuccess
+      window.location.href = `/commande/succes?orderId=${orderId}&amount=${total}&reference=${reference}`;
 
     } catch (error) {
       console.error('Erreur lors de la commande:', error);
@@ -470,7 +452,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-primary text-white py-5 rounded-2xl font-serif text-xl hover:bg-primary-dark transition-all transform shadow-lg shadow-primary/20 flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting ? 'opacity-70' : 'hover:-translate-y-1'}`}
+              className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting ? 'opacity-70' : 'hover:-translate-y-1'}`}
               onClick={() => {
                 if (!isValid || shippingOptions.length === 0 || !selectedShipping) {
                   setShowIncompleteError(true);
@@ -480,10 +462,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               {isSubmitting ? (
                 <>
                   <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full" />
-                  Traitement en cours...
+                  Génération en cours...
                 </>
               ) : (
-                <><Lock size={20} /> Procéder au paiement sécurisé</>
+                <>Valider la commande et générer mon protocole de virement</>
               )}
             </button>
             <p className="text-center text-xs text-text-muted mt-3">
