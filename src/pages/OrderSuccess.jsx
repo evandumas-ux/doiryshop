@@ -69,7 +69,8 @@ const OrderSuccess = ({ setCartItems }) => {
 
   const handleDownload = () => {
     // Déclenche le téléchargement du RIB
-    const imageUrl = `/doiryshop_rib_${orderId}.png`;
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    const imageUrl = `${apiUrl}/api/generate-rib?orderId=${orderId}&amount=${amount}&reference=${reference}&download=1`;
     const link = document.createElement('a');
     link.href = imageUrl;
     link.download = `DoiryShop_RIB_${orderId}.png`;
@@ -125,7 +126,7 @@ const OrderSuccess = ({ setCartItems }) => {
       >
         {/* Assurez-vous que l'image est servie correctement depuis le dossier public ou backend */}
         <img 
-          src={`/doiryshop_rib_${orderId}.png`} 
+          src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/generate-rib?orderId=${orderId}&amount=${amount}&reference=${reference}`} 
           alt="RIB Sécurisé Doiry Shop" 
           className="w-full h-auto object-contain bg-[#111111]"
           onError={(e) => {
@@ -195,3 +196,4 @@ const OrderSuccess = ({ setCartItems }) => {
 };
 
 export default OrderSuccess;
+port default OrderSuccess;

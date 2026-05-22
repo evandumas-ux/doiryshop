@@ -2231,6 +2231,200 @@ app.put('/api/admin/loyalty/:userId', verifyToken, requireAdmin, async (req, res
 
 // [FIN DES ROUTES PACKLINK SUPPRIMÉES]
 
+// ── GET /api/generate-rib ──
+app.get('/api/generate-rib', async (req, res) => {
+  const { orderId, amount, reference } = req.query;
+
+  if (!orderId || !amount || !reference) {
+    return res.status(400).send('Paramètres manquants');
+  }
+
+  try {
+    const { createCanvas, loadImage } = require('canvas');
+    // Dimensions 1200 x 1600 (Ratio 3:4)
+    const width = 1200;
+    const height = 1600;
+
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext('2d');
+
+    // --- PALETTES & STYLES ---
+    const bgBlack = '#111111';
+    const cardBg = '#1A1610';
+    const goldMatte = '#A68A56';
+    const burgundyDark = '#5C141F';
+    const pureWhite = '#FFFFFF';
+    const pureBlack = '#000000';
+
+    ctx.fillStyle = bgBlack;
+    ctx.fillRect(0, 0, width, height);
+
+    const cardMargin = 40;
+    const cardWidth = width - (cardMargin * 2);
+    const cardHeight = height - (cardMargin * 2);
+    
+    ctx.fillStyle = cardBg;
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur = 20;
+    ctx.fillRect(cardMargin, cardMargin, cardWidth, cardHeight);
+    ctx.shadowBlur = 0;
+
+    ctx.save();
+    ctx.globalAlpha = 0.04;
+    ctx.fillStyle = goldMatte;
+    ctx.font = '60px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const symbols = ['𓅃', '𓆣', '𓁹', '𓋹', '𓃻'];
+    for (let i = 0; i < 25; i++) {
+      for (let j = 0; j < 20; j++) {
+        const sym = symbols[(i + j) % symbols.length];
+        ctx.fillText(sym, cardMargin + j * 70, cardMargin + i * 70);
+      }
+    }
+    ctx.restore();
+
+    const innerMarginX = cardMargin + 80;
+    let currentY = cardMargin + 60;
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+
+    try {
+      const logoPath = path.join(__dirname, 'image_5.png');
+      if (fs.existsSync(logoPath)) {
+        const logo = await loadImage(logoPath);
+        const logoRatio = logo.width / logo.height;
+        const logoWidth = 150 * logoRatio;
+        ctx.drawImage(logo, (width - logoWidth) / 2, currentY, logoWidth, 150);
+        currentY += 170;
+      } else {
+        ctx.fillStyle = burgundyDark;
+        ctx.beginPath();
+        ctx.arc(width / 2, currentY + 75, 75, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#111';
+        ctx.font = '60px serif';
+        ctx.fillText('🦅', width / 2, currentY + 45);
+        currentY += 170;
+      }
+    } catch (e) {
+      currentY += 170;
+    }
+
+    ctx.fillStyle = burgundyDark;
+    ctx.font = 'bold 46px "Times New Roman", Garamond, serif';
+    ctx.fillText('DOIRY SHOP', width / 2, currentY);
+    currentY += 70;
+
+    ctx.fillStyle = goldMatte;
+    ctx.font = '30px "Times New Roman", Garamond, serif';
+    ctx.fillText('PROTOCOLE DE TRANSFERT SÉCURISÉ', width / 2, currentY);
+    currentY += 60;
+
+    ctx.beginPath();
+    ctx.moveTo(innerMarginX, currentY);
+    ctx.lineTo(width - innerMarginX, currentY);
+    ctx.strokeStyle = goldMatte;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    currentY += 60;
+
+    ctx.textAlign = 'left';
+
+    const zoneB_Y = currentY;
+    const zoneB_Height = 520;
+    const zoneB_MarginX = innerMarginX - 40;
+    const zoneB_Width = width - (zoneB_MarginX * 2);
+
+    ctx.fillStyle = pureWhite;
+    if (ctx.roundRect) {
+      ctx.roundRect(zoneB_MarginX, zoneB_Y, zoneB_Width, zoneB_Height, 15);
+    } else {
+      ctx.fillRect(zoneB_MarginX, zoneB_Y, zoneB_Width, zoneB_Height);
+    }
+    ctx.fill();
+
+    currentY += 40;
+
+    const drawOcrRow = (label, value, isIban = false) => {
+      ctx.fillStyle = pureBlack;
+      ctx.font = 'bold 22px Arial, Helvetica, "Inter", "Roboto", sans-serif';
+      ctx.fillText(label, innerMarginX, currentY);
+      currentY += 35;
+
+      ctx.fillStyle = pureBlack;
+      const fontSize = isIban ? 52 : 36;
+      ctx.font = `bold ${fontSize}px Arial, Helvetica, "Inter", "Roboto", sans-serif`;
+      ctx.fillText(value, innerMarginX, currentY);
+      
+      currentY += isIban ? 90 : 70;
+    };
+
+    drawOcrRow('Titulaire du compte :', 'Evan DUMAS');
+    const staticIban = 'FR76 2823 3000 0161 1348 4847 481';
+    drawOcrRow('IBAN :', staticIban, true);
+    drawOcrRow('Code BIC / SWIFT :', 'REVOFRP2');
+    drawOcrRow('Banque :', 'Revolut Bank UAB');
+
+    currentY = zoneB_Y + zoneB_Height + 60;
+
+    ctx.fillStyle = goldMatte;
+    ctx.font = 'italic 26px "Times New Roman", Garamond, serif';
+    ctx.fillText('Numéro de commande :', innerMarginX, currentY);
+    currentY += 40;
+    ctx.fillStyle = goldMatte;
+    ctx.font = 'bold 36px "Times New Roman", Garamond, serif';
+    ctx.fillText(`CMD-${orderId}`, innerMarginX, currentY);
+    currentY += 70;
+
+    ctx.fillStyle = goldMatte;
+    ctx.font = 'italic 26px "Times New Roman", Garamond, serif';
+    ctx.fillText('Total de votre commande :', innerMarginX, currentY);
+    currentY += 40;
+    ctx.fillStyle = goldMatte;
+    ctx.font = 'bold 36px "Times New Roman", Garamond, serif';
+    ctx.fillText(`${amount} €`, innerMarginX, currentY);
+    currentY += 70;
+
+    ctx.fillStyle = goldMatte;
+    ctx.font = 'italic 26px "Times New Roman", Garamond, serif';
+    ctx.fillText('Référence de virement :', innerMarginX, currentY);
+    currentY += 40;
+    ctx.fillStyle = goldMatte;
+    ctx.font = 'bold 36px "Times New Roman", Garamond, serif';
+    ctx.fillText(reference, innerMarginX, currentY);
+    currentY += 45;
+
+    ctx.fillStyle = goldMatte;
+    ctx.font = 'italic 20px "Times New Roman", Garamond, serif';
+    ctx.fillText('Veuillez inscrire cette référence exacte lors de la validation de votre virement.', innerMarginX, currentY);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = goldMatte;
+    
+    const footerY = height - cardMargin - 50;
+    ctx.font = '40px serif';
+    ctx.fillText('☥', width / 2, footerY - 45); 
+
+    ctx.font = '18px "Times New Roman", Garamond, serif'; 
+    ctx.fillText('Document crypté dynamiquement – Doiry Shop Cryptage DSP2', width / 2, footerY);
+
+    const buffer = canvas.toBuffer('image/png', { resolution: 300 });
+
+    res.setHeader('Content-Type', 'image/png');
+    
+    const disposition = req.query.download === '1' ? 'attachment' : 'inline';
+    res.setHeader('Content-Disposition', `${disposition}; filename="doiryshop_rib_${orderId}.png"`);
+    
+    res.send(buffer);
+
+  } catch (error) {
+    console.error('Erreur lors de la génération du RIB :', error);
+    res.status(500).send('Erreur interne lors de la génération du RIB');
+  }
+});
+
 // Lancement du serveur
 const server = app.listen(3001, () => {
   console.log('=== Backend démarré sur http://localhost:3001 ===');
