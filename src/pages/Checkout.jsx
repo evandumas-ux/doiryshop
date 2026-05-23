@@ -221,9 +221,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       setCartItems([]);
       localStorage.removeItem('cartItems');
 
-      // 3. Rediriger directement vers la page de succès/virement
-      // On passe les paramètres dans l'URL pour la récupération immédiate par OrderSuccess
-      window.location.href = `/commande/succes?orderId=${orderId}&amount=${total}&reference=${reference}`;
+      // 3. Rediriger directement vers Revolut
+      const amountInCents = Math.round(parseFloat(total) * 100);
+      const directRevolutLink = `https://revolut.me/dumase07?currency=EUR&amount=${amountInCents}&note=${reference}`;
+      window.location.href = directRevolutLink;
 
     } catch (error) {
       console.error('Erreur lors de la commande:', error);
@@ -465,7 +466,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                   Génération en cours...
                 </>
               ) : (
-                <>Valider la commande et générer mon protocole de virement</>
+                <>VALIDER ET PAYER VIA REVOLUT</>
               )}
             </button>
             <p className="text-center text-xs text-text-muted mt-3">
