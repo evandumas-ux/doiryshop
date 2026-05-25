@@ -204,6 +204,26 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+const optionalAuth = (req, res, next) => {
+  const token = req.cookies?.token || req.headers.authorization?.replace("Bearer ", "");
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = {
+      id:    decoded.id || decoded.sub || null,
+      email: decoded.email || null,
+      role:  decoded.role || 'client',
+      name:  decoded.name || null
+    };
+  } catch (err) {
+    req.user = null;
+  }
+  next();
+};
+
 const requireAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Accès interdit. Rôle administrateur requis.' });
@@ -803,22 +823,24 @@ app.get('/api/orders/my-orders', verifyToken, (req, res) => {
  * POST /api/orders
  * Créer une nouvelle commande après validation du paiement.
  */
-app.post('/api/orders', verifyToken, async (req, res) => {
+app.post('/api/orders', optionalAuth, async (req, res) => {
   console.log('[ORDER] req.user complet:', req.user);
   console.log('[ORDER] user_id extrait:', req.user?.id);
 
-  const rawId = req.user?.id || req.user?.email;
+  const { produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price: client_shipping_price, coupon_code, shipping_relay_id, shipping_relay_data, relay_selection_mode, relay_address_text } = req.body;
 
-  if (!rawId) {
-    return res.status(401).json({ error: 'Impossible d\'identifier l\'utilisateur' });
+  let emailClient = "";
+  if (typeof adresse_livraison === 'string') {
+    try { emailClient = JSON.parse(adresse_livraison).email; } catch(e){}
+  } else if (adresse_livraison) {
+    emailClient = adresse_livraison.email;
   }
 
-  // Convertir en nombre si user_id est INTEGER dans la DB
-  const userId = typeof rawId === 'number' 
-    ? rawId 
-    : String(rawId).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0); // hash simple
+  const rawId = req.user?.id || req.user?.email || emailClient;
 
-  const { produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price: client_shipping_price, coupon_code, shipping_relay_id, shipping_relay_data, relay_selection_mode, relay_address_text } = req.body;
+  if (!rawId) {
+    return res.status(400).json({ error: 'Impossible d\'identifier le client (email manquant)' });
+  }
 
   if (!produits || !total) {
     return res.status(400).json({ error: 'Les champs "produits" et "total" sont requis.' });
@@ -1034,7 +1056,7 @@ app.put('/api/orders/:id/status', verifyToken, (req, res) => {
   });
 });
 
-app.post('/api/checkout/create-session', verifyToken, authLimiter, async (req, res) => {
+app.post('/api/checkout/create-session', optionalAuth, authLimiter, async (req, res) => {
   const { items, orderId, couponCode, shippingZip, shippingServiceId } = req.body;
   if (!items || !Array.isArray(items) || !orderId) {
     return res.status(400).json({ error: 'items et orderId sont requis' });
@@ -1098,6 +1120,7 @@ app.post('/api/checkout/create-session', verifyToken, authLimiter, async (req, r
 
     // 4. Bonus Anniversaire (si présent dans la DB pour cet utilisateur)
     const user = await new Promise((resolve) => {
+      if (!req.user?.id) return resolve(null);
       db.get('SELECT date_naissance, anniversaire_utilise FROM users WHERE id = ?', [req.user.id], (err, row) => {
         resolve(row);
       });
