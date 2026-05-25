@@ -320,8 +320,8 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      // Déconnexion complète côté serveur + redirection automatique vers l'accueil
-      await logtoSignOut(window.location.origin);
+      // Déconnexion complète côté serveur Logto + redirection
+      await logtoSignOut('https://doiryshop.com');
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
     }
