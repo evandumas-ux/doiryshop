@@ -5,6 +5,65 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Expéditeur par défaut (onboarding@resend.dev en attendant un domaine custom)
 const FROM_EMAIL = 'Doiry Shop <onboarding@resend.dev>';
+const FROM_CONTACT = 'Doiry Shop <contact@doiryshop.com>';
+const FROM_COMMANDES = 'Doiry Shop <commandes@doiryshop.com>';
+
+/**
+ * Envoie un email de bienvenue à la newsletter.
+ */
+async function sendNewsletterWelcomeEmail(email) {
+  try {
+    const data = await resend.emails.send({
+      from: FROM_CONTACT,
+      to: email,
+      subject: `🌿 Bienvenue dans la communauté Doiry`,
+      html: `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background-color:#121212;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="max-width:600px;margin:40px auto;background:#1a1a1a;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.4);border:1px solid #333;">
+    <div style="padding:40px 32px;text-align:center;border-bottom:1px solid #333;">
+      <h1 style="margin:0;color:#f0f0f0;font-size:28px;font-family:Georgia,serif;font-weight:400;letter-spacing:2px;">
+        Doiry Shop
+      </h1>
+    </div>
+    <div style="padding:40px 32px;">
+      <h2 style="margin:0 0 16px;color:#e8e8e8;font-family:Georgia,serif;font-size:22px;font-weight:400;text-align:center;">
+        Un nouveau chapitre commence
+      </h2>
+      <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 20px;text-align:center;">
+        Merci de rejoindre notre cercle. Ici, nous explorons le calme, la douceur des plantes et les rituels alternatifs.
+      </p>
+      <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 32px;text-align:center;">
+        Votre inscription est bien confirmée. Vous recevrez bientot nos inspirations, nos nouveautés, et un moment de poésie dans votre boite de réception.
+      </p>
+      <div style="text-align:center;margin:32px 0;">
+        <a href="https://doiryshop.fr/#boutique" style="display:inline-block;background:#831b2f;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;transition:background 0.3s;">
+          Découvrir nos créations
+        </a>
+      </div>
+      <p style="color:#808080;font-size:13px;line-height:1.7;margin:0;text-align:center;">
+        Prenez soin de vous,<br/>
+        <strong>L'équipe Doiry Shop</strong>
+      </p>
+    </div>
+    <div style="padding:24px 32px;background:#141414;border-top:1px solid #333;text-align:center;">
+      <p style="margin:0;color:#666;font-size:12px;">
+        © 2026 Doiry Shop · Tous droits réservés
+      </p>
+    </div>
+  </div>
+</body>
+</html>`
+    });
+    console.log(\`✅ Email de bienvenue newsletter envoyé à \${email}\`);
+    return data;
+  } catch (error) {
+    console.error('❌ Erreur envoi email newsletter:', error);
+    throw error;
+  }
+}
 
 /**
  * Envoie un email de bienvenue après création de compte.
