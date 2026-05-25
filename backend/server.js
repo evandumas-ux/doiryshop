@@ -889,6 +889,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
       console.log('[ORDER] Commande créée avec ID:', this.lastID);
 
       const orderId = this.lastID;
+      const orderReference = `Doiry-${orderId}`;
 
       // Incrémenter l'utilisation du coupon si fourni
       if (coupon_code) {
@@ -899,7 +900,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
       res.status(201).json({
         success: true,
         message: 'Commande créée avec succès !',
-        orderId: orderId
+        orderId: orderId,
+        reference: orderReference
       });
 
       // === ATTRIBUTION POINTS DE FIDÉLITÉ & EMAIL ===

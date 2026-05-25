@@ -6,6 +6,7 @@ import { useLogto } from '@logto/react';
 import { createOrder, getUserProfile, getLoyaltyPoints, verifyCoupon, getShippingOptions } from '../services/api';
 import PaymentBadges from '../components/PaymentBadges';
 import SEO from '../components/SEO';
+import { buildOrderReference, buildRevolutMeUrl } from '../utils/revolutPayment';
 const Checkout = ({ cartItems, setCartItems, user }) => {
   const navigate = useNavigate();
   const { getIdToken, signIn } = useLogto();
@@ -214,17 +215,21 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       // 1. Créer la commande en attente dans la BDD (génère aussi le RIB en backend)
       const orderResponse = await createOrder(orderData);
       const orderId = orderResponse.orderId;
-      const reference = orderResponse.reference || `DRY-${orderId}`;
+      const reference = orderResponse.reference || buildOrderReference(orderId);
       console.log('[CHECKOUT] orderId créé =', orderId);
 
       // 2. Nettoyer le panier local
       setCartItems([]);
       localStorage.removeItem('cartItems');
 
-      // 3. Rediriger directement vers Revolut
-      const amountInCents = Math.round(parseFloat(total) * 100);
-      const directRevolutLink = `https://revolut.me/dumase07?currency=EUR&amount=${amountInCents}&note=${reference}`;
-      window.location.href = directRevolutLink;
+      // 3. Garder le client sur Doiry Shop et ouvrir Revolut depuis la page de paiement
+      buildRevolutMeUrl({ amount: total, orderId, reference });
+      const successParams = new URLSearchParams({
+        orderId: String(orderId),
+        amount: Number(total).toFixed(2),
+        reference
+      });
+      navigate(`/commande/succes?${successParams.toString()}`, { replace: true });
 
     } catch (error) {
       console.error('Erreur lors de la commande:', error);
