@@ -544,6 +544,11 @@ app.post('/api/newsletter', authLimiter, (req, res) => {
         }
       );
 
+      // Send the welcome email
+      sendNewsletterWelcomeEmail(email).catch(err => {
+        console.error('[Newsletter] Failed to send welcome email:', err);
+      });
+
       res.json({ message: 'Inscription newsletter enregistree.', code: PROMO_CODE });
     }
   );

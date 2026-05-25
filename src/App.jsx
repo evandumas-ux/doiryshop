@@ -330,6 +330,7 @@ function App() {
     <Router>
       <ScrollToTop />
       <AgeVerification />
+      <ExitIntentPopup />
       <ProfileCheck user={user} isInitializing={isInitializing} />
       <AppRoutes
         cartItems={cartItems}

@@ -117,16 +117,16 @@ async function sendOrderConfirmation(email, order) {
 
   try {
     const data = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: FROM_COMMANDES,
       to: email,
-      subject: `Commande #${order.id} confirmee - Doiry Shop`,
+      subject: `🌿 Confirmation de votre commande - Doiry Shop`,
       html: `
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background-color:#FAFAF7;font-family:'Segoe UI',Arial,sans-serif;">
-  <div style="max-width:600px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-    
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="margin:0;padding:0;background-color:#FAFAF7;font-family:'Segoe UI',Arial,sans-serif;">
+    <div style="max-width:600px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+
     <!-- Header -->
     <div style="background:linear-gradient(135deg,#831b2f 0%,#a8192b 100%);padding:40px 32px;text-align:center;">
       <h1 style="margin:0;color:#ffffff;font-size:28px;font-family:Georgia,serif;font-weight:400;">
@@ -148,6 +148,7 @@ async function sendOrderConfirmation(email, order) {
           Commande <strong style="color:#6B7F5E;">#${order.id}</strong> · ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
       </div>
+
       <p style="color:#5A6855;font-size:15px;line-height:1.7;margin:0 0 24px;">
         Merci pour votre confiance. Nous preparons votre colis avec discretion et attention, puis nous vous informerons des qu'il est en route.
       </p>
@@ -173,6 +174,18 @@ async function sendOrderConfirmation(email, order) {
       </div>
 
       ${adresseHtml}
+
+      <!-- Revolut Payment Reminder -->
+      <div style="margin-top:32px;padding:24px;background:#f9f9f9;border-left:4px solid #831b2f;border-radius:4px;">
+        <h3 style="margin:0 0 12px;color:#333;font-size:16px;font-weight:600;">Règlement de votre commande</h3>
+        <p style="margin:0 0 16px;color:#555;font-size:14px;line-height:1.6;">
+          N'oubliez pas de finaliser votre paiement instantané via Revolut pour que nous puissions préparer votre colis.
+        </p>
+        <a href="https://revolut.me/your_revolut_link_here" target="_blank" style="display:inline-block;background:#000;color:#fff;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:14px;font-weight:600;">
+          Payer via Revolut
+        </a>
+      </div>
+
       <p style="color:#5A6855;font-size:14px;line-height:1.7;margin:24px 0 0;">
         En attendant, prenez soin de vous. Chaque commande Doiry Shop est preparee pour vous offrir un rituel naturel, artisanal et soigne.
       </p>
@@ -187,9 +200,9 @@ async function sendOrderConfirmation(email, order) {
         © 2026 Doiry Shop · Tous droits reserves
       </p>
     </div>
-  </div>
-</body>
-</html>`
+    </div>
+    </body>
+    </html>`
     });
     console.log(`✅ Email de confirmation envoyé à ${email} pour la commande #${order.id}`, data);
     return data;
@@ -222,6 +235,40 @@ async function sendOrderShippedEmail(email, order) {
 <body style="margin:0;padding:0;background-color:#FAFAF7;font-family:'Segoe UI',Arial,sans-serif;">
   <div style="max-width:600px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
     <div style="background:linear-gradient(135deg,#6B7F5E 0%,#2D3B2A 100%);padding:40px 32px;text-align:center;">
+      <h1 style="margin:0;color:#ffffff;font-size:28px;font-family:Georgia,serif;font-weight:400;">Doiry Shop</h1>
+      <p style="margin:8px 0 0;color:rgba(255,255,255,0.85);font-size:14px;letter-spacing:1px;">VOTRE COLIS EST EN ROUTE</p>
+    </div>
+    <div style="padding:40px 32px;">
+      <h2 style="margin:0 0 16px;color:#2D3B2A;font-family:Georgia,serif;font-size:22px;font-weight:400;">Bonne nouvelle !</h2>
+      <p style="color:#5A6855;font-size:15px;line-height:1.7;margin:0 0 24px;">
+        Votre commande <strong>#${order.id}</strong> a ete expediee via <strong>${shippingMethodLabel}</strong>.
+      </p>
+      <div style="background:#F5F5F0;padding:24px;border-radius:12px;text-align:center;margin-bottom:32px;">
+        <p style="margin:0 0 8px;color:#8A9080;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Numéro de suivi</p>
+        <p style="margin:0 0 20px;color:#2D3B2A;font-size:20px;font-weight:700;letter-spacing:2px;">${order.tracking_number}</p>
+        <a href="${trackingLink}" style="display:inline-block;background:#2D3B2A;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;">
+          Suivre mon colis
+        </a>
+      </div>
+      <p style="color:#5A6855;font-size:14px;line-height:1.7;margin:0;">
+        Le delai de livraison estime est de ${order.shipping_method === 'COLISSIMO' ? '2-3' : '3'} jours ouvres.
+      </p>
+    </div>
+    <div style="padding:24px 32px;background:#F5F5F0;border-top:1px solid #E8E8E0;text-align:center;">
+      <p style="margin:0;color:#8A9080;font-size:12px;">© 2026 Doiry Shop</p>
+    </div>
+  </div>
+</body>
+</html>`
+    });
+    return data;
+  } catch (err) {
+    console.error('❌ Erreur email expédition:', err);
+  }
+}
+
+module.exports = { sendWelcomeEmail, sendOrderConfirmation, sendOrderShippedEmail };
+E 0%,#2D3B2A 100%);padding:40px 32px;text-align:center;">
       <h1 style="margin:0;color:#ffffff;font-size:28px;font-family:Georgia,serif;font-weight:400;">Doiry Shop</h1>
       <p style="margin:8px 0 0;color:rgba(255,255,255,0.85);font-size:14px;letter-spacing:1px;">VOTRE COLIS EST EN ROUTE</p>
     </div>
