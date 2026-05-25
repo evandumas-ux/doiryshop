@@ -29,6 +29,7 @@ import OrderSuccess from './pages/OrderSuccess';
 import OrderCancel from './pages/OrderCancel';
 import ArretTabac from './pages/ArretTabac';
 import ScrollToTop from './components/ScrollToTop';
+import ExitIntentPopup from './components/ExitIntentPopup';
 
 // Composant Callback pour Logto (route /callback)
 const LogtoCallback = () => {
