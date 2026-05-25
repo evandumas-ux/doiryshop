@@ -474,7 +474,11 @@ app.post('/api/auth/login', authLimiter, (req, res) => {
 });
 
 app.post('/api/auth/logout', (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
+  });
   res.json({ success: true });
 });
 

@@ -322,10 +322,11 @@ function App() {
     if (e) e.preventDefault();
     try {
       console.log("1. Nettoyage de la session locale du site...");
-      await logout(); // Appel API pour détruire le cookie de session (credentials) côté serveur
+      setUser(null); // Vider le state React local immédiatement
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      setUser(null); // Vider le state React local
+      
+      await logout(); // Appel API pour détruire le cookie de session (credentials) côté serveur
 
       console.log("2. Fermeture de la session globale Logto...");
       await logtoSignOut(window.location.origin);
