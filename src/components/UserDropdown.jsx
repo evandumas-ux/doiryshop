@@ -68,7 +68,7 @@ const UserDropdown = ({ user, onLogout }) => {
             </div>
 
             <div className="border-t border-surface-border py-2">
-              <button onClick={() => { setIsOpen(false); onLogout(); }} className="flex items-center gap-3 px-5 py-3 text-sm text-primary hover:bg-primary/10 transition-colors w-full text-left">
+              <button onClick={async () => { setIsOpen(false); await onLogout(); }} className="flex items-center gap-3 px-5 py-3 text-sm text-primary hover:bg-primary/10 transition-colors w-full text-left">
                 <LogOut size={16} />
                 Se deconnecter
               </button>

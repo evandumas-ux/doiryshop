@@ -5,4 +5,5 @@ export const logtoConfig = {
   appId: 'ggx0ud5lijhyces47vnk8',             // L'App ID de ton application SPA dans Logto
   resources: [],                           // Optionnel: API Resource indicators
   scopes: ['openid', 'profile', 'email', 'offline_access'],
+  prompt: 'select_account',
 };

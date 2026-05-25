@@ -1021,7 +1021,7 @@ const AdminDashboard = ({ user, onLogout }) => {
               </div>
             </div>
             <button
-              onClick={onLogout}
+              onClick={async () => await onLogout()}
               className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
               title="Déconnexion"
             >

@@ -321,9 +321,14 @@ function App() {
     setUser(null);
     try {
       await logout(); // Clear cookie on backend
+    } catch (err) {
+      console.error('Erreur backend logout:', err);
+    }
+    
+    try {
       await logtoSignOut(`${window.location.origin}`);
-    } catch {
-      // Si Logto n'est pas configuré, on ignore l'erreur
+    } catch (err) {
+      console.error('Erreur logtoSignOut:', err);
     }
   };
 
