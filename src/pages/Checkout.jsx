@@ -8,7 +8,7 @@ import PaymentBadges from '../components/PaymentBadges';
 import SEO from '../components/SEO';
 const Checkout = ({ cartItems, setCartItems, user }) => {
   const navigate = useNavigate();
-  const { getIdToken } = useLogto();
+  const { getIdToken, signIn } = useLogto();
   const subtotal = cartItems.reduce((acc, item) => acc + (parseFloat(item.price) * parseInt(item.quantity)), 0);
 
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -451,10 +451,16 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               </div>
             )}
             <button
-              type="submit"
+              type={user ? "submit" : "button"}
               disabled={isSubmitting}
-              className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting ? 'opacity-70' : 'hover:-translate-y-1'}`}
-              onClick={() => {
+              className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting && user ? 'opacity-70' : 'hover:-translate-y-1'}`}
+              onClick={(e) => {
+                if (!user) {
+                  e.preventDefault();
+                  alert("Veuillez créer un compte pour acheter.");
+                  signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL || `${window.location.origin}/callback`);
+                  return;
+                }
                 if (!isValid || shippingOptions.length === 0 || !selectedShipping) {
                   setShowIncompleteError(true);
                 }
@@ -466,7 +472,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                   Génération en cours...
                 </>
               ) : (
-                <>VALIDER ET PAYER VIA REVOLUT</>
+                <>{user ? "VALIDER ET PAYER VIA REVOLUT" : "SE CONNECTER POUR COMMANDER"}</>
               )}
             </button>
             <p className="text-center text-xs text-text-muted mt-3">
