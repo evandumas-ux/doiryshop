@@ -824,129 +824,132 @@ app.get('/api/orders/my-orders', verifyToken, (req, res) => {
  * Créer une nouvelle commande après validation du paiement.
  */
 app.post('/api/orders', optionalAuth, async (req, res) => {
-  console.log('[ORDER] req.user complet:', req.user);
-  console.log('[ORDER] user_id extrait:', req.user?.id);
+  try {
+    console.log('[ORDER] req.user complet:', req.user);
+    console.log('[ORDER] user_id extrait:', req.user?.id);
 
-  const { produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price: client_shipping_price, coupon_code, shipping_relay_id, shipping_relay_data, relay_selection_mode, relay_address_text } = req.body;
+    const { produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price: client_shipping_price, coupon_code, shipping_relay_id, shipping_relay_data, relay_selection_mode, relay_address_text } = req.body;
 
-  let emailClient = "";
-  if (typeof adresse_livraison === 'string') {
-    try { emailClient = JSON.parse(adresse_livraison).email; } catch(e){}
-  } else if (adresse_livraison) {
-    emailClient = adresse_livraison.email;
-  }
-
-  const rawId = req.user?.id || req.user?.email || emailClient;
-
-  if (!rawId) {
-    return res.status(400).json({ error: 'Impossible d\'identifier le client (email manquant)' });
-  }
-
-  if (!produits || !total) {
-    return res.status(400).json({ error: 'Les champs "produits" et "total" sont requis.' });
-  }
-
-  // Validation shipping
-  const validMethods = ['LETTRE_VERTE_SUIVIE', 'COLISSIMO'];
-  if (!validMethods.includes(shipping_method)) {
-    return res.status(400).json({ error: 'Méthode de livraison invalide' });
-  }
-
-  // Recalcul shipping_price (SÉCURITÉ)
-  const items = Array.isArray(produits) ? produits : JSON.parse(produits);
-  const totalWeightGrams = items.reduce((sum, it) => sum + (Number(it.weight || it.weight_g) || 50) * (Number(it.quantity) || 1), 0);
-  const opt = SHIPPING_OPTIONS[shipping_method];
-  
-  // Calcul du sous-total pour la gratuité (cartTotal au sens du montant produits)
-  const cartTotal = items.reduce((sum, it) => sum + (Number(it.price) * Number(it.quantity)), 0);
-  const recalculatedShippingPrice = cartTotal >= FREE_SHIPPING_THRESHOLD
-    ? 0
-    : getShippingPrice(opt, totalWeightGrams);
-
-  if (recalculatedShippingPrice === null) {
-    return res.status(400).json({ error: 'Poids total non supporté pour cette méthode' });
-  }
-
-  const query = `INSERT INTO orders (user_id, produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price, tracking_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-  const params = [
-    userId,
-    typeof produits === 'string' ? produits : JSON.stringify(produits),
-    total,
-    statut_paiement || 'en_attente',
-    typeof adresse_livraison === 'string' ? adresse_livraison : JSON.stringify(adresse_livraison || {}),
-    shipping_method,
-    recalculatedShippingPrice,
-    null // tracking_number à NULL par défaut
-  ];
-
-  db.run(query, params, function (err) {
-    if (err) {
-      console.error('[ORDER] Erreur INSERT:', err.message);
-      return res.status(500).json({ error: 'Erreur lors de la création de la commande', detail: err.message });
-    }
-    console.log('[ORDER] Commande créée avec ID:', this.lastID);
-
-    const orderId = this.lastID;
-
-    // Incrémenter l'utilisation du coupon si fourni
-    if (coupon_code) {
-      db.run('UPDATE coupons SET nombre_utilisations_actuel = nombre_utilisations_actuel + 1 WHERE code = ?', [coupon_code]);
+    let emailClient = "";
+    if (typeof adresse_livraison === 'string') {
+      try { emailClient = JSON.parse(adresse_livraison).email; } catch(e){}
+    } else if (adresse_livraison) {
+      emailClient = adresse_livraison.email;
     }
 
-    // Répondre immédiatement au client
-    res.status(201).json({
-      success: true,
-      message: 'Commande créée avec succès !',
-      orderId: orderId
-    });
+    const userId = req.user?.id || null;
+    const finalEmail = req.user?.email || emailClient;
 
-    if (statut_paiement !== 'en_attente') {
+    if (!finalEmail) {
+      return res.status(400).json({ error: 'Impossible d\'identifier le client (email manquant)' });
     }
 
-    // === ATTRIBUTION POINTS DE FIDÉLITÉ ===
-    if (statut_paiement !== 'en_attente') {
-      const pointsCommande = Math.round(total); // 1 Plume par euro dépensé
-      if (pointsCommande > 0) {
-        addLoyaltyPoints(userId, pointsCommande, `Commande #${orderId}`, orderId).catch(err => {
-          console.error('Erreur attribution points commande:', err);
-        });
+    if (!produits || !total) {
+      return res.status(400).json({ error: 'Les champs "produits" et "total" sont requis.' });
+    }
+
+    // Validation shipping
+    const validMethods = ['LETTRE_VERTE_SUIVIE', 'COLISSIMO'];
+    if (!validMethods.includes(shipping_method)) {
+      return res.status(400).json({ error: 'Méthode de livraison invalide' });
+    }
+
+    // Recalcul shipping_price (SÉCURITÉ)
+    const items = Array.isArray(produits) ? produits : JSON.parse(produits);
+    const totalWeightGrams = items.reduce((sum, it) => sum + (Number(it.weight || it.weight_g) || 50) * (Number(it.quantity) || 1), 0);
+    const opt = SHIPPING_OPTIONS[shipping_method];
+    
+    // Calcul du sous-total pour la gratuité (cartTotal au sens du montant produits)
+    const cartTotal = items.reduce((sum, it) => sum + (Number(it.price) * Number(it.quantity)), 0);
+    const recalculatedShippingPrice = cartTotal >= FREE_SHIPPING_THRESHOLD
+      ? 0
+      : getShippingPrice(opt, totalWeightGrams);
+
+    if (recalculatedShippingPrice === null) {
+      return res.status(400).json({ error: 'Poids total non supporté pour cette méthode' });
+    }
+
+    const query = `INSERT INTO orders (user_id, produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price, tracking_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [
+      userId, // Peut être NULL pour les invités
+      typeof produits === 'string' ? produits : JSON.stringify(produits),
+      total,
+      statut_paiement || 'en_attente',
+      typeof adresse_livraison === 'string' ? adresse_livraison : JSON.stringify(adresse_livraison || {}),
+      shipping_method,
+      recalculatedShippingPrice,
+      null // tracking_number à NULL par défaut
+    ];
+
+    db.run(query, params, function (err) {
+      if (err) {
+        console.error('[ORDER] Erreur INSERT:', err.message);
+        return res.status(500).json({ error: 'Erreur lors de la création de la commande', detail: err.message });
+      }
+      console.log('[ORDER] Commande créée avec ID:', this.lastID);
+
+      const orderId = this.lastID;
+
+      // Incrémenter l'utilisation du coupon si fourni
+      if (coupon_code) {
+        db.run('UPDATE coupons SET nombre_utilisations_actuel = nombre_utilisations_actuel + 1 WHERE code = ?', [coupon_code]);
       }
 
-      // Vérifier si c'est le premier achat pour le bonus
-      db.get('SELECT COUNT(*) as count FROM orders WHERE user_id = ?', [userId], (err, countRow) => {
-        if (!err && countRow && countRow.count === 1) {
-          addLoyaltyPoints(userId, 30, 'Bonus premier achat', orderId).catch(err => {
-            console.error('Erreur attribution bonus premier achat:', err);
-          });
-        }
+      // Répondre immédiatement au client
+      res.status(201).json({
+        success: true,
+        message: 'Commande créée avec succès !',
+        orderId: orderId
       });
 
-      // Gérer le parrainage : créditer le parrain si le filleul passe sa première commande
-      db.get('SELECT parrain_id FROM users WHERE id = ?', [userId], (err, userRow) => {
-        if (!err && userRow && userRow.parrain_id) {
+      // === ATTRIBUTION POINTS DE FIDÉLITÉ & EMAIL ===
+      if (statut_paiement !== 'en_attente') {
+        if (userId) {
+          const pointsCommande = Math.round(total); // 1 Plume par euro dépensé
+          if (pointsCommande > 0) {
+            addLoyaltyPoints(userId, pointsCommande, `Commande #${orderId}`, orderId).catch(err => {
+              console.error('Erreur attribution points commande:', err);
+            });
+          }
+
+          // Vérifier si c'est le premier achat pour le bonus
           db.get('SELECT COUNT(*) as count FROM orders WHERE user_id = ?', [userId], (err, countRow) => {
             if (!err && countRow && countRow.count === 1) {
-              addLoyaltyPoints(userRow.parrain_id, 100, `Parrainage : filleul commande #${orderId}`, orderId).catch(err => {
-                console.error('Erreur attribution points parrainage:', err);
+              addLoyaltyPoints(userId, 30, 'Bonus premier achat', orderId).catch(err => {
+                console.error('Erreur attribution bonus premier achat:', err);
+              });
+            }
+          });
+
+          // Gérer le parrainage : créditer le parrain si le filleul passe sa première commande
+          db.get('SELECT parrain_id FROM users WHERE id = ?', [userId], (err, userRow) => {
+            if (!err && userRow && userRow.parrain_id) {
+              db.get('SELECT COUNT(*) as count FROM orders WHERE user_id = ?', [userId], (err, countRow) => {
+                if (!err && countRow && countRow.count === 1) {
+                  addLoyaltyPoints(userRow.parrain_id, 100, `Parrainage : filleul commande #${orderId}`, orderId).catch(err => {
+                    console.error('Erreur attribution points parrainage:', err);
+                  });
+                }
               });
             }
           });
         }
-      });
 
-      // Envoyer l'email de confirmation en arrière-plan (non-bloquant)
-      db.get('SELECT email FROM users WHERE id = ?', [userId], (err, userRow) => {
-        if (!err && userRow && userRow.email) {
-          sendOrderConfirmation(userRow.email, {
+        // Envoyer l'email de confirmation en arrière-plan (non-bloquant) pour tous (invités et connectés)
+        if (finalEmail) {
+          sendOrderConfirmation(finalEmail, {
             id: orderId,
-            produits,
+            produits: typeof produits === 'string' ? JSON.parse(produits) : produits,
             total,
-            adresse_livraison
-          });
+            adresse_livraison: typeof adresse_livraison === 'string' ? JSON.parse(adresse_livraison) : adresse_livraison
+          }).catch(err => console.error('Erreur envoi email confirmation:', err));
         }
-      });
-    }
-  });
+      }
+    });
+  } catch (err) {
+    console.error('[ORDER] Catch global:', err);
+    return res.status(500).json({ error: err.message || 'Erreur interne lors de la création de la commande' });
+  }
 });
 
 /**
