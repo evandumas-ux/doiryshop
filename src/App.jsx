@@ -318,17 +318,11 @@ function App() {
   };
 
   const handleLogout = async () => {
-    setUser(null);
     try {
-      await logout(); // Clear cookie on backend
-    } catch (err) {
-      console.error('Erreur backend logout:', err);
-    }
-    
-    try {
-      await logtoSignOut(`${window.location.origin}`);
-    } catch (err) {
-      console.error('Erreur logtoSignOut:', err);
+      // Déconnexion complète côté serveur + redirection automatique vers l'accueil
+      await logtoSignOut(window.location.origin);
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion :", error);
     }
   };
 
