@@ -28,10 +28,7 @@ export default function Login({ user, setUser }) {
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      await signIn(`${window.location.origin}/callback`, {
-        directSignIn: { method: 'social', target: 'google' },
-        prompt: 'select_account'
-      });
+      await signIn(`${window.location.origin}/callback`, { prompt: 'select_account' });
     } catch (err) {
       console.error('Erreur Logto:', err);
       setError('Impossible de se connecter avec Google.');
