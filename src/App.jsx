@@ -319,14 +319,18 @@ function App() {
   };
 
   const handleLogout = async (e) => {
-    if (e) e.preventDefault(); // Empêche le navigateur de recharger prématurément
+    if (e) e.preventDefault();
     try {
-      console.log("Fermeture de la session globale Logto...");
-      await logout(); // Vider le cookie JWT local Node.js
-      setUser(null); // Vider le state local pour forcer le rendu déconnecté
-      await logtoSignOut(window.location.origin); // Redirection dynamique vers l'origine
+      console.log("1. Nettoyage de la session locale du site...");
+      await logout(); // Appel API pour détruire le cookie de session (credentials) côté serveur
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null); // Vider le state React local
+
+      console.log("2. Fermeture de la session globale Logto...");
+      await logtoSignOut(window.location.origin);
     } catch (error) {
-      console.error("Erreur lors de la déconnexion :", error);
+      console.error("Erreur complète de déconnexion :", error);
     }
   };
 
