@@ -28,6 +28,7 @@ import MyOrders from './pages/MyOrders';
 import OrderSuccess from './pages/OrderSuccess';
 import OrderCancel from './pages/OrderCancel';
 import ArretTabac from './pages/ArretTabac';
+import Rituels from './pages/Rituels';
 import ScrollToTop from './components/ScrollToTop';
 import ExitIntentPopup from './components/ExitIntentPopup';
 
@@ -156,6 +157,17 @@ const AppRoutes = ({ cartItems, setCartItems, user, isInitializing, handleSetUse
           path="/arret-tabac"
           element={
             <ArretTabac
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+              user={user}
+              onLogout={handleLogout}
+            />
+          }
+        />
+        <Route
+          path="/rituels"
+          element={
+            <Rituels
               cartItems={cartItems}
               setCartItems={setCartItems}
               user={user}
