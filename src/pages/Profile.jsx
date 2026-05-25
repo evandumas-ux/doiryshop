@@ -140,8 +140,9 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
     }
   };
 
-  const handleSignOut = async () => {
-    await onLogout();
+  const handleSignOut = async (e) => {
+    if (e) e.preventDefault();
+    await onLogout(e);
   };
 
   const handleCopyReferralLink = async () => {

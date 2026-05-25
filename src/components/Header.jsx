@@ -75,7 +75,7 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
                 {user.role === 'admin' && (
                   <Link to="/admin/dashboard" onClick={() => setIsMenuOpen(false)} className="text-lg flex items-center gap-3 text-text-light"><LayoutDashboard size={20} /> Dashboard admin</Link>
                 )}
-                <button onClick={async () => { await onLogout(); setIsMenuOpen(false); }} className="text-lg flex items-center gap-3 text-primary"><LogOut size={20} /> Deconnexion</button>
+                <button onClick={async (e) => { await onLogout(e); setIsMenuOpen(false); }} className="text-lg flex items-center gap-3 text-primary"><LogOut size={20} /> Deconnexion</button>
               </>
             ) : (
               <button onClick={() => { onOpenLogin(); setIsMenuOpen(false); }} className="text-lg flex items-center gap-3 text-text-light"><User size={20} /> Se connecter</button>

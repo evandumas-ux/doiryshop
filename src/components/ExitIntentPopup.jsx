@@ -99,10 +99,10 @@ const ExitIntentPopup = () => {
 
             {/* Contenu */}
             <div className="p-8 sm:p-12 text-center">
-              <h2 className="text-3xl font-serif text-white mb-4 tracking-wide">
+              <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4 tracking-wide">
                 Ne partez pas si vite...
               </h2>
-              <p className="text-[#a0a0a0] mb-8 leading-relaxed font-light">
+              <p className="text-gray-400 mb-8 leading-relaxed font-light text-sm sm:text-base">
                 Rejoignez le cercle Doiry Shop. Profitez de <span className="text-white font-medium">-10% sur votre première commande</span> et recevez nos inspirations autour du rituel des plantes.
               </p>
 

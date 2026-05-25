@@ -318,9 +318,11 @@ function App() {
     setUser(userData);
   };
 
-  const handleLogout = async () => {
+  const handleLogout = async (e) => {
+    if (e) e.preventDefault(); // Empêche le navigateur de recharger prématurément
     try {
-      // Déconnexion complète côté serveur Logto + redirection
+      console.log("Fermeture de la session globale Logto...");
+      await logout(); // Vider le cookie JWT local Node.js
       await logtoSignOut('https://doiryshop.com');
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
