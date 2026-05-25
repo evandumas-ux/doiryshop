@@ -4,6 +4,9 @@ import { Menu, X, ShoppingCart, User, LayoutDashboard, LogOut } from 'lucide-rea
 import { Link } from 'react-router-dom';
 import UserDropdown from './UserDropdown';
 
+const MotionSpan = motion.span;
+const MotionNav = motion.nav;
+
 export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user, simplified = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,10 +25,11 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
           <span className="font-display text-lg md:text-xl font-bold tracking-widest text-primary hidden sm:block">DOIRY SHOP</span>
         </Link>
         {!simplified && (
-          <nav className="hidden md:flex gap-8 items-center">
+          <nav className="hidden md:flex gap-6 items-center">
             <a href="/#pourquoi" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Pourquoi</a>
             <a href="/#gammes" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Gammes</a>
             <Link to="/about" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Notre histoire</Link>
+            <Link to="/rituels" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Rituels</Link>
             <Link to="/boutique" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Boutique</Link>
             <Link to="/arret-tabac" className="text-sm font-medium tracking-widest uppercase text-text-muted hover:text-accent transition-colors duration-300">Arrêt du Tabac</Link>
           </nav>
@@ -41,7 +45,7 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
           <button onClick={onOpenCart} className="relative p-2 text-text-light hover:text-accent transition-colors rounded-full">
             <ShoppingCart size={22} />
             {cartItemsCount > 0 && (
-              <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-0 right-0 w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full transform translate-x-1/4 -translate-y-1/4 shadow-sm">{cartItemsCount}</motion.span>
+              <MotionSpan initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-0 right-0 w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full transform translate-x-1/4 -translate-y-1/4 shadow-sm">{cartItemsCount}</MotionSpan>
             )}
           </button>
         </div>
@@ -57,12 +61,13 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
       </div>
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.nav initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="md:hidden absolute top-full left-0 w-full bg-background-light border-b border-surface-border p-6 flex flex-col gap-4 shadow-2xl">
+          <MotionNav initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="md:hidden absolute top-full left-0 w-full bg-background-light border-b border-surface-border p-6 flex flex-col gap-4 shadow-2xl">
             {!simplified && (
               <>
                 <a href="/#pourquoi" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Pourquoi</a>
                 <a href="/#gammes" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Gammes</a>
                 <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Notre histoire</Link>
+                <Link to="/rituels" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Rituels</Link>
                 <Link to="/boutique" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Boutique</Link>
                 <Link to="/arret-tabac" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-muted uppercase tracking-widest font-serif">Arrêt du Tabac</Link>
                 <hr className="border-surface-border my-2" />
@@ -80,7 +85,7 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
             ) : (
               <button onClick={() => { onOpenLogin(); setIsMenuOpen(false); }} className="text-lg flex items-center gap-3 text-text-light"><User size={20} /> Se connecter</button>
             )}
-          </motion.nav>
+          </MotionNav>
         )}
       </AnimatePresence>
     </header>
