@@ -57,7 +57,7 @@ async function sendNewsletterWelcomeEmail(email) {
 </body>
 </html>`
     });
-    console.log(\`✅ Email de bienvenue newsletter envoyé à \${email}\`);
+    console.log(`✅ Email de bienvenue newsletter envoyé à ${email}`);
     return data;
   } catch (error) {
     console.error('❌ Erreur envoi email newsletter:', error);
