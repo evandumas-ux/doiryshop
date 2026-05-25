@@ -277,9 +277,6 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
-  const [showExitPopup, setShowExitPopup] = useState(false);
-  const [exitEmail, setExitEmail] = useState('');
-  const [exitStatus, setExitStatus] = useState('idle');
 
   const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -289,19 +286,7 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    if (document.cookie.includes('doiry_exit_popup_seen=true')) return;
 
-    const handleMouseLeave = (event) => {
-      if (event.clientY <= 0 && !document.cookie.includes('doiry_exit_popup_seen=true')) {
-        setShowExitPopup(true);
-        document.cookie = 'doiry_exit_popup_seen=true; max-age=2592000; path=/; SameSite=Lax';
-      }
-    };
-
-    document.addEventListener('mouseleave', handleMouseLeave);
-    return () => document.removeEventListener('mouseleave', handleMouseLeave);
-  }, []);
 
   const handleAddToCart = (product, options = {}) => {
     setCartItems((prev) => {
@@ -314,17 +299,7 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
     if (!options.keepDrawerClosed) setIsCartOpen(true);
   };
 
-  const handleExitSubmit = async (event) => {
-    event.preventDefault();
-    if (!exitEmail.trim()) return;
-    setExitStatus('loading');
-    try {
-      await subscribeNewsletter(exitEmail, 'exit_intent');
-      setExitStatus('success');
-    } catch {
-      setExitStatus('error');
-    }
-  };
+
 
   const handleRemoveFromCart = (productId) => setCartItems((prev) => prev.filter((item) => item.id !== productId));
 
@@ -361,41 +336,6 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
       <BrandStorySection />
       <FAQ />
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cartItems={cartItems} products={allProducts} onAddProduct={handleAddToCart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} onCheckout={handleCheckout} />
-      <AnimatePresence>
-        {showExitPopup && (
-          <div className="fixed inset-0 z-[120] flex items-center justify-center px-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowExitPopup(false)} className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-            <motion.div initial={{ opacity: 0, y: 16, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 16, scale: 0.98 }} transition={{ duration: 0.2 }} className="relative w-full max-w-md bg-surface border border-surface-border rounded-2xl p-6 shadow-2xl">
-              <button onClick={() => setShowExitPopup(false)} className="absolute right-4 top-4 text-text-muted hover:text-text">
-                <X size={20} />
-              </button>
-              <h2 className="text-3xl font-serif text-text mb-2">Avant de partir...</h2>
-              <p className="text-accent font-medium mb-5">-10% sur ta première commande</p>
-              {exitStatus === 'success' ? (
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 text-center">
-                  <p className="text-text-light mb-1">Ton code :</p>
-                  <p className="text-2xl font-serif text-emerald-400">BIENVENUE10</p>
-                </div>
-              ) : (
-                <form onSubmit={handleExitSubmit} className="space-y-3">
-                  <input
-                    type="email"
-                    value={exitEmail}
-                    onChange={(event) => setExitEmail(event.target.value)}
-                    placeholder="Ton email"
-                    required
-                    className="w-full px-4 h-12 bg-background border border-surface-border rounded-xl focus:outline-none focus:border-primary text-text placeholder:text-text-muted"
-                  />
-                  <button type="submit" disabled={exitStatus === 'loading'} className="w-full h-12 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-60">
-                    Obtenir mon code
-                  </button>
-                  {exitStatus === 'error' && <p className="text-primary text-sm">Impossible d'enregistrer cet email pour le moment.</p>}
-                </form>
-              )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 };

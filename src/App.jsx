@@ -323,7 +323,8 @@ function App() {
     try {
       console.log("Fermeture de la session globale Logto...");
       await logout(); // Vider le cookie JWT local Node.js
-      await logtoSignOut('https://doiryshop.com');
+      setUser(null); // Vider le state local pour forcer le rendu déconnecté
+      await logtoSignOut(window.location.origin); // Redirection dynamique vers l'origine
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
     }
