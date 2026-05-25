@@ -222,14 +222,9 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       setCartItems([]);
       localStorage.removeItem('cartItems');
 
-      // 3. Garder le client sur Doiry Shop et ouvrir Revolut depuis la page de paiement
-      buildRevolutMeUrl({ amount: total, orderId, reference });
-      const successParams = new URLSearchParams({
-        orderId: String(orderId),
-        amount: Number(total).toFixed(2),
-        reference
-      });
-      navigate(`/commande/succes?${successParams.toString()}`, { replace: true });
+      // 3. Rediriger directement vers Revolut dans le meme onglet
+      const directRevolutLink = buildRevolutMeUrl({ amount: total, orderId, reference });
+      window.location.href = directRevolutLink;
 
     } catch (error) {
       console.error('Erreur lors de la commande:', error);

@@ -1,6 +1,6 @@
 const REVOLUT_ME_URL = 'https://revolut.me/dumase07';
 
-export const buildOrderReference = (orderId) => `Doiry-${orderId}`;
+export const buildOrderReference = (orderId) => `dry-${orderId}`;
 
 export const buildRevolutMeUrl = ({ amount, orderId, reference }) => {
   const paymentReference = reference || buildOrderReference(orderId);
@@ -12,7 +12,7 @@ export const buildRevolutMeUrl = ({ amount, orderId, reference }) => {
 
   const params = new URLSearchParams({
     currency: 'EUR',
-    amount: paymentAmount.toFixed(2),
+    amount: String(Math.round(paymentAmount * 100)),
     note: paymentReference
   });
 
