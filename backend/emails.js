@@ -267,38 +267,4 @@ async function sendOrderShippedEmail(email, order) {
   }
 }
 
-module.exports = { sendWelcomeEmail, sendOrderConfirmation, sendOrderShippedEmail };
-E 0%,#2D3B2A 100%);padding:40px 32px;text-align:center;">
-      <h1 style="margin:0;color:#ffffff;font-size:28px;font-family:Georgia,serif;font-weight:400;">Doiry Shop</h1>
-      <p style="margin:8px 0 0;color:rgba(255,255,255,0.85);font-size:14px;letter-spacing:1px;">VOTRE COLIS EST EN ROUTE</p>
-    </div>
-    <div style="padding:40px 32px;">
-      <h2 style="margin:0 0 16px;color:#2D3B2A;font-family:Georgia,serif;font-size:22px;font-weight:400;">Bonne nouvelle !</h2>
-      <p style="color:#5A6855;font-size:15px;line-height:1.7;margin:0 0 24px;">
-        Votre commande <strong>#${order.id}</strong> a ete expediee via <strong>${shippingMethodLabel}</strong>.
-      </p>
-      <div style="background:#F5F5F0;padding:24px;border-radius:12px;text-align:center;margin-bottom:32px;">
-        <p style="margin:0 0 8px;color:#8A9080;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Numéro de suivi</p>
-        <p style="margin:0 0 20px;color:#2D3B2A;font-size:20px;font-weight:700;letter-spacing:2px;">${order.tracking_number}</p>
-        <a href="${trackingLink}" style="display:inline-block;background:#2D3B2A;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;">
-          Suivre mon colis
-        </a>
-      </div>
-      <p style="color:#5A6855;font-size:14px;line-height:1.7;margin:0;">
-        Le delai de livraison estime est de ${order.shipping_method === 'COLISSIMO' ? '2-3' : '3'} jours ouvres.
-      </p>
-    </div>
-    <div style="padding:24px 32px;background:#F5F5F0;border-top:1px solid #E8E8E0;text-align:center;">
-      <p style="margin:0;color:#8A9080;font-size:12px;">© 2026 Doiry Shop</p>
-    </div>
-  </div>
-</body>
-</html>`
-    });
-    return data;
-  } catch (err) {
-    console.error('❌ Erreur email expédition:', err);
-  }
-}
-
-module.exports = { sendWelcomeEmail, sendOrderConfirmation, sendOrderShippedEmail };
+module.exports = { sendWelcomeEmail, sendOrderConfirmation, sendOrderShippedEmail, sendNewsletterWelcomeEmail };
