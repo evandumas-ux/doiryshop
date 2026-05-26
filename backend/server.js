@@ -662,30 +662,37 @@ app.post('/api/newsletter', authLimiter, (req, res) => {
 
 
 // ============================================================
-// ROUTE DE SYNCHRONISATION LOGTO
+// ROUTE DE SYNCHRONISATION LOGTO (SOCIAL LOGIN)
 // ============================================================
 
 /**
- * POST /api/auth/sync-logto
- * Appelé par le frontend après une connexion Logto réussie.
- * Fait un "upsert" de l'utilisateur dans notre DB locale.
+ * POST /api/auth/sync-social-login
+ * Appelé par le frontend après une connexion Logto réussie (Google).
+ * Fait un "upsert" de l'utilisateur dans notre DB locale et envoie l'email de bienvenue si nouveau.
  */
-app.post('/api/auth/sync-logto', (req, res) => {
+app.post('/api/auth/sync-social-login', (req, res) => {
   const { logto_id, email, name } = req.body;
 
-  if (!logto_id || !email) {
-    return res.status(400).json({ error: 'logto_id et email sont requis.' });
+  // logto_id reste accepté pour compatibilité descendante, mais email est obligatoire
+  if (!email) {
+    return res.status(400).json({ error: 'email est requis.' });
   }
 
   // Essayer de trouver l'utilisateur par logto_id ou email
-  db.get('SELECT * FROM users WHERE logto_id = ? OR email = ?', [logto_id, email], (err, existingUser) => {
+  db.get('SELECT * FROM users WHERE (logto_id = ? AND logto_id IS NOT NULL) OR email = ?', [logto_id || 'null', email], (err, existingUser) => {
     if (err) return res.status(500).json({ error: 'Erreur serveur.' });
 
     if (existingUser) {
       // Mettre à jour le logto_id s'il n'était pas encore lié
-      if (!existingUser.logto_id) {
+      if (logto_id && !existingUser.logto_id) {
         db.run('UPDATE users SET logto_id = ? WHERE id = ?', [logto_id, existingUser.id]);
       }
+      
+      // Si un compte est lié via Social Login, on considère l'email vérifié
+      if (!existingUser.is_verified) {
+         db.run('UPDATE users SET is_verified = 1 WHERE id = ?', [existingUser.id]);
+      }
+
       // Générer un JWT local pour cet utilisateur
       const token = jwt.sign(
         { id: existingUser.id, email: existingUser.email, name: existingUser.name, role: existingUser.role },
@@ -713,15 +720,38 @@ app.post('/api/auth/sync-logto', (req, res) => {
       });
     }
 
-    // Nouvel utilisateur : le créer avec le rôle 'client' par défaut
+    // Nouvel utilisateur (Premier login via Social Login) : is_verified = 1 direct
     db.run(
-      'INSERT INTO users (name, email, logto_id, role, profil_complete) VALUES (?, ?, ?, ?, ?)',
-      [name, email, logto_id, 'client', 0],
-      function (err) {
+      'INSERT INTO users (name, email, logto_id, role, is_verified, profil_complete) VALUES (?, ?, ?, ?, 1, 0)',
+      [name || '', email, logto_id || null, 'client'],
+      async function (err) {
         if (err) return res.status(500).json({ error: 'Erreur lors de la création du compte.' });
 
+        const newUserId = this.lastID;
+
+        // Points de fidélité : Inscription +20 plumes
+        try {
+          db.run(
+            `INSERT OR IGNORE INTO loyalty_points (user_id, points_actuels, points_cumules_total, niveau) VALUES (?, 20, 20, 'initie')`,
+            [newUserId]
+          );
+          db.run(
+            `INSERT INTO loyalty_transactions (user_id, points, type, raison) VALUES (?, 20, 'gain', 'inscription')`,
+            [newUserId]
+          );
+        } catch (e) {
+          console.error('[AUTH] Points fidélité non ajoutés', e);
+        }
+
+        // Envoyer l'email de bienvenue Premium
+        try {
+          await sendCustomWelcomeEmail(email);
+        } catch (e) {
+          console.error('[AUTH] Erreur sendCustomWelcomeEmail', e);
+        }
+
         const token = jwt.sign(
-          { id: this.lastID, email, name, role: 'client' },
+          { id: newUserId, email, name, role: 'client' },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
@@ -734,7 +764,7 @@ app.post('/api/auth/sync-logto', (req, res) => {
         });
 
         res.status(201).json({
-          user: { id: this.lastID, name, email, role: 'client', profil_complete: true }
+          user: { id: newUserId, name, email, role: 'client', profil_complete: true }
         });
       }
     );

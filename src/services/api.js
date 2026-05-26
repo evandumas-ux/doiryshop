@@ -105,8 +105,8 @@ export const getMe = async () => {
  * Appelé automatiquement après chaque connexion Logto réussie.
  * Retourne les infos utilisateur locales (avec le rôle).
  */
-export const syncLogtoUser = async (logtoUser) => {
-  const response = await fetch(`${API_URL}/auth/sync-logto`, {
+export const syncSocialLogin = async (logtoUser) => {
+  const response = await fetch(`${API_URL}/auth/sync-social-login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

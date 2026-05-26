@@ -14,7 +14,7 @@ import CookieBanner from './components/CookieBanner';
 import AgeVerification from './components/AgeVerification';
 import Footer from './components/Footer';
 import ProductDetail from './pages/ProductDetail';
-import { getMe, syncLogtoUser, getCart, updateCart, getUserProfile, logout } from './services/api';
+import { getMe, syncSocialLogin, getCart, updateCart, getUserProfile, logout } from './services/api';
 import CompleteProfile from './pages/CompleteProfile';
 import Profile from './pages/Profile';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -269,9 +269,17 @@ function App() {
           const claims = await getIdTokenClaims();
           console.log('[Auth] Logto claims:', claims?.sub, claims?.email);
           if (claims) {
-            const syncResult = await syncLogtoUser(claims);
-            console.log('[Auth] syncLogtoUser result:', JSON.stringify(syncResult));
-            loggedUser = syncResult.user;
+            // Eviter les requêtes de synchro multiples dans une même session
+            const syncKey = `sync_${claims.email}`;
+            if (!sessionStorage.getItem(syncKey)) {
+              const syncResult = await syncSocialLogin(claims);
+              console.log('[Auth] syncSocialLogin result:', JSON.stringify(syncResult));
+              loggedUser = syncResult.user;
+              sessionStorage.setItem(syncKey, 'true');
+            } else {
+              // Déjà synchro dans cette session, on essaie de charger les infos via le getMe du fallback si besoin
+              console.log('[Auth] Sync déjà effectuée cette session pour:', claims.email);
+            }
           }
         } catch (err) {
           console.error('[Auth] Erreur sync Logto:', err);
