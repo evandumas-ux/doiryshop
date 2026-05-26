@@ -305,4 +305,100 @@ async function sendOrderShippedEmail(email, order) {
   }
 }
 
-module.exports = { sendWelcomeEmail, sendOrderConfirmation, sendOrderShippedEmail, sendNewsletterWelcomeEmail };
+/**
+ * Envoie le code de vérification à 6 chiffres (Style Dark Academia).
+ */
+async function sendVerificationCodeEmail(email, code) {
+  try {
+    const data = await resend.emails.send({
+      from: 'Doiry Shop <bienvenue@doiryshop.com>',
+      to: email,
+      subject: 'Votre code secret Doiry Shop',
+      html: `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background-color:#0d0d0d;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="max-width:600px;margin:40px auto;background:#1a1a1a;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.4);border:1px solid #333;">
+    <div style="padding:40px 32px;text-align:center;border-bottom:1px solid #333;">
+      <h1 style="margin:0;color:#f0f0f0;font-size:28px;font-family:Georgia,serif;font-weight:400;letter-spacing:2px;">
+        Doiry Shop
+      </h1>
+    </div>
+    <div style="padding:40px 32px;text-align:center;">
+      <h2 style="margin:0 0 16px;color:#e8e8e8;font-family:Georgia,serif;font-size:22px;font-weight:400;">
+        Vérification de votre espace privilégié
+      </h2>
+      <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 32px;">
+        Veuillez entrer le code suivant pour valider votre accès.
+      </p>
+      <div style="margin:0 auto 32px;background:#0d0d0d;border:1px solid #8b263e;border-radius:8px;padding:20px;max-width:200px;">
+        <span style="color:#ffffff;font-size:32px;font-weight:bold;letter-spacing:4px;">${code}</span>
+      </div>
+      <p style="color:#808080;font-size:13px;line-height:1.7;margin:0;">
+        Ce code expire dans 15 minutes.<br/>
+        Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail.
+      </p>
+    </div>
+  </div>
+</body>
+</html>`
+    });
+    console.log(`✅ Email code envoyé à ${email}`);
+    return data;
+  } catch (error) {
+    console.error('❌ Erreur envoi email code:', error);
+    throw error;
+  }
+}
+
+/**
+ * Envoie l'e-mail de bienvenue Premium (Inscription terminée).
+ */
+async function sendCustomWelcomeEmail(email) {
+  const logoDataUri = getEmailLogoDataUri();
+  try {
+    const data = await resend.emails.send({
+      from: 'Doiry Shop <bienvenue@doiryshop.com>',
+      to: email,
+      subject: 'Bienvenue dans l\'univers Doiry Shop',
+      html: `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background-color:#121212;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="max-width:600px;margin:40px auto;background:#1a1a1a;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.4);border:1px solid #333;">
+    <div style="padding:40px 32px;text-align:center;border-bottom:1px solid #333;">
+      ${logoDataUri ? `<img src="${logoDataUri}" alt="Doiry Shop" style="height:60px;width:auto;display:block;margin:0 auto 14px;" />` : ''}
+      <h1 style="margin:0;color:#f0f0f0;font-size:28px;font-family:Georgia,serif;font-weight:400;letter-spacing:2px;">
+        Doiry Shop
+      </h1>
+    </div>
+    <div style="padding:40px 32px;text-align:center;">
+      <h2 style="margin:0 0 16px;color:#e8e8e8;font-family:Georgia,serif;font-size:22px;font-weight:400;">
+        Votre inscription est confirmée
+      </h2>
+      <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 20px;">
+        Bienvenue chez Doiry Shop. Plongez dans notre univers de rituels botaniques et découvrez nos plantes séchées et infusions.
+      </p>
+      <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 32px;">
+        Pour vous remercier, voici un code de bienvenue de 10% valable sur votre première commande :<br/>
+        <strong style="color:#ffffff;font-size:18px;letter-spacing:2px;display:block;margin-top:10px;">BIENVENUE10</strong>
+      </p>
+      <a href="https://doiryshop.fr/#boutique" style="display:inline-block;background:#8b263e;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;">
+        Découvrir la collection
+      </a>
+    </div>
+  </div>
+</body>
+</html>`
+    });
+    console.log(`✅ Email bienvenue envoyé à ${email}`);
+    return data;
+  } catch (error) {
+    console.error('❌ Erreur envoi email bienvenue:', error);
+    throw error;
+  }
+}
+
+module.exports = { sendWelcomeEmail, sendOrderConfirmation, sendOrderShippedEmail, sendNewsletterWelcomeEmail, sendVerificationCodeEmail, sendCustomWelcomeEmail };

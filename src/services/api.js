@@ -1,5 +1,31 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+// ====== AUTHENTIFICATION (Custom) ======
+
+export const customRegister = async (firstName, lastName, email, password) => {
+  const response = await fetch(`${API_URL}/auth/custom-register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prenom: firstName, nom: lastName, email, password }),
+    credentials: 'include'
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+};
+
+export const customVerify = async (email, code) => {
+  const response = await fetch(`${API_URL}/auth/custom-verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, code }),
+    credentials: 'include'
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+};
+
 // ====== AUTHENTIFICATION (Legacy - login/register local) ======
 
 export const register = async (firstName, lastName, email, password) => {

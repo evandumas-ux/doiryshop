@@ -24,7 +24,7 @@ const db = require('./database');
 const { seedDatabase } = require('./seed');
 seedDatabase();
 
-const { sendOrderConfirmation, sendWelcomeEmail, sendOrderShippedEmail } = require('./emails');
+const { sendOrderConfirmation, sendWelcomeEmail, sendOrderShippedEmail, sendVerificationCodeEmail, sendCustomWelcomeEmail } = require('./emails');
 const { generateInvoicePDF } = require('./invoice');
 
 const rateLimit = require("express-rate-limit");
@@ -370,7 +370,137 @@ app.put('/api/admin/orders/:id/tracking', verifyToken, requireAdmin, (req, res) 
 // ROUTES AUTHENTIFICATION (Legacy - Login/Register local)
 // ============================================================
 
-// Inscription
+// ============================================================
+// ROUTES AUTHENTIFICATION (Custom Registration)
+// ============================================================
+
+app.post('/api/auth/custom-register', async (req, res) => {
+  const { email, password, prenom, nom } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email et mot de passe requis.' });
+  }
+
+  try {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 15 * 60000).toISOString(); // +15 mins
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const fullName = `${prenom || ''} ${nom || ''}`.trim();
+
+    // Vérifier si l'utilisateur existe déjà
+    db.get('SELECT id, is_verified FROM users WHERE email = ?', [email], async (err, user) => {
+      if (err) return res.status(500).json({ error: 'Erreur serveur.' });
+      
+      if (user) {
+        if (user.is_verified) {
+          return res.status(409).json({ error: 'Cet email est déjà utilisé et vérifié.' });
+        }
+        // Mise à jour de l'utilisateur non vérifié existant
+        db.run(
+          'UPDATE users SET password = ?, verification_code = ?, verification_expires = ? WHERE email = ?',
+          [hashedPassword, code, expires, email],
+          async (err) => {
+            if (err) return res.status(500).json({ error: 'Erreur serveur.' });
+            await sendVerificationCodeEmail(email, code);
+            return res.status(200).json({ message: 'Code envoyé.' });
+          }
+        );
+      } else {
+        // Création nouvel utilisateur
+        db.run(
+          'INSERT INTO users (name, prenom, nom, email, password, is_verified, verification_code, verification_expires) VALUES (?, ?, ?, ?, ?, 0, ?, ?)',
+          [fullName, prenom || '', nom || '', email, hashedPassword, code, expires],
+          async function (err) {
+            if (err) return res.status(500).json({ error: 'Erreur création compte.' });
+            await sendVerificationCodeEmail(email, code);
+            return res.status(200).json({ message: 'Code envoyé.' });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.error('[AUTH] custom-register error:', error);
+    res.status(500).json({ error: 'Erreur serveur.' });
+  }
+});
+
+app.post('/api/auth/custom-verify', async (req, res) => {
+  const { email, code } = req.body;
+
+  if (!email || !code) {
+    return res.status(400).json({ error: 'Email et code requis.' });
+  }
+
+  db.get('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
+    if (err) return res.status(500).json({ error: 'Erreur serveur.' });
+    if (!user) return res.status(404).json({ error: 'Utilisateur introuvable.' });
+    
+    if (user.is_verified) {
+      return res.status(400).json({ error: 'Compte déjà vérifié.' });
+    }
+
+    if (user.verification_code !== code) {
+      return res.status(400).json({ error: 'Code incorrect.' });
+    }
+
+    if (new Date(user.verification_expires) < new Date()) {
+      return res.status(400).json({ error: 'Le code a expiré.' });
+    }
+
+    // Valider le compte
+    db.run(
+      'UPDATE users SET is_verified = 1, verification_code = NULL, verification_expires = NULL WHERE id = ?',
+      [user.id],
+      async (err) => {
+        if (err) return res.status(500).json({ error: 'Erreur serveur.' });
+        
+        // Attribution des points de fidélité pour l'inscription (+20 Plumes)
+        try {
+          // addLoyaltyPoints(newUserId, 20, 'inscription', null) - Need to require or use local function
+          db.run(
+            \`INSERT OR IGNORE INTO loyalty_points (user_id, points_actuels, points_cumules_total, niveau) VALUES (?, 20, 20, 'initie')\`,
+            [user.id]
+          );
+          db.run(
+            \`INSERT INTO loyalty_transactions (user_id, points, type, raison) VALUES (?, 20, 'gain', 'inscription')\`,
+            [user.id]
+          );
+        } catch (e) {
+          console.error('Points fidélité non ajoutés', e);
+        }
+
+        // Email de bienvenue Premium
+        try {
+          await sendCustomWelcomeEmail(user.email);
+        } catch (e) {
+          console.error('Erreur sendCustomWelcomeEmail', e);
+        }
+
+        // Générer le token JWT pour connexion automatique
+        const token = jwt.sign(
+          { id: user.id, email: user.email, name: user.name, role: user.role },
+          SECRET_KEY,
+          { expiresIn: '7d' }
+        );
+
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
+        });
+
+        res.json({
+          message: 'Compte vérifié et connecté',
+          user: { id: user.id, name: user.name, email: user.email, role: user.role }
+        });
+      }
+    );
+  });
+});
+
+// Inscription (Legacy)
 app.post('/api/auth/register', async (req, res) => {
   const { prenom, nom, email, password } = req.body;
 

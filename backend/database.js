@@ -50,6 +50,9 @@ db.serialize(() => {
     { name: 'date_naissance', type: 'TEXT' },
     { name: 'avatar_url', type: 'TEXT' },
     { name: 'profil_complete', type: 'INTEGER DEFAULT 0' },
+    { name: 'verification_code', type: 'TEXT' },
+    { name: 'is_verified', type: 'INTEGER DEFAULT 0' },
+    { name: 'verification_expires', type: 'DATETIME' },
   ];
 
   // Vérifier les colonnes existantes et ajouter celles qui manquent
