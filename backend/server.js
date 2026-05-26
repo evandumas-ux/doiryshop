@@ -598,6 +598,46 @@ app.get('/api/auth/me', verifyToken, (req, res) => {
   });
 });
 
+/**
+ * DELETE /api/auth/delete-account
+ * Supprime définitivement le compte utilisateur (route protégée).
+ */
+app.delete('/api/auth/delete-account', verifyToken, (req, res) => {
+  const userId = req.user?.id;
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  db.serialize(() => {
+    db.run('BEGIN TRANSACTION');
+
+    // Supprimer les lignes dépendantes en premier (si présentes).
+    db.run('DELETE FROM loyalty_points WHERE user_id = ?', [userId]);
+    db.run('DELETE FROM loyalty_transactions WHERE user_id = ?', [userId]);
+    db.run('DELETE FROM carts WHERE user_id = ?', [userId]);
+    db.run('DELETE FROM reviews WHERE user_id = ?', [userId]);
+    // Note: on garde l'historique commandes par défaut (orders.user_id peut rester NULL si besoin).
+    db.run('UPDATE orders SET user_id = NULL WHERE user_id = ?', [userId]);
+
+    db.run('DELETE FROM users WHERE id = ?', [userId], function (err) {
+      if (err) {
+        console.error('[AUTH] delete-account error:', err.message);
+        db.run('ROLLBACK');
+        return res.status(500).json({ error: 'Erreur suppression compte.' });
+      }
+
+      db.run('COMMIT', () => {
+        // Logout immédiat
+        res.clearCookie("token", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        });
+
+        return res.json({ message: "Account successfully deleted" });
+      });
+    });
+  });
+});
+
 // ============================================================
 // ROUTE NEWSLETTER
 // ============================================================

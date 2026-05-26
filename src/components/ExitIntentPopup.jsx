@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
 const ExitIntentPopup = () => {
+  console.log("Newsletter component rendered successfully");
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
@@ -48,17 +49,20 @@ const ExitIntentPopup = () => {
   };
 
   const handleSubmit = async (e) => {
+    alert("Click detected!");
     e.preventDefault();
     if (!email) return;
 
     setStatus('loading');
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${API_URL}/newsletter`, {
+      const NEWSLETTER_URL = 'https://doiryshop-api.onrender.com/api/newsletter';
+      console.log('[Newsletter] handleSubmit triggered', { email, url: NEWSLETTER_URL });
+      const response = await fetch(NEWSLETTER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, source: 'exit-intent' }),
       });
+      console.log('[Newsletter] response status', response.status);
 
       if (response.ok) {
         setStatus('success');

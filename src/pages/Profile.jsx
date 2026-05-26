@@ -145,6 +145,50 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
     await onLogout(e);
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently delete your account? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
+    try {
+      console.log('[DeleteAccount] confirmed, calling DELETE /api/auth/delete-account');
+      const response = await fetch('/api/auth/delete-account', {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      const text = await response.text();
+      let payload = null;
+      try {
+        payload = text ? JSON.parse(text) : null;
+      } catch {
+        payload = { raw: text };
+      }
+
+      console.log('[DeleteAccount] response', response.status, payload);
+
+      if (!response.ok) {
+        const message = payload?.error || payload?.message || `Erreur serveur (${response.status})`;
+        throw new Error(message);
+      }
+
+      // Clear any local auth state immediately
+      if (typeof setUser === 'function') setUser(null);
+      try {
+        // Optional: also run the regular logout flow (Logto + cleanup)
+        if (typeof onLogout === 'function') await onLogout();
+      } catch (e) {
+        // ignore logout errors after deletion
+      }
+
+      navigate('/');
+    } catch (err) {
+      console.error('[DeleteAccount] error', err);
+      setSaveMessage(err?.message || 'Erreur lors de la suppression du compte.');
+    }
+  };
+
   const handleCopyReferralLink = async () => {
     if (!referralCode) return;
     const link = `${window.location.origin}/register?ref=${referralCode}`;
@@ -414,6 +458,16 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                   className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-colors text-sm font-medium"
                 >
                   <LogOut size={16} /> Se déconnecter
+                </button>
+              </motion.div>
+
+              {/* Suppression du compte */}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
+                >
+                  Supprimer mon compte
                 </button>
               </motion.div>
             </div>
