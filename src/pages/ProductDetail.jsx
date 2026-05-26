@@ -12,6 +12,10 @@ import UseCasePills from '../components/UseCasePills';
 import Header from '../components/Header';
 import CartDrawer from '../components/CartDrawer';
 const Navbar = Header;
+const MotionDiv = motion.div;
+const MotionImg = motion.img;
+const MotionButton = motion.button;
+const MotionSpan = motion.span;
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -34,7 +38,7 @@ const ProductGallery = ({ images: rawImages, productName }) => {
     <div className="flex flex-col gap-4">
       <div className="aspect-square bg-surface rounded-3xl overflow-hidden shadow-xl border border-surface-border relative group">
         <AnimatePresence mode="wait">
-          <motion.img
+          <MotionImg
             key={currentIndex}
             src={images[currentIndex]}
             alt={`${productName} - Vue ${currentIndex + 1}`}
@@ -93,9 +97,6 @@ const getStockMessage = (stock) => {
   if (Number(stock) > 0 && Number(stock) < 10) return `Plus que ${stock} en stock`;
   return null;
 };
-
-const hasActiveDiscount = (product) =>
-  Number(product?.reference_market_price || 0) > Number(product?.price || 0);
 
 const formatCoffretDescription = (description) => {
   if (!description || !description.includes('•')) {
@@ -217,9 +218,9 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
   else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "IDÉAL CADEAU";
 
   const isSubstitut = tags.includes('substitut');
+  const isVracBotanique = product?.categorie === 'vrac' || tags.includes('vrac') || safeSlug.includes('vrac');
   const isTea = tags.includes('tisanes');
   const stockMessage = product ? getStockMessage(product.stock) : null;
-  const isDiscounted = hasActiveDiscount(product);
   const isCoffretDescription = /coffret transition|coffret sérénité/i.test(product?.name || '');
   const ritualSuggestions = useMemo(() => {
     if (!product) return [];
@@ -431,7 +432,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         cartItemsCount={cartItemsCount} 
         user={user} 
       />
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen bg-background pt-24 pb-20 sm:pb-20">
+      <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen bg-background pt-24 pb-20 sm:pb-20">
         <SEO title={`${product.name} | Doiry Shop`} description={productDescription} image={product.image_url} url={productUrl} type="product">
           <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
         </SEO>
@@ -448,7 +449,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-5 lg:gap-16 items-start">
-            <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }} className="relative">
+            <MotionDiv initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }} className="relative">
               {product.is_best_value && (
                 <div className="absolute top-4 left-4 bg-[#8B7355] text-white text-xs font-bold px-4 py-1.5 rounded-md z-10 shadow-lg">
                   Meilleur choix
@@ -460,9 +461,9 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 </div>
               )}
                 <ProductGallery images={product.images && product.images.length > 0 ? product.images : (product.image_url ? [product.image_url] : [])} productName={product.name} />
-            </motion.div>
+            </MotionDiv>
 
-            <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }} className="flex flex-col">
+            <MotionDiv initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }} className="flex flex-col">
               {stockMessage && (
                 <div className="flex flex-wrap items-center gap-3 mb-5">
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-background border border-surface-border text-text-light">
@@ -540,27 +541,49 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  <motion.button whileTap={{ scale: 0.97 }} onClick={handleAddToCart} disabled={product.stock <= 0} className={`w-full flex items-center justify-center gap-3 py-4 rounded-xl font-medium text-lg transition-all duration-300 shadow-lg ${
+                  <MotionButton whileTap={{ scale: 0.97 }} onClick={handleAddToCart} disabled={product.stock <= 0} className={`w-full flex items-center justify-center gap-3 py-4 rounded-xl font-medium text-lg transition-all duration-300 shadow-lg ${
                     added ? 'bg-[#8b1a1a] text-white shadow-[#8b1a1a]/25' : product.stock > 0 ? 'bg-[#8b1a1a] text-white hover:bg-[#6e1515] shadow-[#8b1a1a]/25' : 'bg-surface text-text-muted cursor-not-allowed shadow-none'
                   }`}>
                     <AnimatePresence mode="wait">
                       {added ? (
-                        <motion.span key="added" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
+                        <MotionSpan key="added" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
                           <CheckCircle2 size={20} /> Ajouté !
-                        </motion.span>
+                        </MotionSpan>
                       ) : (
-                        <motion.span key="add" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
+                        <MotionSpan key="add" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
                           <ShoppingCart size={20} /> Ajouter au panier
-                        </motion.span>
+                        </MotionSpan>
                       )}
                     </AnimatePresence>
-                  </motion.button>
+                  </MotionButton>
 
                   <button onClick={handleBuyNow} disabled={product.stock <= 0} className="w-full flex items-center justify-center gap-3 py-4 rounded-xl font-medium text-lg bg-primary text-white hover:bg-primary-dark transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
                     <Zap size={18} /> Commander maintenant
                   </button>
                 </div>
               </div>
+
+              {isVracBotanique && (
+                <div className="mb-6 rounded-2xl border border-primary/25 bg-[#0d0d0d] p-5 shadow-lg shadow-black/20 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('/bg_texture.png')] bg-cover bg-center opacity-[0.04] pointer-events-none" />
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 mb-3 text-accent">
+                      <Leaf size={18} />
+                      <h2 className="font-serif text-xl text-text">L'alternative pure pour vos mélanges</h2>
+                    </div>
+                    <p className="text-sm md:text-base leading-7 text-text-light font-light">
+                      « Ne gâchez plus les bienfaits et les arômes de vos fleurs de CBD avec du tabac chimique chargé de nicotine. Notre Vrac Botanique est le substitut ultime : 100% naturel, sans aucune substance addictive, avec une combustion douce et un goût subtil qui respecte vos plantes. Reprenez le contrôle de votre rituel. »
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {['Sans nicotine', '100% naturel', 'Mix CBD', 'Combustion douce'].map((item) => (
+                        <span key={item} className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-text-light">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="text-text-light font-light leading-relaxed text-base mb-6">
                 <UseCasePills useCases={
@@ -590,12 +613,12 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </MotionDiv>
           </div>
         </section>
 
         <section className="max-w-7xl mx-auto px-6 mt-20">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <MotionDiv initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="flex border-b border-surface-border mb-8 gap-1 overflow-x-auto scrollbar-hide">
               {[
                 { key: 'description', label: 'Description' },
@@ -607,27 +630,27 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`relative px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === tab.key ? 'text-accent' : 'text-text-muted hover:text-text-light'}`}>
                   {tab.label}
                   {activeTab === tab.key && (
-                    <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
+                    <MotionDiv layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
                   )}
                 </button>
               ))}
             </div>
 
             <AnimatePresence mode="wait">
-              <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.25 }} className={activeTab === 'reviews' ? '' : 'max-w-3xl'}>
+              <MotionDiv key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.25 }} className={activeTab === 'reviews' ? '' : 'max-w-3xl'}>
                 {activeTab === 'reviews' ? <ProductReviews productId={id} user={user} /> : tabContent[activeTab]}
-              </motion.div>
+              </MotionDiv>
             </AnimatePresence>
-          </motion.div>
+          </MotionDiv>
         </section>
 
         {ritualSuggestions.length > 0 && (
           <section className="py-14 bg-background">
             <div className="max-w-7xl mx-auto px-6">
-              <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+              <MotionDiv initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
                 <p className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-2">Suggestion</p>
                 <h2 className="text-2xl md:text-3xl font-serif text-text">Complétez votre rituel</h2>
-              </motion.div>
+              </MotionDiv>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {ritualSuggestions.map((item) => {
@@ -685,7 +708,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
         <section className="mt-24 py-20 bg-background-light relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
+            <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
               <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">
                 {isTea ? 'Le moment calme' : 'Le geste autrement'}
               </span>
@@ -697,7 +720,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   ? "Des compositions courtes, un usage lisible et des formats qui s'adaptent facilement aux soirs chargés comme aux pauses lentes."
                   : "Des références faites pour conserver le rituel tout en simplifiant la composition et en gardant un repère clair : sans nicotine."}
               </p>
-            </motion.div>
+            </MotionDiv>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
@@ -722,11 +745,11 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   description: isTea ? 'Boites, pochons et coffrets soignes pour soi ou pour offrir.' : 'Moins de surcharge, plus de lisibilite, dans un conditionnement propre.',
                 },
               ].map((item) => (
-                <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bg-surface p-8 rounded-2xl border border-surface-border text-center hover:border-accent/20 transition-all duration-500">
+                <MotionDiv key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bg-surface p-8 rounded-2xl border border-surface-border text-center hover:border-accent/20 transition-all duration-500">
                   <div className="inline-flex p-4 bg-primary/10 rounded-full mb-5">{item.icon}</div>
                   <h3 className="text-xl font-serif font-semibold mb-3 text-text">{item.title}</h3>
                   <p className="text-text-light font-light leading-relaxed">{item.description}</p>
-                </motion.div>
+                </MotionDiv>
               ))}
             </div>
           </div>
@@ -764,7 +787,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
             </Link>
           </div>
         </section>
-      </motion.div>
+      </MotionDiv>
 
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl border-t border-surface-border p-4 flex items-center gap-3 sm:hidden">
         <div className="flex-1">

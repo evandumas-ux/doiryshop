@@ -9,7 +9,6 @@ process.on('unhandledRejection', (reason, promise) => {
 
 require('dotenv').config();
 console.log('Toutes les vars env chargées:', {
-  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ? 'OK' : 'UNDEFINED',
   RESEND_API_KEY: process.env.RESEND_API_KEY ? 'OK' : 'UNDEFINED'
 });
 const express = require('express');
@@ -27,7 +26,6 @@ seedDatabase();
 
 const { sendOrderConfirmation, sendWelcomeEmail, sendOrderShippedEmail } = require('./emails');
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 
@@ -83,53 +81,6 @@ const parseJsonArrayField = (value) => {
     return [];
   }
 };
-
-
-
-// Webhook Stripe (DOIT être avant express.json pour express.raw)
-app.post('/api/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error(`[Stripe Webhook] Erreur de signature: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const orderId = session.metadata.orderId;
-
-    if (orderId) {
-      db.run(`UPDATE orders SET statut_paiement = 'payé' WHERE id = ?`, [orderId], function (err) {
-        if (!err) {
-          db.get(`SELECT * FROM orders WHERE id = ?`, [orderId], (err, order) => {
-            if (!err && order) {
-              const userId = order.user_id;
-              const pointsCommande = Math.round(order.total);
-              if (pointsCommande > 0) {
-                addLoyaltyPoints(userId, pointsCommande, `Commande #${orderId}`, orderId);
-              }
-              db.get('SELECT email FROM users WHERE id = ?', [userId], (err, userRow) => {
-                if (!err && userRow && userRow.email) {
-                  sendOrderConfirmation(userRow.email, {
-                    id: orderId,
-                    produits: JSON.parse(order.produits),
-                    total: order.total,
-                    adresse_livraison: JSON.parse(order.adresse_livraison)
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
-    }
-  }
-  res.send();
-});
 
 app.use(cookieParser());
 app.use(express.json());
@@ -1059,118 +1010,6 @@ app.put('/api/orders/:id/status', verifyToken, (req, res) => {
       });
     });
   });
-});
-
-app.post('/api/checkout/create-session', optionalAuth, authLimiter, async (req, res) => {
-  const { items, orderId, couponCode, shippingZip, shippingServiceId } = req.body;
-  if (!items || !Array.isArray(items) || !orderId) {
-    return res.status(400).json({ error: 'items et orderId sont requis' });
-  }
-
-  try {
-    // 1. Recalculer le total des produits depuis la BDD (POINT 3)
-    let subtotal = 0;
-    const productDetails = [];
-    
-    for (const item of items) {
-      const product = await new Promise((resolve, reject) => {
-        db.get('SELECT id, name, price, weight_g, length_cm, width_cm, height_cm FROM products WHERE id = ?', [item.id], (err, row) => {
-          if (err) reject(err);
-          else resolve(row);
-        });
-      });
-      
-      if (product) {
-        const itemTotal = product.price * item.quantity;
-        subtotal += itemTotal;
-        productDetails.push({ ...product, quantity: item.quantity });
-      }
-    }
-
-    // 2. Valider le code promo (POINT 4)
-    let couponDiscount = 0;
-    if (couponCode) {
-      const coupon = await new Promise((resolve) => {
-        db.get('SELECT * FROM coupons WHERE code = ? AND actif = 1', [couponCode.toUpperCase()], (err, row) => {
-          if (err) resolve(null);
-          else resolve(row);
-        });
-      });
-
-      if (coupon) {
-        const now = new Date();
-        const expiration = coupon.date_expiration ? new Date(coupon.date_expiration) : null;
-        if (!expiration || expiration > now) {
-          if (coupon.type === 'pourcentage') {
-            couponDiscount = (subtotal * coupon.valeur) / 100;
-          } else {
-            couponDiscount = coupon.valeur;
-          }
-        }
-      }
-    }
-
-    // 3. Valider et calculer les frais de port
-    let shippingPrice = 0;
-    if (shippingServiceId) {
-      const totalWeight = productDetails.reduce((sum, p) => sum + (Number(p.weight_g) || 50) * p.quantity, 0);
-      const opt = SHIPPING_OPTIONS[shippingServiceId];
-      if (opt) {
-        const basePrice = getShippingPrice(opt, totalWeight);
-        shippingPrice = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : (basePrice || 0);
-      } else {
-        shippingPrice = 0; // Ou erreur si obligatoire
-      }
-    }
-
-    // 4. Bonus Anniversaire (si présent dans la DB pour cet utilisateur)
-    const user = await new Promise((resolve) => {
-      if (!req.user?.id) return resolve(null);
-      db.get('SELECT date_naissance, anniversaire_utilise FROM users WHERE id = ?', [req.user.id], (err, row) => {
-        resolve(row);
-      });
-    });
-
-    let birthdayDiscount = 0;
-    if (user && user.date_naissance) {
-      const today = new Date();
-      const dob = new Date(user.date_naissance);
-      const sameDay = today.getDate() === dob.getDate() && today.getMonth() === dob.getMonth();
-      const currentYear = today.getFullYear();
-      if (sameDay && user.anniversaire_utilise !== currentYear) {
-        birthdayDiscount = (subtotal + shippingPrice) * 0.25;
-      }
-    }
-
-    const finalTotal = Math.max(0, subtotal + shippingPrice - couponDiscount - birthdayDiscount);
-
-    const line_items = [{
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: 'Commande Doiryshop',
-        },
-        unit_amount: Math.round(finalTotal * 100), // Stripe attend des centimes
-      },
-      quantity: 1,
-    }];
-
-    const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items,
-      mode: 'payment',
-      success_url: `${FRONTEND_URL}/commande/succes?orderId=${orderId}`,
-      cancel_url: `${FRONTEND_URL}/commande/annulation`,
-      metadata: { orderId: orderId.toString() },
-    });
-
-    res.json({ url: session.url });
-  } catch (error) {
-    console.error('Erreur Stripe:', error);
-    res.status(500).json({ error: 'Erreur lors de la création de la session Stripe' });
-  }
 });
 
 // ============================================================

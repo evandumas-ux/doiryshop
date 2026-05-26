@@ -29,7 +29,7 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
             <a href="/#pourquoi" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Pourquoi</a>
             <a href="/#gammes" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Gammes</a>
             <Link to="/about" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Notre histoire</Link>
-            <Link to="/rituels" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Rituels</Link>
+            <Link to="/rituels" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Les Rituels</Link>
             <Link to="/boutique" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Boutique</Link>
             <Link to="/arret-tabac" className="text-sm font-medium tracking-widest uppercase text-text-muted hover:text-accent transition-colors duration-300">Arrêt du Tabac</Link>
           </nav>
@@ -67,7 +67,7 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
                 <a href="/#pourquoi" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Pourquoi</a>
                 <a href="/#gammes" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Gammes</a>
                 <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Notre histoire</Link>
-                <Link to="/rituels" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Rituels</Link>
+                <Link to="/rituels" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Les Rituels</Link>
                 <Link to="/boutique" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Boutique</Link>
                 <Link to="/arret-tabac" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-muted uppercase tracking-widest font-serif">Arrêt du Tabac</Link>
                 <hr className="border-surface-border my-2" />

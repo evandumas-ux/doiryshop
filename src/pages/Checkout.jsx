@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Lock, Heart, CheckCircle2, X, AlertCircle } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLogto } from '@logto/react';
 import { createOrder, getUserProfile, getLoyaltyPoints, verifyCoupon, getShippingOptions } from '../services/api';
 import PaymentBadges from '../components/PaymentBadges';
 import SEO from '../components/SEO';
 import { buildOrderReference, buildRevolutMeUrl } from '../utils/revolutPayment';
+const MotionDiv = motion.div;
 const Checkout = ({ cartItems, setCartItems, user }) => {
-  const navigate = useNavigate();
-  const { getIdToken, signIn } = useLogto();
+  const { isAuthenticated, signIn } = useLogto();
   const subtotal = cartItems.reduce((acc, item) => acc + (parseFloat(item.price) * parseInt(item.quantity)), 0);
 
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -41,7 +41,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [orderSuccess] = useState(false);
   const [showIncompleteError, setShowIncompleteError] = useState(false);
 
   useEffect(() => {
@@ -169,6 +169,11 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user || isAuthenticated === false) {
+      signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL || `${window.location.origin}/callback`);
+      return;
+    }
+
     // Validate form (sets red borders and scrolls if invalid)
     const isFormValid = validateForm();
 
@@ -268,13 +273,13 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
   if (orderSuccess) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
-        <motion.div
+        <MotionDiv
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 15 }}
         >
           <CheckCircle2 size={80} className="text-green-500 mx-auto mb-6" />
-        </motion.div>
+        </MotionDiv>
         <h2 className="text-3xl font-serif mb-4 text-text">Commande confirmée ! 🎉</h2>
         <p className="text-text-light mb-2 max-w-md">Merci pour votre achat. Votre commande a été enregistrée avec succès.</p>
         <p className="text-text-muted text-sm mb-8">Vous allez être redirigé vers l'accueil...</p>
@@ -455,9 +460,8 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               disabled={isSubmitting}
               className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting && user ? 'opacity-70' : 'hover:-translate-y-1'}`}
               onClick={(e) => {
-                if (!user) {
+                if (!user || isAuthenticated === false) {
                   e.preventDefault();
-                  alert("Veuillez créer un compte pour acheter.");
                   signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL || `${window.location.origin}/callback`);
                   return;
                 }
@@ -468,7 +472,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             >
               {isSubmitting ? (
                 <>
-                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full" />
+                  <MotionDiv animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full" />
                   Génération en cours...
                 </>
               ) : (
