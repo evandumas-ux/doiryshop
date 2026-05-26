@@ -32,13 +32,13 @@ const productGuides = [
     image: '/images/etui_preroules.png',
     icon: Flame,
     intro:
-      "Les pré-roulés Doiry sont pensés pour les moments où l'envie arrive vite : une pause, une tension, une soirée, une transition. Vous gardez la gestuelle, la fumée texturée, la combustion lente, mais vous sortez du réflexe tabac.",
+      "Les pré-roulés Doiry sont pensés pour les moments où l’envie arrive vite : une pause, une tension, une soirée, une transition. Vous gardez la gestuelle, la fumée texturée, la combustion lente, mais vous sortez du réflexe tabac.",
     cta: 'Voir les pré-roulés',
     moments: [
       {
         name: 'Pause de journée',
         when: 'Quand le stress monte ou que la main cherche une cigarette.',
-        how: "Allumez lentement, tirez peu, laissez la fumée s'installer. Le but n'est pas de reproduire l'urgence, mais de ralentir le geste.",
+        how: "Allumez lentement, tirez peu, laissez la fumée ’nstaller. Le but ’st pas de reproduire ’rgence, mais de ralentir le geste.",
         benefit: 'Retrouver une pause nette, sans nicotine.'
       },
       {
@@ -50,7 +50,7 @@ const productGuides = [
       {
         name: 'Soirée et moment social',
         when: 'Au milieu des verres, des discussions et des sorties.',
-        how: 'Sortez-le comme un accessoire discret. Une fumée aromatique, intrigante, plus élégante qu�"une cigarette classique.',
+        how: 'Sortez-le comme un accessoire discret. Une fumée aromatique, intrigante, plus élégante qu’une cigarette classique.',
         benefit: 'Créer la curiosité sans odeur lourde ni vape artificielle.'
       },
       {
@@ -66,7 +66,7 @@ const productGuides = [
     order: '02',
     label: 'Le vrac pour fumer',
     title: 'Vrac Botanique Doiry',
-    subtitle: 'L�"alternative pure au tabac dans vos mélanges.',
+    subtitle: 'L’alternative pure au tabac dans vos mélanges.',
     image: '/images/pochon_kraft_noir.png',
     icon: Leaf,
     intro:
@@ -89,7 +89,7 @@ const productGuides = [
       {
         name: 'Remplacer le tabac progressivement',
         when: 'Quand vous voulez garder le geste sans subir la dépendance physique.',
-        how: 'Commencez par remplacer une partie du tabac, puis augmentez la proportion de Vrac Doiry jusqu�"à basculer vers une alternative pure.',
+        how: 'Commencez par remplacer une partie du tabac, puis augmentez la proportion de Vrac Doiry jusq’ basculer vers une alternative pure.',
         benefit: 'Une transition plus douce, plus consciente.'
       },
       {
@@ -109,25 +109,25 @@ const productGuides = [
     image: '/images/boite_infusion_kraft.png',
     icon: Sun,
     intro:
-      "Les infusions Doiry accompagnent les moments où le corps a besoin de chaleur, de clarté ou d�"un retour au calme. Elles ne remplacent pas le geste fumé : elles l�"encadrent, l�"adoucissent et créent une routine plus complète.",
+      "Les infusions Doiry accompagnent les moments où le corps a besoin de chaleur, de clarté ou d’un retour au calme. Elles ne remplacent pas le geste fumé : elles l’encadrent, l’adoucissent et créent une routine plus complète.",
     cta: 'Découvrir les infusions',
     moments: [
       {
         name: 'Matin clair',
         when: 'Avant les messages, avant la vitesse.',
-        how: 'Infusez quelques minutes, respirez la vapeur, buvez lentement. Le matin devient un point d�"ancrage plutôt qu�"une course.',
+        how: 'Infusez quelques minutes, respirez la vapeur, buvez lentement. Le matin devient un point d’ancrage plutôt qu’une course.',
         benefit: 'Clarté, éveil doux, esprit plus net.'
       },
       {
         name: 'Après-midi focus',
-        when: 'Quand l�"énergie descend mais que la journée continue.',
+        when: 'Quand ’nergie descend mais que la journée continue.',
         how: 'Préparez une tasse légère et gardez-la près de vous pendant le travail. Une pause calme, sans excitation brutale.',
         benefit: 'Focus plus posé, moins de nervosité.'
       },
       {
         name: 'Soir apaisé',
         when: 'Quand la journée doit enfin ralentir.',
-        how: 'Associez l�"infusion à un pré-roulé doux ou à un rituel sans écran. L�"idée : relâcher, pas stimuler.',
+        how: 'Associez l’infusion à un pré-roulé doux ou à un rituel sans écran. ’dée : relâcher, pas stimuler.',
         benefit: 'Retour au calme et préparation au sommeil.'
       }
     ]
@@ -147,13 +147,13 @@ const productGuides = [
       {
         name: 'Première transition',
         when: 'Quand vous ne savez pas par quoi commencer.',
-        how: 'Utilisez le coffret comme une semaine d�"essai : pré-roulé pour les envies fortes, infusion pour encadrer les moments sensibles, vrac si vous aimez rouler.',
+        how: 'Utilisez le coffret comme une semaine ’ssai : pré-roulé pour les envies fortes, infusion pour encadrer les moments sensibles, vrac si vous aimez rouler.',
         benefit: 'Un parcours clair, sans dispersion.'
       },
       {
         name: 'Routine du soir',
         when: 'Quand le stress retombe mal et que le sommeil tarde.',
-        how: 'Créez une séquence stable : ranger la journée, préparer l�"infusion, puis choisir une volute douce si le geste vous apaise.',
+        how: 'Créez une séquence stable : ranger la journée, préparer l’infusion, puis choisir une volute douce si le geste vous apaise.',
         benefit: 'Un rituel nocturne plus profond.'
       },
       {
@@ -226,7 +226,7 @@ const ProductGuideSection = ({ guide, index }) => {
                 <div className="mb-4 flex items-center justify-between gap-4">
                   <h3 className="font-serif text-2xl text-text">{moment.name}</h3>
                   <span className="hidden rounded-full border border-primary/30 px-3 py-1 text-xs uppercase tracking-[0.18em] text-primary sm:inline-flex">
-                    Comment l'utiliser
+                    Comment ’tiliser
                   </span>
                 </div>
                 <div className="grid gap-4 md:grid-cols-3">
@@ -268,7 +268,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
   return (
     <>
       <SEO
-        title="Les Rituels Doiry | Guide d'utilisation botanique"
+        title="Les Rituels Doiry | Guide ’tilisation botanique"
         description="Comment utiliser les pré-roulés, le Vrac Botanique, les infusions et les coffrets Doiry selon chaque moment de la journée."
         url="https://doiryshop.com/rituels"
       />
@@ -365,10 +365,10 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
             <div className="mb-8 flex items-end justify-between gap-6">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Liste rapide</span>
-                <h2 className="mt-3 font-serif text-3xl text-text md:text-4xl">Tous les moments d'utilisation</h2>
+                <h2 className="mt-3 font-serif text-3xl text-text md:text-4xl">Tous les moments ’tilisation</h2>
               </div>
               <p className="hidden max-w-sm text-sm leading-6 text-text-muted md:block">
-                Cliquez sur un moment pour accéder au produit adapté et à sa méthode d'utilisation.
+                Cliquez sur un moment pour accéder au produit adapté et à sa méthode ’tilisation.
               </p>
             </div>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">

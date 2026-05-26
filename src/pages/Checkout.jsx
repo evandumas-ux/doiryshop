@@ -281,7 +281,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
         >
           <CheckCircle2 size={80} className="text-green-500 mx-auto mb-6" />
         </MotionDiv>
-        <h2 className="text-3xl font-serif mb-4 text-text">Commande confirmée ! �x}0</h2>
+        <h2 className="text-3xl font-serif mb-4 text-text">Commande confirmée ! 🎉</h2>
         <p className="text-text-light mb-2 max-w-md">Merci pour votre achat. Votre commande a été enregistrée avec succès.</p>
         <p className="text-text-muted text-sm mb-8">Vous allez être redirigé vers l'accueil...</p>
         <Link to="/" className="px-8 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors">
