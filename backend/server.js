@@ -589,7 +589,7 @@ app.get('/api/auth/me', verifyToken, (req, res) => {
   const query = `SELECT id, name, email, role, prenom, nom, profil_complete, created_at FROM users WHERE id = ?`;
   db.get(query, [req.user.id], (err, user) => {
     if (err) return res.status(500).json({ error: 'Erreur serveur.' });
-    if (!user) return res.status(404).json({ error: 'Email ou mot de passe incorrect.' });
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
     if (user.profil_complete !== undefined) {
       user.profil_complete = true; // ne plus bloquer
