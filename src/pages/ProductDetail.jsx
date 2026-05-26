@@ -81,7 +81,7 @@ const ProductGallery = ({ images: rawImages, productName }) => {
   );
 };
 
-const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
 const parseTags = (tags) => {
   if (Array.isArray(tags)) return tags;
@@ -494,7 +494,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
               <div className="product-price-container">
                 <div className="flex items-baseline gap-4">
-                  <span className="product-price-current">{formatPrice(product.price)}</span>
+                  <span className="product-price-current">{formatPrice(product.price)} TTC</span>
                   {product.stock > 0 ? (
                     <span className="text-sm text-text-muted">{stockMessage || 'En stock'}</span>
                   ) : (

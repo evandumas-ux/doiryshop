@@ -171,11 +171,22 @@ async function sendOrderConfirmation(email, order, options = {}) {
   const revolutLink = buildRevolutPaymentLink({ amount: order.total, orderId: order.id, reference: orderReference });
   const logoDataUri = getEmailLogoDataUri();
 
+  const getProductEmoji = (name) => {
+    const n = name.toLowerCase();
+    if (n.includes('infusion') || n.includes('tisane') || n.includes('nocturne') || n.includes('détente') || n.includes('sérénité')) {
+      if (n.includes('camomille')) return '🌼';
+      return '🍵';
+    }
+    if (n.includes('roulage') || n.includes('papier') || n.includes('filtre')) return '📄';
+    if (n.includes('pré-roulé') || n.includes('essentiel') || n.includes('vrac') || n.includes('base pure') || n.includes('cigarette')) return '🚬🌿';
+    return '';
+  };
+
   const produitsHtml = produits.map((p) => `
     <tr>
-      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;">${p.name || 'Produit'}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#d6d0c8;font-size:14px;text-align:center;">${p.quantity || 1}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;text-align:right;font-weight:600;">${((p.price || 0) * (p.quantity || 1)).toFixed(2)} €</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;">${p.name || 'Produit'} ${getProductEmoji(p.name || '')}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#d6d0c8;font-size:14px;text-align:center;"> ${p.quantity || 1}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;text-align:right;font-weight:600;">${((p.price || 0) * (p.quantity || 1)).toFixed(2)} € </td>
     </tr>
   `).join('');
 
@@ -191,7 +202,7 @@ async function sendOrderConfirmation(email, order, options = {}) {
     const data = await resend.emails.send({
       from: FROM_COMMANDES,
       to: email,
-      subject: 'Votre commande Doiry Shop est enregistrée €xRR',
+      subject: 'Détails de la commande ☑️',
       attachments,
       html: `
 <!DOCTYPE html>
@@ -201,7 +212,7 @@ async function sendOrderConfirmation(email, order, options = {}) {
   <div style="max-width:640px;margin:24px auto;background:#121212;border:1px solid #2a2a2a;border-radius:16px;overflow:hidden;">
     <div style="padding:30px 28px;border-bottom:1px solid #2a2a2a;background:#151515;">
       ${logoDataUri ? `<img src="${logoDataUri}" alt="Doiry Shop" style="height:60px;width:auto;display:block;margin-bottom:14px;" />` : '<h1 style="margin:0 0 14px;color:#f4f1ec;font-family:Georgia,serif;">Doiry Shop</h1>'}
-      <p style="margin:0;color:#b9b2aa;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Commande enregistrée</p>
+      <p style="margin:0;color:#b9b2aa;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Détails de la commande ☑️</p>
       <p style="margin:8px 0 0;color:#f4f1ec;font-size:14px;">Référence <strong style="color:#e9d9de;">${orderReference}</strong></p>
     </div>
 
@@ -226,7 +237,7 @@ async function sendOrderConfirmation(email, order, options = {}) {
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid #2a2a2a;">
         <span style="color:#d6d0c8;font-size:14px;">Total TTC</span>
-        <span style="color:#f4f1ec;font-size:22px;font-weight:700;font-family:Georgia,serif;">${Number(order.total || 0).toFixed(2)} €</span>
+        <span style="color:#f4f1ec;font-size:22px;font-weight:700;font-family:Georgia,serif;">${Number(order.total || 0).toFixed(2)} €</span>
       </div>
 
       <div style="text-align:center;margin:26px 0 10px;">
@@ -265,7 +276,7 @@ async function sendOrderShippedEmail(email, order) {
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: `Votre commande #${order.id} est en route ! €xaa`,
+      subject: `Votre commande #${order.id} est en route ! 📦`,
       html: `
 <!DOCTYPE html>
 <html>

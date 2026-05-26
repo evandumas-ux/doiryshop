@@ -514,7 +514,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                           </p>
                         </div>
                         <div className="flex items-center justify-between sm:flex-col sm:items-end gap-1">
-                          <span className="font-bold text-accent text-lg">{Number(order?.total || 0).toFixed(2)} €</span>
+                          <span className="font-bold text-accent text-lg">{Number(order?.total || 0).toFixed(2)} €</span>
                           <span className="text-xs text-text-light">{Array.isArray(order?.produits) ? order.produits.length : 0} article(s)</span>
                         </div>
                       </div>

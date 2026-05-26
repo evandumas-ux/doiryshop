@@ -436,8 +436,8 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                             <strong>{opt.label}</strong>
                             <span className="font-bold">
                               {opt.free
-                                ? (<><span className="text-accent">GRATUIT</span><small className="line-through ml-2 text-text-muted">{opt.originalPrice.toFixed(2)} €</small></>)
-                                : (<span>{opt.price.toFixed(2)} €</span>)}
+                                ? (<><span className="text-accent">GRATUIT</span><small className="line-through ml-2 text-text-muted">{opt.originalPrice.toFixed(2)} €</small></>)
+                                : (<span>{opt.price.toFixed(2)} €</span>)}
                             </span>
                           </div>
                           <p className="text-sm text-text-light">{opt.description}</p>
@@ -501,9 +501,9 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium text-text">{item.name}</h4>
-                      <p className="text-sm text-text-light">{item.price} €</p>
+                      <p className="text-sm text-text-light">{item.price} €</p>
                     </div>
-                    <div className="font-medium text-accent">{(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} €</div>
+                    <div className="font-medium text-accent">{(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} €</div>
                   </div>
                 ))}
               </div>
@@ -517,7 +517,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                       <span className="text-emerald-400 font-medium text-sm">Code {appliedCoupon.code} appliqué</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-emerald-400 font-bold">- {discountAmount.toFixed(2)} €</span>
+                      <span className="text-emerald-400 font-bold">- {discountAmount.toFixed(2)} €</span>
                       <button type="button" onClick={handleRemovePromo} className="text-emerald-500 hover:text-emerald-300 p-1">
                         <X size={16} />
                       </button>
@@ -550,7 +550,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               <div className="border-t border-surface-border pt-4 space-y-3 mt-6">
                 <div className="flex justify-between text-text-light">
                   <span>Sous-total</span>
-                  <span>{parseFloat(subtotal).toFixed(2)} €</span>
+                  <span>{parseFloat(subtotal).toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between text-text-light">
                   <span>Frais de livraison</span>
@@ -561,7 +561,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                       selectedShipping.price === 0 ? (
                         <span style={{ color: '#4ade80' }}>Offerte</span>
                       ) : (
-                        <span>{Number(selectedShipping.price).toFixed(2)} €</span>
+                        <span>{Number(selectedShipping.price).toFixed(2)} €</span>
                       )
                     ) : (
                       <span></span>
@@ -571,18 +571,18 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                 {birthdayBonus.active && (
                   <div className="flex justify-between text-primary font-medium">
                     <span>Réduction membre anniversaire (-25%)</span>
-                    <span>- {birthdayDiscount.toFixed(2)} €</span>
+                    <span>- {birthdayDiscount.toFixed(2)} €</span>
                   </div>
                 )}
                 {appliedCoupon && (
                   <div className="flex justify-between text-emerald-400 font-medium">
                     <span>Réduction ({appliedCoupon.code})</span>
-                    <span>- {discountAmount.toFixed(2)} €</span>
+                    <span>- {discountAmount.toFixed(2)} €</span>
                   </div>
                 )}
                 <div className="flex justify-between items-center text-xl font-serif font-bold pt-4 border-t border-surface-border text-accent">
                   <span>Total TTC</span>
-                  <span>{parseFloat(total).toFixed(2)} €</span>
+                  <span>{parseFloat(total).toFixed(2)} €</span>
                 </div>
               </div>
 
