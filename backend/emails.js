@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { Resend } = require('resend');
 
 // Utilise la clé API depuis les variables d'environnement
@@ -7,6 +9,32 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = 'Doiry Shop <onboarding@resend.dev>';
 const FROM_CONTACT = 'Doiry Shop <contact@doiryshop.com>';
 const FROM_COMMANDES = 'Doiry Shop <commandes@doiryshop.com>';
+const DEFAULT_REVOLUT_URL = process.env.REVOLUT_ME_URL || 'https://revolut.me/dumase07';
+
+const buildOrderReference = (orderId) => `dry-${orderId}`;
+
+const buildRevolutPaymentLink = ({ amount, orderId, reference }) => {
+  const params = new URLSearchParams();
+  if (amount) params.set('amount', Number(amount).toFixed(2));
+  if (reference) params.set('reference', reference);
+  else if (orderId) params.set('reference', buildOrderReference(orderId));
+  return `${DEFAULT_REVOLUT_URL}?${params.toString()}`;
+};
+
+const getEmailLogoDataUri = () => {
+  const logoCandidates = [
+    path.resolve(__dirname, '../public/favicon.jpg'),
+    path.resolve(__dirname, '../public/logo.jpg'),
+  ];
+  const logoPath = logoCandidates.find((candidate) => fs.existsSync(candidate));
+  if (!logoPath) return null;
+  try {
+    const logoBase64 = fs.readFileSync(logoPath).toString('base64');
+    return `data:image/jpeg;base64,${logoBase64}`;
+  } catch {
+    return null;
+  }
+};
 
 /**
  * Envoie un email de bienvenue à la newsletter.
@@ -136,134 +164,85 @@ async function sendWelcomeEmail(email, prenom) {
 /**
  * Envoie un email de confirmation de commande.
  */
-async function sendOrderConfirmation(email, order) {
+async function sendOrderConfirmation(email, order, options = {}) {
   const produits = Array.isArray(order.produits) ? order.produits : JSON.parse(order.produits || '[]');
   const adresse = typeof order.adresse_livraison === 'object' ? order.adresse_livraison : JSON.parse(order.adresse_livraison || '{}');
+  const orderReference = order.reference || buildOrderReference(order.id);
+  const revolutLink = buildRevolutPaymentLink({ amount: order.total, orderId: order.id, reference: orderReference });
+  const logoDataUri = getEmailLogoDataUri();
 
-  const produitsHtml = produits.map(p => `
+  const produitsHtml = produits.map((p) => `
     <tr>
-      <td style="padding:12px 0;border-bottom:1px solid #EEEEE8;color:#2D3B2A;font-size:14px;">
-        ${p.name || 'Produit'}
-      </td>
-      <td style="padding:12px 0;border-bottom:1px solid #EEEEE8;color:#5A6855;font-size:14px;text-align:center;">
-        ×${p.quantity || 1}
-      </td>
-      <td style="padding:12px 0;border-bottom:1px solid #EEEEE8;color:#2D3B2A;font-size:14px;text-align:right;font-weight:600;">
-        ${((p.price || 0) * (p.quantity || 1)).toFixed(2)} €
-      </td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;">${p.name || 'Produit'}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#d6d0c8;font-size:14px;text-align:center;">×${p.quantity || 1}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;text-align:right;font-weight:600;">${((p.price || 0) * (p.quantity || 1)).toFixed(2)} €</td>
     </tr>
   `).join('');
 
-  const shippingMethodLabel = {
-    'LETTRE_VERTE_SUIVIE': 'Lettre Verte Suivie',
-    'COLISSIMO': 'Colissimo Domicile'
-  }[order.shipping_method] || 'Standard';
-
-  const adresseHtml = adresse && Object.keys(adresse).length > 0
-    ? `
-      <div style="margin-top:28px;padding:20px;background:#F5F5F0;border-radius:12px;">
-        <h3 style="margin:0 0 12px;color:#2D3B2A;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">
-          📍 Livraison via ${shippingMethodLabel}
-        </h3>
-        <p style="margin:0;color:#5A6855;font-size:14px;line-height:1.7;">
-          ${adresse.fname || ''} ${adresse.lname || ''}<br/>
-          ${adresse.address || ''}<br/>
-          ${adresse.zip || ''} ${adresse.city || ''}<br/>
-          ${adresse.country || 'France'}
-        </p>
-      </div>
-    ` : '';
+  const attachments = [];
+  if (options.invoiceBuffer) {
+    attachments.push({
+      filename: options.filename || `facture-${order.id}.pdf`,
+      content: options.invoiceBuffer.toString('base64'),
+    });
+  }
 
   try {
     const data = await resend.emails.send({
       from: FROM_COMMANDES,
       to: email,
-      subject: `🌿 Confirmation de votre commande - Doiry Shop`,
+      subject: 'Votre commande Doiry Shop est enregistrée 🌌',
+      attachments,
       html: `
-    <!DOCTYPE html>
-    <html>
-    <head><meta charset="utf-8"></head>
-    <body style="margin:0;padding:0;background-color:#FAFAF7;font-family:'Segoe UI',Arial,sans-serif;">
-    <div style="max-width:600px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-
-    <!-- Header -->
-    <div style="background:linear-gradient(135deg,#831b2f 0%,#a8192b 100%);padding:40px 32px;text-align:center;">
-      <h1 style="margin:0;color:#ffffff;font-size:28px;font-family:Georgia,serif;font-weight:400;">
-        Doiry Shop
-      </h1>
-      <p style="margin:8px 0 0;color:rgba(255,255,255,0.85);font-size:14px;letter-spacing:1px;">CONFIRMATION DE COMMANDE</p>
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background-color:#0d0d0d;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="max-width:640px;margin:24px auto;background:#121212;border:1px solid #2a2a2a;border-radius:16px;overflow:hidden;">
+    <div style="padding:30px 28px;border-bottom:1px solid #2a2a2a;background:#151515;">
+      ${logoDataUri ? `<img src="${logoDataUri}" alt="Doiry Shop" style="height:60px;width:auto;display:block;margin-bottom:14px;" />` : '<h1 style="margin:0 0 14px;color:#f4f1ec;font-family:Georgia,serif;">Doiry Shop</h1>'}
+      <p style="margin:0;color:#b9b2aa;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Commande enregistrée</p>
+      <p style="margin:8px 0 0;color:#f4f1ec;font-size:14px;">Référence <strong style="color:#e9d9de;">${orderReference}</strong></p>
     </div>
 
-    <!-- Corps -->
-    <div style="padding:40px 32px;">
-      <div style="text-align:center;margin-bottom:32px;">
-        <div style="display:inline-block;width:64px;height:64px;line-height:64px;background:#E8F0E4;border-radius:50%;font-size:28px;">
-          ✓
-        </div>
-        <h2 style="margin:16px 0 8px;color:#2D3B2A;font-family:Georgia,serif;font-size:22px;font-weight:400;">
-          Votre commande est confirmee
-        </h2>
-        <p style="margin:0;color:#8A9080;font-size:14px;">
-          Commande <strong style="color:#6B7F5E;">#${order.id}</strong> · ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-        </p>
-      </div>
-
-      <p style="color:#5A6855;font-size:15px;line-height:1.7;margin:0 0 24px;">
-        Merci pour votre confiance. Nous preparons votre colis avec discretion et attention, puis nous vous informerons des qu'il est en route.
+    <div style="padding:28px;">
+      <p style="margin:0 0 16px;color:#f4f1ec;font-size:16px;line-height:1.7;">
+        Merci pour votre confiance. Votre commande est bien enregistrée.
+      </p>
+      <p style="margin:0 0 16px;color:#d6d0c8;font-size:14px;line-height:1.7;">
+        Pour valider votre achat et déclencher l'expédition sous 48h, merci d'effectuer votre virement Revolut en indiquant impérativement la référence <strong style="color:#f4f1ec;">${orderReference}</strong> en note.
       </p>
 
-      <!-- Tableau produits -->
-      <table style="width:100%;border-collapse:collapse;">
+      <table style="width:100%;border-collapse:collapse;margin:20px 0 10px;">
         <thead>
           <tr>
-            <th style="text-align:left;padding:0 0 12px;color:#8A9080;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #EEEEE8;">Produit</th>
-            <th style="text-align:center;padding:0 0 12px;color:#8A9080;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #EEEEE8;">Qté</th>
-            <th style="text-align:right;padding:0 0 12px;color:#8A9080;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #EEEEE8;">Prix</th>
+            <th style="text-align:left;padding-bottom:10px;color:#8b263e;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #2a2a2a;">Produit</th>
+            <th style="text-align:center;padding-bottom:10px;color:#8b263e;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #2a2a2a;">Qté</th>
+            <th style="text-align:right;padding-bottom:10px;color:#8b263e;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #2a2a2a;">Total TTC</th>
           </tr>
         </thead>
-        <tbody>
-          ${produitsHtml}
-        </tbody>
+        <tbody>${produitsHtml}</tbody>
       </table>
 
-      <!-- Total -->
-      <div style="margin-top:20px;padding:16px 0;border-top:2px solid #6B7F5E;display:flex;justify-content:space-between;align-items:center;">
-        <span style="color:#2D3B2A;font-size:16px;font-weight:600;">Total TTC</span>
-        <span style="color:#6B7F5E;font-size:24px;font-weight:700;font-family:Georgia,serif;">${Number(order.total).toFixed(2)} €</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid #2a2a2a;">
+        <span style="color:#d6d0c8;font-size:14px;">Total TTC</span>
+        <span style="color:#f4f1ec;font-size:22px;font-weight:700;font-family:Georgia,serif;">${Number(order.total || 0).toFixed(2)} €</span>
       </div>
 
-      ${adresseHtml}
-
-      <!-- Revolut Payment Reminder -->
-      <div style="margin-top:32px;padding:24px;background:#f9f9f9;border-left:4px solid #831b2f;border-radius:4px;">
-        <h3 style="margin:0 0 12px;color:#333;font-size:16px;font-weight:600;">Règlement de votre commande</h3>
-        <p style="margin:0 0 16px;color:#555;font-size:14px;line-height:1.6;">
-          N'oubliez pas de finaliser votre paiement instantané via Revolut pour que nous puissions préparer votre colis.
-        </p>
-        <a href="https://revolut.me/your_revolut_link_here" target="_blank" style="display:inline-block;background:#000;color:#fff;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:14px;font-weight:600;">
-          Payer via Revolut
+      <div style="text-align:center;margin:26px 0 10px;">
+        <a href="${revolutLink}" target="_blank" style="display:inline-block;background:#8b263e;color:#ffffff;text-decoration:none;padding:14px 26px;border-radius:10px;font-size:14px;font-weight:700;letter-spacing:0.3px;">
+          Payer maintenant via Revolut
         </a>
       </div>
-
-      <p style="color:#5A6855;font-size:14px;line-height:1.7;margin:24px 0 0;">
-        En attendant, prenez soin de vous. Chaque commande Doiry Shop est preparee pour vous offrir un rituel naturel, artisanal et soigne.
+      <p style="margin:8px 0 0;color:#908880;font-size:12px;text-align:center;">
+        La facture PDF est jointe à cet email.
       </p>
     </div>
-
-    <!-- Footer -->
-    <div style="padding:24px 32px;background:#F5F5F0;border-top:1px solid #E8E8E0;text-align:center;">
-      <p style="margin:0 0 8px;color:#5A6855;font-size:13px;">
-        Une question ? Répondez directement à cet email.
-      </p>
-      <p style="margin:0;color:#8A9080;font-size:12px;">
-        © 2026 Doiry Shop · Tous droits reserves
-      </p>
-    </div>
-    </div>
-    </body>
-    </html>`
+  </div>
+</body>
+</html>`
     });
-    console.log(`✅ Email de confirmation envoyé à ${email} pour la commande #${order.id}`, data);
+    console.log(`✅ Email premium envoyé à ${email} pour la commande #${order.id}`);
     return data;
   } catch (error) {
     console.error('❌ Erreur envoi email confirmation:', error);

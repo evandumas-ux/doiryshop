@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Package, Clock, CheckCircle2, AlertCircle, Truck, ChevronDown, ShoppingBag } from 'lucide-react';
 import { useLogto } from '@logto/react';
-import { getMyOrders } from '../services/api';
+import { downloadOrderInvoice, getMyOrders } from '../services/api';
 
 const MyOrders = ({ user, isInitializing }) => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ const MyOrders = ({ user, isInitializing }) => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const [downloadingInvoiceId, setDownloadingInvoiceId] = useState(null);
 
   useEffect(() => {
     // Attendre que l'initialisation auth soit terminée
@@ -41,6 +42,25 @@ const MyOrders = ({ user, isInitializing }) => {
       case 'en attente': return { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20', icon: Clock, label: 'En attente' };
       case 'expédiée': return { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20', icon: Truck, label: 'Expédiée' };
       default: return { bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20', icon: AlertCircle, label: status };
+    }
+  };
+
+  const handleDownloadInvoice = async (orderId) => {
+    try {
+      setDownloadingInvoiceId(orderId);
+      const blob = await downloadOrderInvoice(orderId);
+      const fileUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = `facture-${orderId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(fileUrl);
+    } catch (err) {
+      console.error('Erreur téléchargement facture:', err);
+    } finally {
+      setDownloadingInvoiceId(null);
     }
   };
 
@@ -168,6 +188,16 @@ const MyOrders = ({ user, isInitializing }) => {
                             </span>
                           </div>
                         ))}
+                        <div className="pt-2">
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadInvoice(order.id)}
+                            disabled={downloadingInvoiceId === order.id}
+                            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#8b263e]/40 text-[#d8c4ca] hover:bg-[#8b263e]/15 transition-colors text-sm font-medium disabled:opacity-60"
+                          >
+                            {downloadingInvoiceId === order.id ? 'Téléchargement...' : 'Télécharger ma facture (PDF)'}
+                          </button>
+                        </div>
                       </div>
                     </motion.div>
                   )}

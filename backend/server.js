@@ -25,6 +25,7 @@ const { seedDatabase } = require('./seed');
 seedDatabase();
 
 const { sendOrderConfirmation, sendWelcomeEmail, sendOrderShippedEmail } = require('./emails');
+const { generateInvoicePDF } = require('./invoice');
 
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
@@ -771,6 +772,44 @@ app.get('/api/orders/my-orders', verifyToken, (req, res) => {
 });
 
 /**
+ * GET /api/orders/:orderId/invoice
+ * Télécharge la facture PDF d'une commande.
+ */
+app.get('/api/orders/:orderId/invoice', verifyToken, (req, res) => {
+  const { orderId } = req.params;
+  const isAdmin = req.user?.role === 'admin';
+  const params = isAdmin ? [orderId] : [orderId, req.user.id];
+  const query = isAdmin
+    ? 'SELECT * FROM orders WHERE id = ?'
+    : 'SELECT * FROM orders WHERE id = ? AND user_id = ?';
+
+  db.get(query, params, async (err, order) => {
+    if (err) {
+      console.error('[INVOICE] Erreur SQL:', err.message);
+      return res.status(500).json({ error: 'Erreur lors de la récupération de la facture.' });
+    }
+    if (!order) {
+      return res.status(404).json({ error: 'Commande introuvable ou accès refusé.' });
+    }
+
+    try {
+      const pdfBuffer = await generateInvoicePDF({
+        ...order,
+        id: order.id,
+        reference: `dry-${order.id}`,
+      });
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="facture-${order.id}.pdf"`);
+      return res.send(pdfBuffer);
+    } catch (invoiceErr) {
+      console.error('[INVOICE] Erreur génération PDF:', invoiceErr.message);
+      return res.status(500).json({ error: 'Impossible de générer la facture PDF.' });
+    }
+  });
+});
+
+/**
  * POST /api/orders
  * Créer une nouvelle commande après validation du paiement.
  */
@@ -855,7 +894,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
         reference: orderReference
       });
 
-      // === ATTRIBUTION POINTS DE FIDÉLITÉ & EMAIL ===
+      // === ATTRIBUTION POINTS DE FIDÉLITÉ ===
       if (statut_paiement !== 'en_attente') {
         if (userId) {
           const pointsCommande = Math.round(total); // 1 Plume par euro dépensé
@@ -888,15 +927,29 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
           });
         }
 
-        // Envoyer l'email de confirmation en arrière-plan (non-bloquant) pour tous (invités et connectés)
-        if (finalEmail) {
-          sendOrderConfirmation(finalEmail, {
-            id: orderId,
-            produits: typeof produits === 'string' ? JSON.parse(produits) : produits,
-            total,
-            adresse_livraison: typeof adresse_livraison === 'string' ? JSON.parse(adresse_livraison) : adresse_livraison
-          }).catch(err => console.error('Erreur envoi email confirmation:', err));
-        }
+      }
+
+      // Email premium + facture PDF (non bloquant) dès la création de commande
+      if (finalEmail) {
+        const parsedProduits = typeof produits === 'string' ? JSON.parse(produits) : produits;
+        const parsedAdresse = typeof adresse_livraison === 'string' ? JSON.parse(adresse_livraison) : adresse_livraison;
+        const mailOrder = {
+          id: orderId,
+          reference: orderReference,
+          produits: parsedProduits,
+          total,
+          shipping_price: recalculatedShippingPrice,
+          adresse_livraison: parsedAdresse,
+          shipping_method,
+          date_creation: new Date().toISOString()
+        };
+
+        generateInvoicePDF(mailOrder)
+          .then((invoiceBuffer) => sendOrderConfirmation(finalEmail, mailOrder, {
+            invoiceBuffer,
+            filename: `facture-${orderId}.pdf`,
+          }))
+          .catch((mailErr) => console.error('Erreur envoi email premium:', mailErr));
       }
     });
   } catch (err) {

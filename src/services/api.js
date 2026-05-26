@@ -190,6 +190,27 @@ export const getMyOrders = async (userId = null) => {
   return { orders: [] };
 };
 
+export const downloadOrderInvoice = async (orderId) => {
+  const response = await fetch(`${API_URL}/orders/${orderId}/invoice`, {
+    method: 'GET',
+    credentials: 'include'
+  });
+
+  if (!response.ok) {
+    let message = 'Impossible de télécharger la facture.';
+    try {
+      const payload = await response.json();
+      if (payload?.error) message = payload.error;
+    } catch {
+      // fallback message
+    }
+    throw new Error(message);
+  }
+
+  const blob = await response.blob();
+  return blob;
+};
+
 // ====== ADMIN ======
 
 /**

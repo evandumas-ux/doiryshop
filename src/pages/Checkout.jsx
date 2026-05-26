@@ -10,6 +10,7 @@ import { buildOrderReference, buildRevolutMeUrl } from '../utils/revolutPayment'
 const MotionDiv = motion.div;
 const Checkout = ({ cartItems, setCartItems, user }) => {
   const { isAuthenticated, signIn } = useLogto();
+  const redirectToAuth = () => signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL || `${window.location.origin}/callback`);
   const subtotal = cartItems.reduce((acc, item) => acc + (parseFloat(item.price) * parseInt(item.quantity)), 0);
 
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -170,7 +171,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
     e.preventDefault();
 
     if (!user || isAuthenticated === false) {
-      signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL || `${window.location.origin}/callback`);
+      redirectToAuth();
       return;
     }
 
@@ -462,7 +463,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               onClick={(e) => {
                 if (!user || isAuthenticated === false) {
                   e.preventDefault();
-                  signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL || `${window.location.origin}/callback`);
+                  redirectToAuth();
                   return;
                 }
                 if (!isValid || shippingOptions.length === 0 || !selectedShipping) {
