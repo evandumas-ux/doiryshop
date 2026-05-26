@@ -9,7 +9,7 @@ const updates = [
   { id: 12, subtitle: "3 pré-roulés aux plantes, sans tabac ni nicotine — prêts à l'emploi." },
   { id: 13, subtitle: "5 pré-roulés aux plantes — format quotidien, zéro préparation." },
   { id: 14, subtitle: "Tout pour rouler vos propres cigarettes de plantes dès ce soir." },
-  { id: 15, subtitle: "Infusion valériane-passiflore pour s'endormir naturellement — 50g en vrac." },
+  { id: 15, subtitle: "Infusion framboisier-camomille pour s'endormir naturellement — 50g en vrac." },
   { id: 16, subtitle: "20 sachets de tisane apaisante du soir — pour 20 nuits de détente." },
   { id: 17, subtitle: "10 sachets pour tester la tisane du soir sans engagement." },
   { id: 18, subtitle: "Coffret cadeau détente — infusion, bougie et rituel du soir réunis." }

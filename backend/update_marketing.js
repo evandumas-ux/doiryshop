@@ -38,8 +38,8 @@ const descriptions = {
 
   // L'Élixir Nocturne 50g
   "elixir-nocturne-infusion-vrac": {
-    desc: `Valériane, mélisse, passiflore, aubépine.
-    Quatre plantes, un seul but : calmer. Infusez 10 minutes, laissez faire.
+    desc: `Feuilles de framboisier et camomille.
+    Deux plantes, un seul but : calmer. Infusez 10 minutes, laissez faire.
     Le sommeil ne se force pas — il s'accompagne.`,
     img: '/images/boite_infusion_kraft.png'
   },
