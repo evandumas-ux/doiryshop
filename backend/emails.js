@@ -67,7 +67,7 @@ async function sendNewsletterWelcomeEmail(email) {
         Votre inscription est bien confirmée. Vous recevrez bientot nos inspirations, nos nouveautés, et un moment de poésie dans votre boite de réception.
       </p>
       <div style="text-align:center;margin:32px 0;">
-        <a href="https://doiryshop.fr/#boutique" style="display:inline-block;background:#831b2f;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;transition:background 0.3s;">
+        <a href="https://doiryshop.com/#boutique" style="display:inline-block;background:#831b2f;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;transition:background 0.3s;">
           Découvrir nos créations
         </a>
       </div>
@@ -132,7 +132,7 @@ async function sendWelcomeEmail(email, prenom) {
         Prenez votre temps, explorez la collection, et trouvez le format qui vous ressemble. Nous sommes ravis de vous accompagner dans cette transition.
       </p>
       <div style="text-align:center;margin:32px 0;">
-        <a href="https://doiryshop.fr/#boutique" style="display:inline-block;background:#A8192B;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;">
+        <a href="https://doiryshop.com/#boutique" style="display:inline-block;background:#A8192B;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;">
           Decouvrir la collection
         </a>
       </div>
@@ -385,7 +385,7 @@ async function sendCustomWelcomeEmail(email) {
         Pour vous remercier, voici un code de bienvenue de 10% valable sur votre première commande :<br/>
         <strong style="color:#ffffff;font-size:18px;letter-spacing:2px;display:block;margin-top:10px;">BIENVENUE10</strong>
       </p>
-      <a href="https://doiryshop.fr/#boutique" style="display:inline-block;background:#8b263e;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;">
+      <a href="https://doiryshop.com/#boutique" style="display:inline-block;background:#8b263e;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;">
         Découvrir la collection
       </a>
     </div>

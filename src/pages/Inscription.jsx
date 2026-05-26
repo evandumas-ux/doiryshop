@@ -110,7 +110,7 @@ export default function Inscription({ setUser }) {
       <SEO
         title="Inscription - Doiry Shop"
         description="Créez votre compte Doiry Shop."
-        url="https://doiryshop.fr/inscription"
+        url="https://doiryshop.com/inscription"
         robots="noindex, nofollow"
       />
 

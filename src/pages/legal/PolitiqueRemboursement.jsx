@@ -9,7 +9,7 @@ const PolitiqueRemboursement = () => {
       <SEO
         title="Politique de Remboursement"
         description="Politique de remboursement et conditions de retours de Doiry Shop."
-        url="https://doiryshop.fr/politique-remboursement"
+        url="https://doiryshop.com/politique-remboursement"
         robots="noindex, nofollow"
       />
       <div className="bg-surface border-b border-surface-border sticky top-0 z-10">
@@ -60,7 +60,7 @@ const PolitiqueRemboursement = () => {
               Afin de faciliter le traitement de votre demande, merci de suivre ces étapes :
             </p>
             <ol className="list-decimal pl-5 space-y-3">
-              <li><strong>Contact initial :</strong> Envoyez un e-mail à notre support client (contact@doiryshop.fr) contenant votre numéro de commande, la raison du retour, et d'éventuelles photos si le produit a été endommagé pendant le transport.</li>
+              <li><strong>Contact initial :</strong> Envoyez un e-mail à notre support client (contact@doiryshop.com) contenant votre numéro de commande, la raison du retour, et d'éventuelles photos si le produit a été endommagé pendant le transport.</li>
               <li><strong>Validation :</strong> Notre équipe traitera votre demande et vous confirmera si le retour est accepté ainsi que l'adresse postale où renvoyer les articles.</li>
               <li><strong>Renvoi :</strong> Vous expédiez les produits à vos frais (sauf erreur manifeste de notre part ou casse avérée liée au transporteur).</li>
             </ol>
@@ -89,8 +89,8 @@ const PolitiqueRemboursement = () => {
             <h2 className="text-2xl font-serif mb-4">6. Contact</h2>
             <p>
               Pour toute question relative aux retours et remboursements, vous pouvez nous joindre à tout moment à l'adresse suivante :{' '}
-              <a className="text-accent hover:underline" href="mailto:contact@doiryshop.fr">
-                contact@doiryshop.fr
+              <a className="text-accent hover:underline" href="mailto:contact@doiryshop.com">
+                contact@doiryshop.com
               </a>.
             </p>
           </section>

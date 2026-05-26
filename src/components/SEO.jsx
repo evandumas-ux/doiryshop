@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const SITE_NAME = 'Doiry Shop';
-const SITE_URL = 'https://doiryshop.fr';
+const SITE_URL = 'https://doiryshop.com';
 const DEFAULT_IMAGE = `${SITE_URL}/logo.jpg`;
 
 const SEO = ({

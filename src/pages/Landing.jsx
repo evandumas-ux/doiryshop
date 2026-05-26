@@ -335,7 +335,7 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
       <SEO
         title="Plantes séchées artisanales et infusions apaisantes | Doiry Shop"
         description="Découvrez nos plantes séchées artisanales et infusions apaisantes. Feuilles de framboisier, pré-roulés, tisanes et coffrets artisanaux."
-        url="https://doiryshop.fr/"
+        url="https://doiryshop.com/"
         type="website"
       />
       <Header onOpenCart={() => setIsCartOpen(true)} onOpenLogin={() => navigate('/login')} onLogout={onLogout} cartItemsCount={cartItemsCount} user={user} />

@@ -38,7 +38,7 @@ const About = () => {
       <SEO
         title="Notre histoire"
         description="Découvrez l'histoire fondatrice de Doiryshop et la transition qui a donné naissance à notre approche."
-        url="https://doiryshop.fr/about"
+        url="https://doiryshop.com/about"
       />
       <Navbar
         onOpenCart={() => {}}

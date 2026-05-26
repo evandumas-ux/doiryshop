@@ -9,7 +9,7 @@ const MentionsLegales = () => {
       <SEO
         title="Mentions Légales"
         description="Mentions légales de Doiry Shop."
-        url="https://doiryshop.fr/mentions-legales"
+        url="https://doiryshop.com/mentions-legales"
         robots="noindex, nofollow"
       />
       <div className="bg-surface border-b border-surface-border sticky top-0 z-10">
@@ -37,8 +37,8 @@ const MentionsLegales = () => {
             <p>Nom de l'entreprise ou du responsable : DUMAS Evan</p>
             <p>
               Email de contact :{' '}
-              <a className="text-accent hover:underline" href="mailto:contact@doiryshop.fr">
-                contact@doiryshop.fr
+              <a className="text-accent hover:underline" href="mailto:contact@doiryshop.com">
+                contact@doiryshop.com
               </a>
             </p>
           </section>

@@ -117,7 +117,7 @@ const createShipment = async (orderData) => {
         zip: SENDER_ZIP,
         country: SENDER_COUNTRY,
         phone: "0600000000",
-        email: "contact@doiryshop.fr"
+        email: "contact@doiryshop.com"
       },
       to: {
         name: orderData.client.name,

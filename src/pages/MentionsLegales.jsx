@@ -60,7 +60,7 @@ const MentionsLegales = () => {
 
           <Section number="3" title="Contact" icon={Mail}>
             <p>
-              Email : <a href="mailto:contact@doiryshop.fr" className="text-accent hover:underline">contact@doiryshop.fr</a><br />
+              Email : <a href="mailto:contact@doiryshop.com" className="text-accent hover:underline">contact@doiryshop.com</a><br />
               Téléphone : <span className="text-text-muted italic">[Numéro à compléter]</span>
             </p>
           </Section>

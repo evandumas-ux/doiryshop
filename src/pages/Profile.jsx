@@ -260,7 +260,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
         <SEO
           title="Mon profil | Doiry Shop"
           description="Accédez à votre profil Doiry Shop, vos informations et vos commandes."
-          url="https://doiryshop.fr/profil"
+          url="https://doiryshop.com/profil"
           robots="noindex, nofollow"
         />
         {/* Header */}

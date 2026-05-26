@@ -25,7 +25,7 @@ export default function ForgotPassword() {
       <SEO
         title="Mot de passe oublié - Doiry Shop"
         description="Réinitialisez votre mot de passe Doiry Shop"
-        url="https://doiryshop.fr/mot-de-passe-oublie"
+        url="https://doiryshop.com/mot-de-passe-oublie"
         robots="noindex, nofollow"
       />
       {/* Hieroglyphic background texture */}

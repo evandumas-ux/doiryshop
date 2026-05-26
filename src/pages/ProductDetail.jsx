@@ -305,7 +305,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
     );
   }
 
-  const productUrl = `https://doiryshop.fr/produit/${product.id}`;
+  const productUrl = `https://doiryshop.com/produit/${product.id}`;
   const productDescription = product.description || `Découvrez ${product.name} sur Doiry Shop.`;
   const structuredData = {
     '@context': 'https://schema.org',
@@ -780,7 +780,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         <section className="py-16">
           <div className="max-w-3xl mx-auto px-6 text-center">
             <p className="text-text-light font-light mb-6">
-              Vous avez des questions ? Écrivez-nous à <strong className="text-accent">contact@doiryshop.fr</strong>
+              Vous avez des questions ? Écrivez-nous à <strong className="text-accent">contact@doiryshop.com</strong>
             </p>
             <Link to="/" className="inline-flex items-center gap-2 text-primary font-medium hover:text-primary-light transition-colors">
               <ArrowLeft size={16} /> Voir tous nos produits

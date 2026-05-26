@@ -9,7 +9,7 @@ const PolitiqueConfidentialite = () => {
       <SEO
         title="Politique de Confidentialité"
         description="Politique de confidentialité et protection des données personnelles de Doiry Shop."
-        url="https://doiryshop.fr/politique-confidentialite"
+        url="https://doiryshop.com/politique-confidentialite"
         robots="noindex, nofollow"
       />
       <div className="bg-surface border-b border-surface-border sticky top-0 z-10">

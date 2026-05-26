@@ -9,7 +9,7 @@ const CGV = () => {
       <SEO
         title="CGV"
         description="Conditions générales de vente Doiry Shop."
-        url="https://doiryshop.fr/cgv"
+        url="https://doiryshop.com/cgv"
         robots="noindex, nofollow"
       />
       <div className="bg-surface border-b border-surface-border sticky top-0 z-10">
@@ -97,8 +97,8 @@ const CGV = () => {
             <h2 className="text-2xl font-serif mb-3">7. Modalités de rétractation</h2>
             <p>
               Le client dispose de 14 jours pour se rétracter sans justification en envoyant un email à{' '}
-              <a className="text-accent hover:underline" href="mailto:contact@doiryshop.fr">
-                contact@doiryshop.fr
+              <a className="text-accent hover:underline" href="mailto:contact@doiryshop.com">
+                contact@doiryshop.com
               </a>
               .
             </p>

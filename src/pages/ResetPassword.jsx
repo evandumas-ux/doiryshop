@@ -9,7 +9,7 @@ export default function ResetPassword() {
       <SEO
         title="Mot de passe oublié - Doiry Shop"
         description="Réinitialisez votre mot de passe Doiry Shop"
-        url="https://doiryshop.fr/reset-password"
+        url="https://doiryshop.com/reset-password"
         robots="noindex, nofollow"
       />
       {/* Hieroglyphic background texture */}

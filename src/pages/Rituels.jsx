@@ -270,7 +270,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
       <SEO
         title="Les Rituels Doiry | Guide d'utilisation botanique"
         description="Comment utiliser les pré-roulés, le Vrac Botanique, les infusions et les coffrets Doiry selon chaque moment de la journée."
-        url="https://doiryshop.fr/rituels"
+        url="https://doiryshop.com/rituels"
       />
 
       <Header

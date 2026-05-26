@@ -308,7 +308,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       <SEO
         title="Commande | Doiry Shop"
         description="Finalisez votre commande sur Doiry Shop"
-        url="https://doiryshop.fr/checkout"
+        url="https://doiryshop.com/checkout"
         robots="noindex, nofollow"
       />
       {/* Header */}

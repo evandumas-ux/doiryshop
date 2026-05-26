@@ -70,7 +70,7 @@ export default function Login({ user, setUser }) {
       <SEO
         title="Connexion - Doiry Shop"
         description="Connectez-vous à votre compte Doiry Shop"
-        url="https://doiryshop.fr/login"
+        url="https://doiryshop.com/login"
         robots="noindex, nofollow"
       />
       {/* Hieroglyphic background texture */}

@@ -39,9 +39,10 @@ const Footer = () => {
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
 
-  const handleSubmit = async (event) => {
+  const handleSubscribe = async (event) => {
     event.preventDefault();
     const emailValue = email.trim();
+    console.log("handleSubscribe triggered avec:", emailValue);
     if (!emailValue) {
       setEmailError(true);
       setEmailErrorMessage('Veuillez saisir votre email');
@@ -77,7 +78,7 @@ const Footer = () => {
             <h2 className="text-3xl font-serif text-text mb-2">Rejoins la communauté Doiry</h2>
             <p className="text-text-light">Recettes, rituels calmes et offres douces, directement par email.</p>
           </div>
-          <form onSubmit={handleSubmit} className="w-full md:w-[420px]">
+          <form onSubmit={handleSubscribe} className="w-full md:w-[420px]">
             <div className="flex gap-2">
               <input
                 type="email"

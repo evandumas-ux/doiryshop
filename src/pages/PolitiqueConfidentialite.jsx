@@ -48,7 +48,7 @@ const PolitiqueConfidentialite = () => {
               Le responsable du traitement des données personnelles est la société :<br />
               <strong className="text-text">DOIRY SHOP SAS</strong><br />
               Délégué à la Protection des Données (DPO) : <span className="text-text-muted italic">[Nom du DPO à compléter]</span><br />
-              Email de contact RGPD : <a href="mailto:rgpd@doiryshop.fr" className="text-accent hover:underline">rgpd@doiryshop.fr</a>
+              Email de contact RGPD : <a href="mailto:rgpd@doiryshop.com" className="text-accent hover:underline">rgpd@doiryshop.com</a>
             </p>
           </Section>
 
@@ -107,7 +107,7 @@ const PolitiqueConfidentialite = () => {
               <li><strong className="text-text">Droit d'opposition :</strong> refuser certains traitements (ex: marketing)</li>
             </ul>
             <p className="mt-4">
-              Pour exercer vos droits, vous pouvez nous contacter par email à <strong className="text-accent">rgpd@doiryshop.fr</strong>. 
+              Pour exercer vos droits, vous pouvez nous contacter par email à <strong className="text-accent">rgpd@doiryshop.com</strong>. 
               Vous avez également le droit d'introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" className="text-primary hover:underline">www.cnil.fr</a>).
             </p>
           </Section>

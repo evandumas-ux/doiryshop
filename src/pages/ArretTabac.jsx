@@ -212,7 +212,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
       <SEO 
         title="Arrêter de fumer : Les vrais bénéfices et économies | DoiryShop"
         description="Découvrez les bénéfices concrets de l'arrêt du tabac : santé, souffle, et calculez vos économies. DoiryShop vous accompagne avec des alternatives sans nicotine."
-        url="https://doiryshop.fr/arret-tabac"
+        url="https://doiryshop.com/arret-tabac"
       />
 
       <Header 
