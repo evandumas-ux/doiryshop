@@ -45,7 +45,7 @@ const PolitiqueConfidentialite = () => {
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3 text-text">2. DONN�0ES COLLECT�0ES</h2>
+            <h2 className="text-2xl font-serif mb-3 text-text">2. DONNÉES COLLECTÉES</h2>
             <p className="mb-4">Dans le cadre de votre commande et de l'utilisation du site, nous collectons :</p>
             <ul className="list-disc pl-5 space-y-1 mb-4">
               <li>Nom, prénom, adresse email</li>
@@ -59,7 +59,7 @@ const PolitiqueConfidentialite = () => {
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3 text-text">3. FINALIT�0S DU TRAITEMENT</h2>
+            <h2 className="text-2xl font-serif mb-3 text-text">3. FINALITÉS DU TRAITEMENT</h2>
             <p className="mb-2">Vos données sont utilisées pour :</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Traiter et expédier votre commande</li>
@@ -71,7 +71,7 @@ const PolitiqueConfidentialite = () => {
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3 text-text">4. DUR�0E DE CONSERVATION</h2>
+            <h2 className="text-2xl font-serif mb-3 text-text">4. DURÉE DE CONSERVATION</h2>
             <ul className="list-disc pl-5 space-y-1">
               <li>Données de commande : 3 ans (obligation légale comptable)</li>
               <li>Données de compte : jusqu'à suppression de votre compte</li>
@@ -80,13 +80,13 @@ const PolitiqueConfidentialite = () => {
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3 text-text">5. PARTAGE DES DONN�0ES</h2>
+            <h2 className="text-2xl font-serif mb-3 text-text">5. PARTAGE DES DONNÉES</h2>
             <p className="mb-3">Vos données sont partagées uniquement avec :</p>
             <ul className="list-disc pl-5 space-y-2 mb-4">
-              <li><span className="font-medium text-text">Stripe</span> (paiement) � <a href="https://stripe.com/fr/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">stripe.com/fr/privacy</a></li>
-              <li><span className="font-medium text-text">Resend</span> (emails transactionnels) � <a href="https://resend.com/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">resend.com/privacy</a></li>
-              <li><span className="font-medium text-text">La Poste</span> (expédition) � <a href="https://www.laposte.fr/politique-de-confidentialite" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">laposte.fr/politique-de-confidentialite</a></li>
-              <li><span className="font-medium text-text">Logto</span> (authentification) � <a href="https://logto.io/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">logto.io/privacy</a></li>
+              <li><span className="font-medium text-text">Stripe</span> (paiement) € <a href="https://stripe.com/fr/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">stripe.com/fr/privacy</a></li>
+              <li><span className="font-medium text-text">Resend</span> (emails transactionnels) € <a href="https://resend.com/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">resend.com/privacy</a></li>
+              <li><span className="font-medium text-text">La Poste</span> (expédition) € <a href="https://www.laposte.fr/politique-de-confidentialite" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">laposte.fr/politique-de-confidentialite</a></li>
+              <li><span className="font-medium text-text">Logto</span> (authentification) € <a href="https://logto.io/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">logto.io/privacy</a></li>
             </ul>
             <p className="text-sm font-medium">Aucune donnée n'est vendue ou partagée à des fins publicitaires.</p>
           </section>
@@ -117,7 +117,7 @@ const PolitiqueConfidentialite = () => {
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3 text-text">8. S�0CURIT�0</h2>
+            <h2 className="text-2xl font-serif mb-3 text-text">8. SÉCURIT0</h2>
             <p className="mb-2">Vos données sont protégées par :</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Connexion HTTPS (SSL)</li>
@@ -127,11 +127,11 @@ const PolitiqueConfidentialite = () => {
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3 text-text">9. CONTACT & R�0CLAMATION</h2>
+            <h2 className="text-2xl font-serif mb-3 text-text">9. CONTACT & RÉCLAMATION</h2>
             <p className="mb-4">Pour toute question : <a href="mailto:doiryshop.pro@gmail.com" className="text-accent hover:underline">doiryshop.pro@gmail.com</a></p>
             <p>
               Vous pouvez également adresser une réclamation à la CNIL :<br />
-              <a href="https://www.cnil.fr" target="_blank" rel="noreferrer" className="text-accent hover:underline">cnil.fr</a> � 3 Place de Fontenoy, 75007 Paris
+              <a href="https://www.cnil.fr" target="_blank" rel="noreferrer" className="text-accent hover:underline">cnil.fr</a> € 3 Place de Fontenoy, 75007 Paris
             </p>
           </section>
         </div>

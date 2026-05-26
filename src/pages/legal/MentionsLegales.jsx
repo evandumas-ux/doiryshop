@@ -33,7 +33,7 @@ const MentionsLegales = () => {
 
         <div className="space-y-8 text-text-light leading-relaxed">
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3">�0diteur du site</h2>
+            <h2 className="text-2xl font-serif mb-3">Éditeur du site</h2>
             <p>Nom de l'entreprise ou du responsable : DUMAS Evan</p>
             <p>
               Email de contact :{' '}

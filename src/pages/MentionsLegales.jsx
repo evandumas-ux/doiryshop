@@ -32,14 +32,14 @@ const MentionsLegales = () => {
 
       <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">�ܥ Informations légales</span>
+          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">⚖️ Informations légales</span>
           <h1 className="text-4xl md:text-5xl font-serif text-text mb-3">Mentions Légales</h1>
           <p className="text-text-muted text-sm mb-12">Dernière mise à jour : Avril 2026</p>
         </motion.div>
 
         <div className="space-y-10 text-text-light font-light leading-relaxed">
 
-          <Section number="1" title="�0diteur du site" icon={Building2}>
+          <Section number="1" title="Éditeur du site" icon={Building2}>
             <p>
               Le site <strong className="text-accent">DOIRY SHOP</strong> est édité par :<br />
               <strong className="text-text">DOIRY SHOP SAS</strong><br />
@@ -111,7 +111,7 @@ const MentionsLegales = () => {
           {/* Séparateur décoratif */}
           <div className="pt-8 border-t border-surface-border">
             <p className="text-xs text-text-muted text-center">
-              Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'�0conomie Numérique.
+              Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'Économie Numérique.
             </p>
           </div>
         </div>

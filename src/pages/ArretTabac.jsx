@@ -70,7 +70,7 @@ const SavingsCalculator = () => {
     return () => clearTimeout(timer);
   }, [inputs.packs, inputs.cigarettes, pricePerPack, monthlySavings, yearlySavings]);
 
-  const formatPrice = (val) => val.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' ��';
+  const formatPrice = (val) => val.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €';
 
   return (
     <div className="bg-surface border border-surface-border rounded-3xl p-8 shadow-2xl relative overflow-hidden">
@@ -109,7 +109,7 @@ const SavingsCalculator = () => {
           </div>
         </div>
         <div className="space-y-3">
-          <label className="block text-sm text-text-light font-medium">Prix du paquet (��)</label>
+          <label className="block text-sm text-text-light font-medium">Prix du paquet ()</label>
           <div className="flex items-center bg-background border border-surface-border rounded-xl px-4 py-3">
             <input 
               type="number" 
@@ -414,7 +414,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               />
               <FAQItem 
                 question="Combien peut-on économiser en arrêtant ?"
-                answer="Tout dépend de votre consommation quotidienne. ì raison d'un paquet à 13�� par jour, l'économie s'élève à près de 400�� par mois, et plus de 4700�� par an. N'hésitez pas à utiliser notre calculateur plus haut pour obtenir votre propre estimation."
+                answer="Tout dépend de votre consommation quotidienne. À raison d'un paquet à 13— par jour, l'économie s'élève à près de 400— par mois, et plus de 4700— par an. N'hésitez pas à utiliser notre calculateur plus haut pour obtenir votre propre estimation."
               />
               <FAQItem 
                 question="DoiryShop remplace-t-il un traitement médical ?"

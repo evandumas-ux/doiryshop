@@ -32,7 +32,7 @@ const PolitiqueConfidentialite = () => {
 
       <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">�ܥ Protection des données</span>
+          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">⚖️ Protection des données</span>
           <h1 className="text-4xl md:text-5xl font-serif text-text mb-3">Politique de Confidentialité</h1>
           <p className="text-text-muted text-sm mb-12">Dernière mise à jour : Avril 2026</p>
         </motion.div>
@@ -127,7 +127,7 @@ const PolitiqueConfidentialite = () => {
 
           <Section number="7" title="Sécurité des données" icon={Lock}>
             <p>
-              DOIRY SHOP met en �uvre toutes les mesures techniques et organisationnelles appropriées pour garantir 
+              DOIRY SHOP met en €uvre toutes les mesures techniques et organisationnelles appropriées pour garantir 
               la sécurité de vos données, avec l'utilisation du protocole HTTPS, le hachage des mots de passe (via Logto), 
               et des accès restreints aux bases de données.
             </p>

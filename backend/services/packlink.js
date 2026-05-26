@@ -60,7 +60,7 @@ const fetchRates = async (destZip, destCountry = 'FR', packages, orderSubtotal =
     if (orderSubtotal >= 35) {
       filteredRates.unshift({
         id: 'free',
-        name: 'Livraison offerte �xR�',
+        name: 'Livraison offerte 🌿',
         carrier: 'Doiryshop',
         price: 0,
         transit_hours: 96,

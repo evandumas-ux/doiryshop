@@ -81,7 +81,7 @@ const ProductGallery = ({ images: rawImages, productName }) => {
   );
 };
 
-const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ��`;
+const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
 const parseTags = (tags) => {
   if (Array.isArray(tags)) return tags;
@@ -105,7 +105,7 @@ const formatCoffretDescription = (description) => {
 
   const normalized = String(description).replace(/\r\n/g, '\n');
   const sections = normalized
-    .split('�S�')
+    .split('✨ ')
     .map((chunk) => chunk.trim())
     .filter(Boolean)
     .map((chunk) => {
@@ -136,7 +136,7 @@ const formatCoffretDescription = (description) => {
     <div className="space-y-5">
       {sections.map((section) => (
         <div key={section.title} className="space-y-2">
-          {section.title && <p className="font-medium text-text">{`�S� ${section.title}`}</p>}
+          {section.title && <p className="font-medium text-text">{`✨  ${section.title}`}</p>}
           <div className="space-y-1.5">
             {section.bullets.map((bullet, bulletIndex) => (
               <p key={`${bullet}-${bulletIndex}`}>⬢ {bullet}</p>
@@ -213,9 +213,9 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
   
   let emotionalBadge = null;
   if (safeSlug === 'elixir-nocturne-infusion-vrac' || safeSlug.includes('elixir-nocturne')) emotionalBadge = "PROFIL APAISANT";
-  else if (safeSlug === 'coffret-transition-kit-roulage') emotionalBadge = "ASSEMBL�0 ì LA MAIN";
-  else if (tags.includes('pre-roules') || safeSlug.includes('pre-roules')) emotionalBadge = "PR�`T ì L'EMPLOI";
-  else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "ID�0AL CADEAU";
+  else if (safeSlug === 'coffret-transition-kit-roulage') emotionalBadge = "ASSEMBLÉ ì LA MAIN";
+  else if (tags.includes('pre-roules') || safeSlug.includes('pre-roules')) emotionalBadge = "PRÊT À L'EMPLOI";
+  else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "IDÉAL CADEAU";
 
   const isSubstitut = tags.includes('substitut');
   const isVracBotanique = product?.categorie === 'vrac' || tags.includes('vrac') || safeSlug.includes('vrac');
@@ -768,7 +768,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
             />
             <ProductFAQItem 
               question="ì quelle fréquence puis-je l'utiliser ?"
-              answer="L'utilisation dépend de vos besoins personnels. �0tant donné l'absence de nicotine, ce produit ne crée pas de dépendance physique. Vous pouvez l'utiliser pour remplacer progressivement un ancien rituel ou pour une pause ponctuelle."
+              answer="L'utilisation dépend de vos besoins personnels. Étant donné l'absence de nicotine, ce produit ne crée pas de dépendance physique. Vous pouvez l'utiliser pour remplacer progressivement un ancien rituel ou pour une pause ponctuelle."
             />
             <ProductFAQItem 
               question="Combien de temps se conserve-t-il ?"
@@ -780,7 +780,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         <section className="py-16">
           <div className="max-w-3xl mx-auto px-6 text-center">
             <p className="text-text-light font-light mb-6">
-              Vous avez des questions ? �0crivez-nous à <strong className="text-accent">contact@doiryshop.com</strong>
+              Vous avez des questions ? Écrivez-nous à <strong className="text-accent">contact@doiryshop.com</strong>
             </p>
             <Link to="/" className="inline-flex items-center gap-2 text-primary font-medium hover:text-primary-light transition-colors">
               <ArrowLeft size={16} /> Voir tous nos produits

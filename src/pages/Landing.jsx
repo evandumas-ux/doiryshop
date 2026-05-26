@@ -57,13 +57,13 @@ const Hero = () => (
       </p>
 
       <div className="text-xl md:text-2xl font-semibold text-white animate-fade-slide-up delay-300 tracking-wide mt-2">
-        �xR� 0% Nicotine <span className="opacity-50 mx-1">·</span> 100% Plantes
+        🌿 0% Nicotine <span className="opacity-50 mx-1">·</span> 100% Plantes
       </div>
 
       <div className="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 text-xs md:text-sm text-gray-400 animate-fade-slide-up delay-300 mt-2 mb-2">
-        <span className="flex items-center gap-1.5">�x� Livraison discrète sous 48h</span>
-        <span className="flex items-center gap-1.5">�S& 100% Légal en France</span>
-        <span className="flex items-center gap-1.5">�x Paiement Revolut sécurisé</span>
+        <span className="flex items-center gap-1.5">x— Livraison discrète sous 48h</span>
+        <span className="flex items-center gap-1.5">📧 100% Légal en France</span>
+        <span className="flex items-center gap-1.5">x Paiement Revolut sécurisé</span>
       </div>
 
       <div className="flex flex-col sm:flex-row items-center md:items-start gap-4 mt-2 w-full md:w-auto justify-center md:justify-start animate-fade-slide-up delay-400">
@@ -109,7 +109,7 @@ const WhyDoiryshop = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
           <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Notre démarche</span>
-          <h2 className="text-4xl md:text-5xl font-serif mb-6 text-text leading-tight">Plus qu�"un produit :<br/>une aide pour changer d�"habitude</h2>
+          <h2 className="text-4xl md:text-5xl font-serif mb-6 text-text leading-tight">Plus qu"un produit :<br/>une aide pour changer d"habitude</h2>
           <p className="text-text-light max-w-2xl mx-auto font-light leading-relaxed text-lg">
             DoiryShop accompagne une prise de distance avec le tabac en vous offrant une alternative végétale. 
             Retrouvez un autre rythme, à votre manière.

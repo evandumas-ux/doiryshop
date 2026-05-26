@@ -369,11 +369,11 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                     </div>
                     <div className="flex justify-between border-b border-surface-border pb-2.5">
                       <span className="text-text-light flex items-center gap-2"><Phone size={13} /> Téléphone</span>
-                      <span className="font-medium text-right">{profile?.telephone || '�'}</span>
+                      <span className="font-medium text-right">{profile?.telephone || ''}</span>
                     </div>
                     <div className="flex justify-between pb-1">
                       <span className="text-text-light flex items-center gap-2"><Calendar size={13} /> Naissance</span>
-                      <span className="font-medium text-right">{profile?.date_naissance ? new Date(profile.date_naissance).toLocaleDateString('fr-FR') : '�'}</span>
+                      <span className="font-medium text-right">{profile?.date_naissance ? new Date(profile.date_naissance).toLocaleDateString('fr-FR') : ''}</span>
                     </div>
                   </div>
                 )}
@@ -432,7 +432,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                 <h3 className="font-serif text-lg text-text mb-4">Parrainez vos amis</h3>
                 <p className="text-sm text-text-light mb-3">Votre code de parrainage</p>
                 <div className="bg-background border border-primary/30 rounded-2xl px-4 py-3 text-center mb-3">
-                  <p className="text-2xl font-bold tracking-widest text-primary">{referralCode || '�'}</p>
+                  <p className="text-2xl font-bold tracking-widest text-primary">{referralCode || ''}</p>
                 </div>
                 <button
                   onClick={handleCopyReferralLink}
@@ -447,7 +447,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                 <p className="text-sm text-text-light mt-3 text-center">{referralCount} ami(s) parrainé(s)</p>
                 <p className="text-sm text-text-muted mt-3 text-center">
                   Parrainez un ami et gagnez 50 Plumes. <br />
-                  Votre ami reçoit ��5% sur sa première commande.
+                  Votre ami reçoit €5% sur sa première commande.
                 </p>
               </motion.section>
 
@@ -472,7 +472,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
               </motion.div>
             </div>
 
-            {/* Colonne droite � Commandes */}
+            {/* Colonne droite € Commandes */}
             <div className="lg:col-span-2">
               <motion.section 
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
@@ -507,14 +507,14 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                             </span>
                           </div>
                           <p className="text-xs text-text-light flex items-center gap-1.5">
-                            <Clock size={12} /> {order?.date_creation ? new Date(order.date_creation).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) : '�'}
+                            <Clock size={12} /> {order?.date_creation ? new Date(order.date_creation).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}
                           </p>
                           <p className="text-xs text-text-muted mt-1">
                             {Array.isArray(order?.produits) ? order.produits.map(p => p?.name).filter(Boolean).join(', ') : ''}
                           </p>
                         </div>
                         <div className="flex items-center justify-between sm:flex-col sm:items-end gap-1">
-                          <span className="font-bold text-accent text-lg">{Number(order?.total || 0).toFixed(2)} ��</span>
+                          <span className="font-bold text-accent text-lg">{Number(order?.total || 0).toFixed(2)} €</span>
                           <span className="text-xs text-text-light">{Array.isArray(order?.produits) ? order.produits.length : 0} article(s)</span>
                         </div>
                       </div>

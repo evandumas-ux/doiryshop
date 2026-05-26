@@ -22,7 +22,7 @@ const storyParagraphs = [
   'Si cela pouvait exister pour eux, cela pouvait exister pour d\'autres.',
   '',
   'Doiryshop est né de cette transition.',
-  'Une manière de proposer, à ceux qui le souhaitent, une autre approche � plus douce, plus consciente, sans renier le geste.',
+  'Une manière de proposer, à ceux qui le souhaitent, une autre approche € plus douce, plus consciente, sans renier le geste.',
   "Ici, rien n'est excessif.",
   'Chaque produit est pensé comme une présence différente, plus calme, plus maîtrisée.',
   '',
@@ -68,7 +68,7 @@ const About = () => {
             to="/shop"
             className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
           >
-            Découvrir la collection � 
+            Découvrir la collection — 
           </Link>
         </div>
       </div>

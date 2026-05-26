@@ -76,8 +76,8 @@ const CGV = () => {
                 Les délais indicatifs sont de <strong>48 à 72h</strong> pour <strong>Colissimo Domicile (La Poste)</strong> (jours ouvrés), après expédition.
               </p>
               <p>
-                Les frais de livraison sont de <strong>7,59��</strong> par commande (Colissimo Domicile, La Poste, livraison en 2-3 jours ouvrés).
-                La livraison est offerte pour toute commande d'un montant supérieur ou égal à <strong>35��</strong>.
+                Les frais de livraison sont de <strong>7,59</strong> par commande (Colissimo Domicile, La Poste, livraison en 2-3 jours ouvrés).
+                La livraison est offerte pour toute commande d'un montant supérieur ou égal à <strong>35</strong>.
               </p>
               <p className="text-sm text-text-muted">
                 Les frais et délais exacts sont rappelés au moment du paiement, avant validation de la commande.

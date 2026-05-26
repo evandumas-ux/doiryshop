@@ -44,7 +44,7 @@ async function sendNewsletterWelcomeEmail(email) {
     const data = await resend.emails.send({
       from: FROM_CONTACT,
       to: email,
-      subject: `�xR� Bienvenue dans la communauté Doiry`,
+      subject: `🌿 Bienvenue dans la communauté Doiry`,
       html: `
 <!DOCTYPE html>
 <html>
@@ -85,10 +85,10 @@ async function sendNewsletterWelcomeEmail(email) {
 </body>
 </html>`
     });
-    console.log(`�S& Email de bienvenue newsletter envoyé à ${email}`);
+    console.log(`📧 Email de bienvenue newsletter envoyé à ${email}`);
     return data;
   } catch (error) {
-    console.error('�R Erreur envoi email newsletter:', error);
+    console.error('❌ Erreur envoi email newsletter:', error);
     throw error;
   }
 }
@@ -101,7 +101,7 @@ async function sendWelcomeEmail(email, prenom) {
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: `Bienvenue chez Doiry Shop, ${prenom || 'et bienvenue'} �S�`,
+      subject: `Bienvenue chez Doiry Shop, ${prenom || 'et bienvenue'} ✨ `,
       html: `
 <!DOCTYPE html>
 <html>
@@ -153,10 +153,10 @@ async function sendWelcomeEmail(email, prenom) {
 </body>
 </html>`
     });
-    console.log(`�S& Email de bienvenue envoyé à ${email}`, data);
+    console.log(`📧 Email de bienvenue envoyé à ${email}`, data);
     return data;
   } catch (error) {
-    console.error('�R Erreur envoi email bienvenue:', error);
+    console.error('❌ Erreur envoi email bienvenue:', error);
     throw error;
   }
 }
@@ -174,8 +174,8 @@ async function sendOrderConfirmation(email, order, options = {}) {
   const produitsHtml = produits.map((p) => `
     <tr>
       <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;">${p.name || 'Produit'}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#d6d0c8;font-size:14px;text-align:center;">�${p.quantity || 1}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;text-align:right;font-weight:600;">${((p.price || 0) * (p.quantity || 1)).toFixed(2)} ��</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#d6d0c8;font-size:14px;text-align:center;">${p.quantity || 1}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;text-align:right;font-weight:600;">${((p.price || 0) * (p.quantity || 1)).toFixed(2)} €</td>
     </tr>
   `).join('');
 
@@ -191,7 +191,7 @@ async function sendOrderConfirmation(email, order, options = {}) {
     const data = await resend.emails.send({
       from: FROM_COMMANDES,
       to: email,
-      subject: 'Votre commande Doiry Shop est enregistrée �xRR',
+      subject: 'Votre commande Doiry Shop est enregistrée €xRR',
       attachments,
       html: `
 <!DOCTYPE html>
@@ -226,7 +226,7 @@ async function sendOrderConfirmation(email, order, options = {}) {
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid #2a2a2a;">
         <span style="color:#d6d0c8;font-size:14px;">Total TTC</span>
-        <span style="color:#f4f1ec;font-size:22px;font-weight:700;font-family:Georgia,serif;">${Number(order.total || 0).toFixed(2)} ��</span>
+        <span style="color:#f4f1ec;font-size:22px;font-weight:700;font-family:Georgia,serif;">${Number(order.total || 0).toFixed(2)} €</span>
       </div>
 
       <div style="text-align:center;margin:26px 0 10px;">
@@ -242,10 +242,10 @@ async function sendOrderConfirmation(email, order, options = {}) {
 </body>
 </html>`
     });
-    console.log(`�S& Email premium envoyé à ${email} pour la commande #${order.id}`);
+    console.log(`📧 Email premium envoyé à ${email} pour la commande #${order.id}`);
     return data;
   } catch (error) {
-    console.error('�R Erreur envoi email confirmation:', error);
+    console.error('❌ Erreur envoi email confirmation:', error);
     throw error;
   }
 }
@@ -265,7 +265,7 @@ async function sendOrderShippedEmail(email, order) {
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: `Votre commande #${order.id} est en route ! �xaa`,
+      subject: `Votre commande #${order.id} est en route ! €xaa`,
       html: `
 <!DOCTYPE html>
 <html>
@@ -301,7 +301,7 @@ async function sendOrderShippedEmail(email, order) {
     });
     return data;
   } catch (err) {
-    console.error('�R Erreur email expédition:', err);
+    console.error('❌ Erreur email expédition:', err);
   }
 }
 
@@ -344,10 +344,10 @@ async function sendVerificationCodeEmail(email, code) {
 </body>
 </html>`
     });
-    console.log(`�S& Email code envoyé à ${email}`);
+    console.log(`📧 Email code envoyé à ${email}`);
     return data;
   } catch (error) {
-    console.error('�R Erreur envoi email code:', error);
+    console.error('❌ Erreur envoi email code:', error);
     throw error;
   }
 }
@@ -393,10 +393,10 @@ async function sendCustomWelcomeEmail(email) {
 </body>
 </html>`
     });
-    console.log(`�S& Email bienvenue envoyé à ${email}`);
+    console.log(`📧 Email bienvenue envoyé à ${email}`);
     return data;
   } catch (error) {
-    console.error('�R Erreur envoi email bienvenue:', error);
+    console.error('❌ Erreur envoi email bienvenue:', error);
     throw error;
   }
 }
