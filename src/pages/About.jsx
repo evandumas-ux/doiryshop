@@ -7,27 +7,27 @@ const Navbar = Header;
 
 const storyParagraphs = [
   'Certaines histoires commencent sans bruit.',
-  "La mienne s'est Ã©crite dans un quotidien oÃ¹ la fumÃ©e faisait partie du dÃ©cor.",
-  "Je n'ai jamais cherchÃ© Ã  juger, ni Ã  imposer.",
+  "La mienne s'est écrite dans un quotidien où la fumée faisait partie du décor.",
+  "Je n'ai jamais cherché à juger, ni à imposer.",
   "Mais j'ai voulu comprendre s'il existait une autre voie.",
-  'Quelque chose de plus nuancÃ©, de plus maÃ®trisÃ©.',
+  'Quelque chose de plus nuancé, de plus maîtrisé.',
   "Un geste qui reste, mais dont l'intention change.",
   '',
-  "Alors j'ai commencÃ©, simplement.",
+  "Alors j'ai commencé, simplement.",
   'Pour mes proches.',
-  'En explorant les plantes, leurs textures, leurs arÃ´mes, leur simplicitÃ©.',
+  'En explorant les plantes, leurs textures, leurs arômes, leur simplicité.',
   "En cherchant une alternative qui ne brusque pas, mais qui accompagne.",
   '',
-  'Peu Ã  peu, ce qui Ã©tait personnel est devenu Ã©vident.',
+  'Peu à peu, ce qui était personnel est devenu évident.',
   'Si cela pouvait exister pour eux, cela pouvait exister pour d\'autres.',
   '',
-  'Doiryshop est nÃ© de cette transition.',
-  'Une maniÃ¨re de proposer, Ã  ceux qui le souhaitent, une autre approche â€” plus douce, plus consciente, sans renier le geste.',
+  'Doiryshop est né de cette transition.',
+  'Une manière de proposer, à ceux qui le souhaitent, une autre approche � plus douce, plus consciente, sans renier le geste.',
   "Ici, rien n'est excessif.",
-  'Chaque produit est pensÃ© comme une prÃ©sence diffÃ©rente, plus calme, plus maÃ®trisÃ©e.',
+  'Chaque produit est pensé comme une présence différente, plus calme, plus maîtrisée.',
   '',
   "Ce n'est pas une promesse.",
-  "C'est une continuitÃ©.",
+  "C'est une continuité.",
 ];
 
 const About = () => {
@@ -37,7 +37,7 @@ const About = () => {
     <main className="min-h-screen bg-background text-text pt-28 pb-16 px-6">
       <SEO
         title="Notre histoire"
-        description="DÃ©couvrez l'histoire fondatrice de Doiryshop et la transition qui a donnÃ© naissance Ã  notre approche."
+        description="Découvrez l'histoire fondatrice de Doiryshop et la transition qui a donné naissance à notre approche."
         url="https://doiryshop.com/about"
       />
       <Navbar
@@ -68,7 +68,7 @@ const About = () => {
             to="/shop"
             className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
           >
-            DÃ©couvrir la collection â†’
+            Découvrir la collection � 
           </Link>
         </div>
       </div>

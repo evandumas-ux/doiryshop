@@ -2,10 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { Resend } = require('resend');
 
-// Utilise la clÃ© API depuis les variables d'environnement
+// Utilise la clé API depuis les variables d'environnement
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ExpÃ©diteur par dÃ©faut (onboarding@resend.dev en attendant un domaine custom)
+// Expéditeur par défaut (onboarding@resend.dev en attendant un domaine custom)
 const FROM_EMAIL = 'Doiry Shop <onboarding@resend.dev>';
 const FROM_CONTACT = 'Doiry Shop <contact@doiryshop.com>';
 const FROM_COMMANDES = 'Doiry Shop <commandes@doiryshop.com>';
@@ -37,14 +37,14 @@ const getEmailLogoDataUri = () => {
 };
 
 /**
- * Envoie un email de bienvenue Ã  la newsletter.
+ * Envoie un email de bienvenue à la newsletter.
  */
 async function sendNewsletterWelcomeEmail(email) {
   try {
     const data = await resend.emails.send({
       from: FROM_CONTACT,
       to: email,
-      subject: `ðŸŒ¿ Bienvenue dans la communautÃ© Doiry`,
+      subject: `�xR� Bienvenue dans la communauté Doiry`,
       html: `
 <!DOCTYPE html>
 <html>
@@ -64,44 +64,44 @@ async function sendNewsletterWelcomeEmail(email) {
         Merci de rejoindre notre cercle. Ici, nous explorons le calme, la douceur des plantes et les rituels alternatifs.
       </p>
       <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 32px;text-align:center;">
-        Votre inscription est bien confirmÃ©e. Vous recevrez bientot nos inspirations, nos nouveautÃ©s, et un moment de poÃ©sie dans votre boite de rÃ©ception.
+        Votre inscription est bien confirmée. Vous recevrez bientot nos inspirations, nos nouveautés, et un moment de poésie dans votre boite de réception.
       </p>
       <div style="text-align:center;margin:32px 0;">
         <a href="https://doiryshop.com/#boutique" style="display:inline-block;background:#831b2f;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;transition:background 0.3s;">
-          DÃ©couvrir nos crÃ©ations
+          Découvrir nos créations
         </a>
       </div>
       <p style="color:#808080;font-size:13px;line-height:1.7;margin:0;text-align:center;">
         Prenez soin de vous,<br/>
-        <strong>L'Ã©quipe Doiry Shop</strong>
+        <strong>L'équipe Doiry Shop</strong>
       </p>
     </div>
     <div style="padding:24px 32px;background:#141414;border-top:1px solid #333;text-align:center;">
       <p style="margin:0;color:#666;font-size:12px;">
-        Â© 2026 Doiry Shop Â· Tous droits rÃ©servÃ©s
+        © 2026 Doiry Shop · Tous droits réservés
       </p>
     </div>
   </div>
 </body>
 </html>`
     });
-    console.log(`âœ… Email de bienvenue newsletter envoyÃ© Ã  ${email}`);
+    console.log(`�S& Email de bienvenue newsletter envoyé à ${email}`);
     return data;
   } catch (error) {
-    console.error('âŒ Erreur envoi email newsletter:', error);
+    console.error('�R Erreur envoi email newsletter:', error);
     throw error;
   }
 }
 
 /**
- * Envoie un email de bienvenue aprÃ¨s crÃ©ation de compte.
+ * Envoie un email de bienvenue après création de compte.
  */
 async function sendWelcomeEmail(email, prenom) {
   try {
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: `Bienvenue chez Doiry Shop, ${prenom || 'et bienvenue'} âœ¨`,
+      subject: `Bienvenue chez Doiry Shop, ${prenom || 'et bienvenue'} �S�`,
       html: `
 <!DOCTYPE html>
 <html>
@@ -126,7 +126,7 @@ async function sendWelcomeEmail(email, prenom) {
         Merci d'avoir rejoint Doiry Shop. Ici, nous creons des substituts naturels au tabac et des infusions apaisantes a base de plantes selectionnees avec soin.
       </p>
       <p style="color:#5A6855;font-size:15px;line-height:1.7;margin:0 0 24px;">
-        Vous y trouverez des prÃ©-roulÃ©s aux feuilles de framboisier, des bases en vrac, des kits de roulage et des infusions pensees pour ralentir naturellement, toujours sans nicotine.
+        Vous y trouverez des pré-roulés aux feuilles de framboisier, des bases en vrac, des kits de roulage et des infusions pensees pour ralentir naturellement, toujours sans nicotine.
       </p>
       <p style="color:#5A6855;font-size:15px;line-height:1.7;margin:0 0 24px;">
         Prenez votre temps, explorez la collection, et trouvez le format qui vous ressemble. Nous sommes ravis de vous accompagner dans cette transition.
@@ -145,7 +145,7 @@ async function sendWelcomeEmail(email, prenom) {
     <!-- Footer -->
     <div style="padding:24px 32px;background:#F5F5F0;border-top:1px solid #E8E8E0;text-align:center;">
       <p style="margin:0;color:#8A9080;font-size:12px;">
-        Â© 2026 Doiry Shop Â· Tous droits reserves<br/>
+        © 2026 Doiry Shop · Tous droits reserves<br/>
         Vente reservee aux majeurs de 18 ans.
       </p>
     </div>
@@ -153,10 +153,10 @@ async function sendWelcomeEmail(email, prenom) {
 </body>
 </html>`
     });
-    console.log(`âœ… Email de bienvenue envoyÃ© Ã  ${email}`, data);
+    console.log(`�S& Email de bienvenue envoyé à ${email}`, data);
     return data;
   } catch (error) {
-    console.error('âŒ Erreur envoi email bienvenue:', error);
+    console.error('�R Erreur envoi email bienvenue:', error);
     throw error;
   }
 }
@@ -174,8 +174,8 @@ async function sendOrderConfirmation(email, order, options = {}) {
   const produitsHtml = produits.map((p) => `
     <tr>
       <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;">${p.name || 'Produit'}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#d6d0c8;font-size:14px;text-align:center;">Ã—${p.quantity || 1}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;text-align:right;font-weight:600;">${((p.price || 0) * (p.quantity || 1)).toFixed(2)} â‚¬</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#d6d0c8;font-size:14px;text-align:center;">�${p.quantity || 1}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#f4f1ec;font-size:14px;text-align:right;font-weight:600;">${((p.price || 0) * (p.quantity || 1)).toFixed(2)} ��</td>
     </tr>
   `).join('');
 
@@ -191,7 +191,7 @@ async function sendOrderConfirmation(email, order, options = {}) {
     const data = await resend.emails.send({
       from: FROM_COMMANDES,
       to: email,
-      subject: 'Votre commande Doiry Shop est enregistrÃ©e ðŸŒŒ',
+      subject: 'Votre commande Doiry Shop est enregistrée �xRR',
       attachments,
       html: `
 <!DOCTYPE html>
@@ -201,23 +201,23 @@ async function sendOrderConfirmation(email, order, options = {}) {
   <div style="max-width:640px;margin:24px auto;background:#121212;border:1px solid #2a2a2a;border-radius:16px;overflow:hidden;">
     <div style="padding:30px 28px;border-bottom:1px solid #2a2a2a;background:#151515;">
       ${logoDataUri ? `<img src="${logoDataUri}" alt="Doiry Shop" style="height:60px;width:auto;display:block;margin-bottom:14px;" />` : '<h1 style="margin:0 0 14px;color:#f4f1ec;font-family:Georgia,serif;">Doiry Shop</h1>'}
-      <p style="margin:0;color:#b9b2aa;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Commande enregistrÃ©e</p>
-      <p style="margin:8px 0 0;color:#f4f1ec;font-size:14px;">RÃ©fÃ©rence <strong style="color:#e9d9de;">${orderReference}</strong></p>
+      <p style="margin:0;color:#b9b2aa;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Commande enregistrée</p>
+      <p style="margin:8px 0 0;color:#f4f1ec;font-size:14px;">Référence <strong style="color:#e9d9de;">${orderReference}</strong></p>
     </div>
 
     <div style="padding:28px;">
       <p style="margin:0 0 16px;color:#f4f1ec;font-size:16px;line-height:1.7;">
-        Merci pour votre confiance. Votre commande est bien enregistrÃ©e.
+        Merci pour votre confiance. Votre commande est bien enregistrée.
       </p>
       <p style="margin:0 0 16px;color:#d6d0c8;font-size:14px;line-height:1.7;">
-        Pour valider votre achat et dÃ©clencher l'expÃ©dition sous 48h, merci d'effectuer votre virement Revolut en indiquant impÃ©rativement la rÃ©fÃ©rence <strong style="color:#f4f1ec;">${orderReference}</strong> en note.
+        Pour valider votre achat et déclencher l'expédition sous 48h, merci d'effectuer votre virement Revolut en indiquant impérativement la référence <strong style="color:#f4f1ec;">${orderReference}</strong> en note.
       </p>
 
       <table style="width:100%;border-collapse:collapse;margin:20px 0 10px;">
         <thead>
           <tr>
             <th style="text-align:left;padding-bottom:10px;color:#8b263e;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #2a2a2a;">Produit</th>
-            <th style="text-align:center;padding-bottom:10px;color:#8b263e;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #2a2a2a;">QtÃ©</th>
+            <th style="text-align:center;padding-bottom:10px;color:#8b263e;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #2a2a2a;">Qté</th>
             <th style="text-align:right;padding-bottom:10px;color:#8b263e;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #2a2a2a;">Total TTC</th>
           </tr>
         </thead>
@@ -226,7 +226,7 @@ async function sendOrderConfirmation(email, order, options = {}) {
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid #2a2a2a;">
         <span style="color:#d6d0c8;font-size:14px;">Total TTC</span>
-        <span style="color:#f4f1ec;font-size:22px;font-weight:700;font-family:Georgia,serif;">${Number(order.total || 0).toFixed(2)} â‚¬</span>
+        <span style="color:#f4f1ec;font-size:22px;font-weight:700;font-family:Georgia,serif;">${Number(order.total || 0).toFixed(2)} ��</span>
       </div>
 
       <div style="text-align:center;margin:26px 0 10px;">
@@ -235,23 +235,23 @@ async function sendOrderConfirmation(email, order, options = {}) {
         </a>
       </div>
       <p style="margin:8px 0 0;color:#908880;font-size:12px;text-align:center;">
-        La facture PDF est jointe Ã  cet email.
+        La facture PDF est jointe à cet email.
       </p>
     </div>
   </div>
 </body>
 </html>`
     });
-    console.log(`âœ… Email premium envoyÃ© Ã  ${email} pour la commande #${order.id}`);
+    console.log(`�S& Email premium envoyé à ${email} pour la commande #${order.id}`);
     return data;
   } catch (error) {
-    console.error('âŒ Erreur envoi email confirmation:', error);
+    console.error('�R Erreur envoi email confirmation:', error);
     throw error;
   }
 }
 
 /**
- * Envoie un email quand la commande est expÃ©diÃ©e (avec suivi).
+ * Envoie un email quand la commande est expédiée (avec suivi).
  */
 async function sendOrderShippedEmail(email, order) {
   const shippingMethodLabel = {
@@ -265,7 +265,7 @@ async function sendOrderShippedEmail(email, order) {
     const data = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: `Votre commande #${order.id} est en route ! ðŸšš`,
+      subject: `Votre commande #${order.id} est en route ! �xaa`,
       html: `
 <!DOCTYPE html>
 <html>
@@ -282,7 +282,7 @@ async function sendOrderShippedEmail(email, order) {
         Votre commande <strong>#${order.id}</strong> a ete expediee via <strong>${shippingMethodLabel}</strong>.
       </p>
       <div style="background:#F5F5F0;padding:24px;border-radius:12px;text-align:center;margin-bottom:32px;">
-        <p style="margin:0 0 8px;color:#8A9080;font-size:12px;text-transform:uppercase;letter-spacing:1px;">NumÃ©ro de suivi</p>
+        <p style="margin:0 0 8px;color:#8A9080;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Numéro de suivi</p>
         <p style="margin:0 0 20px;color:#2D3B2A;font-size:20px;font-weight:700;letter-spacing:2px;">${order.tracking_number}</p>
         <a href="${trackingLink}" style="display:inline-block;background:#2D3B2A;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;">
           Suivre mon colis
@@ -293,7 +293,7 @@ async function sendOrderShippedEmail(email, order) {
       </p>
     </div>
     <div style="padding:24px 32px;background:#F5F5F0;border-top:1px solid #E8E8E0;text-align:center;">
-      <p style="margin:0;color:#8A9080;font-size:12px;">Â© 2026 Doiry Shop</p>
+      <p style="margin:0;color:#8A9080;font-size:12px;">© 2026 Doiry Shop</p>
     </div>
   </div>
 </body>
@@ -301,12 +301,12 @@ async function sendOrderShippedEmail(email, order) {
     });
     return data;
   } catch (err) {
-    console.error('âŒ Erreur email expÃ©dition:', err);
+    console.error('�R Erreur email expédition:', err);
   }
 }
 
 /**
- * Envoie le code de vÃ©rification Ã  6 chiffres (Style Dark Academia).
+ * Envoie le code de vérification à 6 chiffres (Style Dark Academia).
  */
 async function sendVerificationCodeEmail(email, code) {
   try {
@@ -327,33 +327,33 @@ async function sendVerificationCodeEmail(email, code) {
     </div>
     <div style="padding:40px 32px;text-align:center;">
       <h2 style="margin:0 0 16px;color:#e8e8e8;font-family:Georgia,serif;font-size:22px;font-weight:400;">
-        VÃ©rification de votre espace privilÃ©giÃ©
+        Vérification de votre espace privilégié
       </h2>
       <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 32px;">
-        Veuillez entrer le code suivant pour valider votre accÃ¨s.
+        Veuillez entrer le code suivant pour valider votre accès.
       </p>
       <div style="margin:0 auto 32px;background:#0d0d0d;border:1px solid #8b263e;border-radius:8px;padding:20px;max-width:200px;">
         <span style="color:#ffffff;font-size:32px;font-weight:bold;letter-spacing:4px;">${code}</span>
       </div>
       <p style="color:#808080;font-size:13px;line-height:1.7;margin:0;">
         Ce code expire dans 15 minutes.<br/>
-        Si vous n'Ãªtes pas Ã  l'origine de cette demande, vous pouvez ignorer cet e-mail.
+        Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail.
       </p>
     </div>
   </div>
 </body>
 </html>`
     });
-    console.log(`âœ… Email code envoyÃ© Ã  ${email}`);
+    console.log(`�S& Email code envoyé à ${email}`);
     return data;
   } catch (error) {
-    console.error('âŒ Erreur envoi email code:', error);
+    console.error('�R Erreur envoi email code:', error);
     throw error;
   }
 }
 
 /**
- * Envoie l'e-mail de bienvenue Premium (Inscription terminÃ©e).
+ * Envoie l'e-mail de bienvenue Premium (Inscription terminée).
  */
 async function sendCustomWelcomeEmail(email) {
   const logoDataUri = getEmailLogoDataUri();
@@ -376,27 +376,27 @@ async function sendCustomWelcomeEmail(email) {
     </div>
     <div style="padding:40px 32px;text-align:center;">
       <h2 style="margin:0 0 16px;color:#e8e8e8;font-family:Georgia,serif;font-size:22px;font-weight:400;">
-        Votre inscription est confirmÃ©e
+        Votre inscription est confirmée
       </h2>
       <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 20px;">
-        Bienvenue chez Doiry Shop. Plongez dans notre univers de rituels botaniques et dÃ©couvrez nos plantes sÃ©chÃ©es et infusions.
+        Bienvenue chez Doiry Shop. Plongez dans notre univers de rituels botaniques et découvrez nos plantes séchées et infusions.
       </p>
       <p style="color:#b0b0b0;font-size:15px;line-height:1.7;margin:0 0 32px;">
-        Pour vous remercier, voici un code de bienvenue de 10% valable sur votre premiÃ¨re commande :<br/>
+        Pour vous remercier, voici un code de bienvenue de 10% valable sur votre première commande :<br/>
         <strong style="color:#ffffff;font-size:18px;letter-spacing:2px;display:block;margin-top:10px;">BIENVENUE10</strong>
       </p>
       <a href="https://doiryshop.com/#boutique" style="display:inline-block;background:#8b263e;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:1px;">
-        DÃ©couvrir la collection
+        Découvrir la collection
       </a>
     </div>
   </div>
 </body>
 </html>`
     });
-    console.log(`âœ… Email bienvenue envoyÃ© Ã  ${email}`);
+    console.log(`�S& Email bienvenue envoyé à ${email}`);
     return data;
   } catch (error) {
-    console.error('âŒ Erreur envoi email bienvenue:', error);
+    console.error('�R Erreur envoi email bienvenue:', error);
     throw error;
   }
 }

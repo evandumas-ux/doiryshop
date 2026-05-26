@@ -31,7 +31,7 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
 
   const categories = [
     { id: 'all', label: 'Tous' },
-    { id: 'pre-roules', label: 'PrÃ©-roulÃ©s' },
+    { id: 'pre-roules', label: 'Pré-roulés' },
     { id: 'vrac', label: 'En vrac' },
     { id: 'kits', label: 'Kits & coffrets' },
     { id: 'tisanes', label: 'Tisanes & infusions' },
@@ -79,7 +79,7 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
     <div className="min-h-screen bg-background">
       <SEO
         title="Boutique | Doiry Shop"
-        description="DÃ©couvrez tous les produits Doiry Shop."
+        description="Découvrez tous les produits Doiry Shop."
         url="https://doiryshop.com/boutique"
       />
 
@@ -96,7 +96,7 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
           <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Catalogue</span>
           <h1 className="text-4xl md:text-5xl font-serif text-text mb-4">Nos produits</h1>
           <p className="text-text-light font-light max-w-2xl mx-auto text-lg leading-relaxed">
-            Une sÃ©lection concise, lisible et faite pour accompagner un changement d'habitude sans bruit inutile.
+            Une sélection concise, lisible et faite pour accompagner un changement d'habitude sans bruit inutile.
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
             ))}
           </div>
           <p className="text-text-muted text-xs mt-4 font-light italic">
-            {`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} affichÃ©${filteredProducts.length > 1 ? 's' : ''}`}
+            {`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} affiché${filteredProducts.length > 1 ? 's' : ''}`}
           </p>
         </div>
 

@@ -32,7 +32,7 @@ const isMatchingCategory = (product, category) => {
 
 const Hero = () => (
   <section id="hero" className="grid grid-cols-1 md:grid-cols-2 min-h-[80vh] items-center bg-black">
-    {/* Gauche : Logo plein Ã©cran vertical */}
+    {/* Gauche : Logo plein écran vertical */}
     <div className="bg-black relative flex items-center justify-center min-h-[50vh] md:min-h-[80vh] h-full overflow-hidden">
       <img
         src="/logo.jpg"
@@ -53,22 +53,22 @@ const Hero = () => (
       </h1>
 
       <p className="text-[1.1rem] text-[#ccc] leading-[1.6] max-w-[420px] animate-fade-slide-up delay-200">
-        Une alternative vÃ©gÃ©tale sans nicotine. Conservez votre rituel et entamez votre transition en douceur.
+        Une alternative végétale sans nicotine. Conservez votre rituel et entamez votre transition en douceur.
       </p>
 
       <div className="text-xl md:text-2xl font-semibold text-white animate-fade-slide-up delay-300 tracking-wide mt-2">
-        ðŸŒ¿ 0% Nicotine <span className="opacity-50 mx-1">Â·</span> 100% Plantes
+        �xR� 0% Nicotine <span className="opacity-50 mx-1">·</span> 100% Plantes
       </div>
 
       <div className="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 text-xs md:text-sm text-gray-400 animate-fade-slide-up delay-300 mt-2 mb-2">
-        <span className="flex items-center gap-1.5">ðŸ“¦ Livraison discrÃ¨te sous 48h</span>
-        <span className="flex items-center gap-1.5">âœ… 100% LÃ©gal en France</span>
-        <span className="flex items-center gap-1.5">ðŸ”’ Paiement Revolut sÃ©curisÃ©</span>
+        <span className="flex items-center gap-1.5">�x� Livraison discrète sous 48h</span>
+        <span className="flex items-center gap-1.5">�S& 100% Légal en France</span>
+        <span className="flex items-center gap-1.5">�x Paiement Revolut sécurisé</span>
       </div>
 
       <div className="flex flex-col sm:flex-row items-center md:items-start gap-4 mt-2 w-full md:w-auto justify-center md:justify-start animate-fade-slide-up delay-400">
         <a href="#boutique" className="bg-primary text-white px-8 py-4 rounded-full text-base font-medium transition-all w-full sm:w-auto text-center flex items-center justify-center gap-2 group btn-primary-glow">
-          DÃ©couvrir nos produits <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+          Découvrir nos produits <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
         </a>
         <a href="#gammes" className="text-white font-medium hover:text-accent transition-colors px-6 py-4 border border-surface-border rounded-full w-full sm:w-auto text-center btn-secondary-glow">
           Voir nos gammes
@@ -77,7 +77,7 @@ const Hero = () => (
 
       <div className="mt-4 animate-fade-slide-up delay-500">
         <Link to="/arret-tabac" className="inline-flex items-center gap-2 text-accent hover:text-accent-light transition-colors text-sm font-medium tracking-wide uppercase">
-          DÃ©couvrir pourquoi arrÃªter change tout <ArrowRight size={16} />
+          Découvrir pourquoi arrêter change tout <ArrowRight size={16} />
         </Link>
       </div>
     </div>
@@ -89,17 +89,17 @@ const WhyDoiryshop = () => {
     {
       icon: <ShieldCheck className="w-8 h-8 text-primary" />,
       title: 'Sans nicotine',
-      description: "Pour sortir d'un automatisme sans entretenir la dÃ©pendance physique. Une coupure nette avec les substances addictives.",
+      description: "Pour sortir d'un automatisme sans entretenir la dépendance physique. Une coupure nette avec les substances addictives.",
     },
     {
       icon: <Hand className="w-8 h-8 text-primary" />,
-      title: 'Le rituel prÃ©servÃ©',
-      description: "Parce que l'habitude gestuelle est souvent la plus dure Ã  perdre, nous proposons une transition sans tout casser.",
+      title: 'Le rituel préservé',
+      description: "Parce que l'habitude gestuelle est souvent la plus dure à perdre, nous proposons une transition sans tout casser.",
     },
     {
       icon: <Leaf className="w-8 h-8 text-primary" />,
       title: 'Un choix transparent',
-      description: "Uniquement des plantes naturelles sÃ©lectionnÃ©es avec soin, pour une dÃ©marche plus saine et plus claire.",
+      description: "Uniquement des plantes naturelles sélectionnées avec soin, pour une démarche plus saine et plus claire.",
     },
   ];
 
@@ -108,11 +108,11 @@ const WhyDoiryshop = () => {
       <div className="absolute inset-0 bg-[url('/bg_texture.png')] bg-cover bg-center opacity-[0.02] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Notre dÃ©marche</span>
-          <h2 className="text-4xl md:text-5xl font-serif mb-6 text-text leading-tight">Plus quâ€™un produit :<br/>une aide pour changer dâ€™habitude</h2>
+          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Notre démarche</span>
+          <h2 className="text-4xl md:text-5xl font-serif mb-6 text-text leading-tight">Plus qu�"un produit :<br/>une aide pour changer d�"habitude</h2>
           <p className="text-text-light max-w-2xl mx-auto font-light leading-relaxed text-lg">
-            DoiryShop accompagne une prise de distance avec le tabac en vous offrant une alternative vÃ©gÃ©tale. 
-            Retrouvez un autre rythme, Ã  votre maniÃ¨re.
+            DoiryShop accompagne une prise de distance avec le tabac en vous offrant une alternative végétale. 
+            Retrouvez un autre rythme, à votre manière.
           </p>
         </motion.div>
 
@@ -131,7 +131,7 @@ const WhyDoiryshop = () => {
             to="/arret-tabac" 
             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-surface border border-primary/30 text-primary rounded-xl font-medium hover:bg-primary/5 transition-colors shadow-lg shadow-primary/5"
           >
-            DÃ©couvrir notre dÃ©marche et les bÃ©nÃ©fices de l'arrÃªt <ArrowRight size={18} />
+            Découvrir notre démarche et les bénéfices de l'arrêt <ArrowRight size={18} />
           </Link>
         </div>
       </div>
@@ -145,7 +145,7 @@ const Ranges = () => (
     <div className="max-w-6xl mx-auto px-6 relative z-10">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
         <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Nos gammes</span>
-        <h2 className="text-4xl font-serif mb-4 text-text">Deux univers, un mÃªme tempo plus doux</h2>
+        <h2 className="text-4xl font-serif mb-4 text-text">Deux univers, un même tempo plus doux</h2>
       </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -154,13 +154,13 @@ const Ranges = () => (
             <Filter size={16} />
             Le Rituel
           </div>
-          <h3 className="text-3xl font-serif text-text mb-3">Plantes sÃ©chÃ©es et infusions naturelles</h3>
+          <h3 className="text-3xl font-serif text-text mb-3">Plantes séchées et infusions naturelles</h3>
           <p className="text-text-light font-light leading-relaxed mb-6">
             Pour celles et ceux qui aiment le geste, veulent ralentir et garder une routine plus simple, sans nicotine.
           </p>
           <ul className="space-y-3 text-sm text-text-light">
-            <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Base pure en vrac pour rouler Ã  votre rythme</li>
-            <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> PrÃ©-roulÃ©s prÃªts Ã  l'emploi pour les pauses rapides</li>
+            <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Base pure en vrac pour rouler à votre rythme</li>
+            <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Pré-roulés prêts à l'emploi pour les pauses rapides</li>
             <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Coffret complet pour entamer la transition</li>
           </ul>
         </div>
@@ -172,12 +172,12 @@ const Ranges = () => (
           </div>
           <h3 className="text-3xl font-serif text-text mb-3">Tisanes et infusions du soir</h3>
           <p className="text-text-light font-light leading-relaxed mb-6">
-            Des mÃ©langes de plantes pour accompagner les fins de journÃ©e, les routines calmes et les cadeaux bien choisis.
+            Des mélanges de plantes pour accompagner les fins de journée, les routines calmes et les cadeaux bien choisis.
           </p>
           <ul className="space-y-3 text-sm text-text-light">
             <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Infusion en vrac pour doser librement</li>
             <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Infusettes pratiques pour la maison ou le bureau</li>
-            <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Coffret sÃ©rÃ©nitÃ© prÃªt Ã  offrir</li>
+            <li className="flex gap-3"><CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" /> Coffret sérénité prêt à offrir</li>
           </ul>
         </div>
       </div>
@@ -192,7 +192,7 @@ const Products = ({ onAddToCart }) => {
 
   const categories = [
     { id: 'all', label: 'Tous' },
-    { id: 'pre-roules', label: 'PrÃ©-roulÃ©s' },
+    { id: 'pre-roules', label: 'Pré-roulés' },
     { id: 'vrac', label: 'En vrac' },
     { id: 'kits', label: 'Kits & coffrets' },
     { id: 'tisanes', label: 'Tisanes & infusions' },
@@ -226,7 +226,7 @@ const Products = ({ onAddToCart }) => {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
           <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Boutique</span>
           <h2 className="text-4xl font-serif mb-4 text-text">Nos produits</h2>
-          <p className="text-text-light max-w-2xl mx-auto font-light">Une sÃ©lection concise, lisible et faite pour accompagner un changement d'habitude sans bruit inutile.</p>
+          <p className="text-text-light max-w-2xl mx-auto font-light">Une sélection concise, lisible et faite pour accompagner un changement d'habitude sans bruit inutile.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col items-center mb-10">
@@ -243,7 +243,7 @@ const Products = ({ onAddToCart }) => {
             ))}
           </div>
           <p className="text-text-muted text-xs mt-3 font-light">
-            {`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} trouvÃ©${filteredProducts.length > 1 ? 's' : ''}`}
+            {`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} trouvé${filteredProducts.length > 1 ? 's' : ''}`}
           </p>
         </motion.div>
 
@@ -264,19 +264,19 @@ const BrandStorySection = () => {
     <section className="py-20 bg-[#111]">
       <div className="max-w-3xl mx-auto px-6 text-center">
         <p className="text-text-light leading-8">
-          Peu Ã  peu, ce qui Ã©tait personnel est devenu Ã©vident.
+          Peu à peu, ce qui était personnel est devenu évident.
           <br />
           Si cela pouvait exister pour eux, cela pouvait exister pour d'autres.
           <br />
-          Doiryshop est nÃ© de cette transition.
+          Doiryshop est né de cette transition.
           <br />
-          Ce n'est pas une promesse. C'est une continuitÃ©.
+          Ce n'est pas une promesse. C'est une continuité.
         </p>
         <Link
           to="/about"
           className="inline-block mt-8 text-accent hover:text-accent-light transition-colors underline underline-offset-4"
         >
-          Notre histoire complÃ¨te
+          Notre histoire complète
         </Link>
       </div>
     </section>
@@ -333,8 +333,8 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
   return (
     <>
       <SEO
-        title="Plantes sÃ©chÃ©es artisanales et infusions apaisantes | Doiry Shop"
-        description="DÃ©couvrez nos plantes sÃ©chÃ©es artisanales et infusions apaisantes. Feuilles de framboisier, prÃ©-roulÃ©s, tisanes et coffrets artisanaux."
+        title="Plantes séchées artisanales et infusions apaisantes | Doiry Shop"
+        description="Découvrez nos plantes séchées artisanales et infusions apaisantes. Feuilles de framboisier, pré-roulés, tisanes et coffrets artisanaux."
         url="https://doiryshop.com/"
         type="website"
       />

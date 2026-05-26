@@ -7,8 +7,8 @@ export default function ResetPassword() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden font-sans">
       <SEO
-        title="Mot de passe oubliÃ© - Doiry Shop"
-        description="RÃ©initialisez votre mot de passe Doiry Shop"
+        title="Mot de passe oublié - Doiry Shop"
+        description="Réinitialisez votre mot de passe Doiry Shop"
         url="https://doiryshop.com/reset-password"
         robots="noindex, nofollow"
       />
@@ -32,11 +32,11 @@ export default function ResetPassword() {
               <img src="/logo.jpg" alt="DOIRY SHOP" className="w-20 h-20 object-contain rounded-xl" />
               <span className="font-display text-2xl font-bold tracking-widest text-primary">DOIRY SHOP</span>
             </Link>
-            <h1 className="text-2xl font-serif font-bold text-text mt-4">Mot de passe oubliÃ©</h1>
+            <h1 className="text-2xl font-serif font-bold text-text mt-4">Mot de passe oublié</h1>
           </div>
 
           <div className="mb-6 p-4 bg-primary/10 text-primary rounded-xl text-[13px] font-medium text-center border border-primary/20">
-            FonctionnalitÃ© bientÃ´t disponible.
+            Fonctionnalité bientôt disponible.
           </div>
 
           <form className="flex flex-col gap-4">
@@ -61,7 +61,7 @@ export default function ResetPassword() {
 
           <p className="text-center text-[13px] mt-8 text-text-muted">
             <Link to="/login" className="text-accent font-medium hover:underline">
-              Retour Ã  la connexion
+              Retour à la connexion
             </Link>
           </p>
         </div>

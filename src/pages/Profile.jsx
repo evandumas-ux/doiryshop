@@ -24,7 +24,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
   const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
-    // Attendre que l'initialisation auth soit terminÃ©e avant de dÃ©cider
+    // Attendre que l'initialisation auth soit terminée avant de décider
     if (isInitializing) return;
     
     if (!user) {
@@ -34,7 +34,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
 
     const fetchData = async () => {
       try {
-        // 1. RÃ©cupÃ©rer les claims Logto (email, nom)
+        // 1. Récupérer les claims Logto (email, nom)
         let logtoEmail = user?.email || '';
         let logtoName = user?.name || '';
         try {
@@ -43,16 +43,16 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
           if (claims?.email) logtoEmail = claims.email;
           if (claims?.name) logtoName = claims.name;
         } catch(e) {
-          console.warn('[Profile] getIdTokenClaims() a Ã©chouÃ©:', e);
+          console.warn('[Profile] getIdTokenClaims() a échoué:', e);
         }
 
-        // 2. RÃ©cupÃ©rer le profil depuis le backend
+        // 2. Récupérer le profil depuis le backend
         let profileData = {};
         try {
           profileData = await getUserProfile();
-          console.log('[Profile] DonnÃ©es profil backend:', profileData);
+          console.log('[Profile] Données profil backend:', profileData);
         } catch(e) {
-          console.warn('[Profile] getUserProfile() a Ã©chouÃ©:', e);
+          console.warn('[Profile] getUserProfile() a échoué:', e);
         }
 
         // 3. Fusionner : backend prioritaire, mais fallback sur Logto pour email/nom
@@ -63,14 +63,14 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
           prenom: profileData?.prenom || logtoName.split(' ')[0] || '',
           nom: profileData?.nom || logtoName.split(' ').slice(1).join(' ') || '',
         };
-        console.log('[Profile] Profil final fusionnÃ©:', mergedProfile);
+        console.log('[Profile] Profil final fusionné:', mergedProfile);
         setProfile(mergedProfile);
         
-        // 4. RÃ©cupÃ©rer les commandes
+        // 4. Récupérer les commandes
         const ordersData = await getMyOrders(user?.id);
         setOrders((ordersData.orders || []).slice(0, 5));
 
-        // 5. RÃ©cupÃ©rer code parrainage + compteur filleuls
+        // 5. Récupérer code parrainage + compteur filleuls
         const [codeData, loyaltyData] = await Promise.all([
           getReferralCode(),
           getLoyaltyPoints(),
@@ -78,8 +78,8 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
         setReferralCode(codeData?.code || codeData || '');
         setReferralCount(loyaltyData?.filleuls_count || 0);
       } catch (err) {
-        console.error('[Profile] Erreur chargement donnÃ©es espace client:', err);
-        setError('Impossible de charger les donnÃ©es de votre profil. Veuillez rÃ©essayer plus tard.');
+        console.error('[Profile] Erreur chargement données espace client:', err);
+        setError('Impossible de charger les données de votre profil. Veuillez réessayer plus tard.');
       } finally {
         setIsLoading(false);
       }
@@ -130,7 +130,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
       
       setProfile(prev => ({ ...prev, ...formData }));
       setEditingSection(null);
-      setSaveMessage('Modifications enregistrÃ©es !');
+      setSaveMessage('Modifications enregistrées !');
       setTimeout(() => setSaveMessage(''), 3000);
     } catch (err) {
       console.error('Erreur sauvegarde:', err);
@@ -203,9 +203,9 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
-      case 'payÃ©': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      case 'payé': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
       case 'en attente': return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-      case 'expÃ©diÃ©e': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+      case 'expédiée': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
       default: return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
     }
   };
@@ -214,7 +214,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <header className="bg-surface border-b border-surface-border py-4 px-6 sticky top-0 z-10">
-          <Link to="/" className="text-text-light flex items-center gap-2 max-w-6xl mx-auto hover:text-primary transition-colors"><ArrowLeft size={20} /> Retour Ã  la boutique</Link>
+          <Link to="/" className="text-text-light flex items-center gap-2 max-w-6xl mx-auto hover:text-primary transition-colors"><ArrowLeft size={20} /> Retour à la boutique</Link>
         </header>
         <div className="flex-1 flex items-center justify-center">
           <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
@@ -227,7 +227,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <header className="bg-surface border-b border-surface-border py-4 px-6 sticky top-0 z-10">
-          <Link to="/" className="text-text-light flex items-center gap-2 max-w-6xl mx-auto hover:text-primary transition-colors"><ArrowLeft size={20} /> Retour Ã  la boutique</Link>
+          <Link to="/" className="text-text-light flex items-center gap-2 max-w-6xl mx-auto hover:text-primary transition-colors"><ArrowLeft size={20} /> Retour à la boutique</Link>
         </header>
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
@@ -236,7 +236,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
            <h2 className="text-xl font-serif text-text mb-2">Une erreur est survenue</h2>
            <p className="text-text-light mb-6 max-w-md">{error}</p>
            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors">
-             RÃ©essayer
+             Réessayer
            </button>
         </div>
       </div>
@@ -259,7 +259,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
       <div className="min-h-screen bg-background flex flex-col">
         <SEO
           title="Mon profil | Doiry Shop"
-          description="AccÃ©dez Ã  votre profil Doiry Shop, vos informations et vos commandes."
+          description="Accédez à votre profil Doiry Shop, vos informations et vos commandes."
           url="https://doiryshop.com/profil"
           robots="noindex, nofollow"
         />
@@ -267,7 +267,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
         <header className="bg-surface border-b border-surface-border py-4 px-6 z-10 sticky top-0">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <Link to="/" className="text-text-light hover:text-primary transition-colors flex items-center gap-2">
-              <ArrowLeft size={18} /> <span className="font-medium hidden sm:inline">Retour Ã  la boutique</span>
+              <ArrowLeft size={18} /> <span className="font-medium hidden sm:inline">Retour à la boutique</span>
             </Link>
             <Link to="/" className="flex items-center gap-3">
               <img src="/logo.jpg" alt="DOIRY SHOP" className="h-10 w-auto rounded-lg" />
@@ -293,7 +293,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                 <h1 className="text-3xl font-serif text-text">{profile?.prenom || user?.name || 'Client'}</h1>
                 {profile?.profil_complete && (
                   <span className="inline-flex items-center gap-1 text-xs font-medium bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20">
-                    <CheckCircle2 size={12} /> Client vÃ©rifiÃ©
+                    <CheckCircle2 size={12} /> Client vérifié
                   </span>
                 )}
               </div>
@@ -343,12 +343,12 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                 {editingSection === 'info' ? (
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
-                      <input type="text" placeholder="PrÃ©nom" value={formData.prenom || ''} onChange={e => setFormData({...formData, prenom: e.target.value})}
+                      <input type="text" placeholder="Prénom" value={formData.prenom || ''} onChange={e => setFormData({...formData, prenom: e.target.value})}
                         className="px-3 py-2.5 min-h-[48px] bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
                       <input type="text" placeholder="Nom" value={formData.nom || ''} onChange={e => setFormData({...formData, nom: e.target.value})}
                         className="px-3 py-2.5 min-h-[48px] bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
                     </div>
-                    <input type="tel" placeholder="TÃ©lÃ©phone" value={formData.telephone || ''} onChange={e => setFormData({...formData, telephone: e.target.value})}
+                    <input type="tel" placeholder="Téléphone" value={formData.telephone || ''} onChange={e => setFormData({...formData, telephone: e.target.value})}
                       className="w-full px-3 py-2.5 bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
                     <input type="date" value={formData.date_naissance || ''} onChange={e => setFormData({...formData, date_naissance: e.target.value})}
                       className="w-full px-3 py-2.5 bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
@@ -368,12 +368,12 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                       <span className="font-medium text-right break-words max-w-[150px]">{profile?.email || ''}</span>
                     </div>
                     <div className="flex justify-between border-b border-surface-border pb-2.5">
-                      <span className="text-text-light flex items-center gap-2"><Phone size={13} /> TÃ©lÃ©phone</span>
-                      <span className="font-medium text-right">{profile?.telephone || 'â€”'}</span>
+                      <span className="text-text-light flex items-center gap-2"><Phone size={13} /> Téléphone</span>
+                      <span className="font-medium text-right">{profile?.telephone || '�'}</span>
                     </div>
                     <div className="flex justify-between pb-1">
                       <span className="text-text-light flex items-center gap-2"><Calendar size={13} /> Naissance</span>
-                      <span className="font-medium text-right">{profile?.date_naissance ? new Date(profile.date_naissance).toLocaleDateString('fr-FR') : 'â€”'}</span>
+                      <span className="font-medium text-right">{profile?.date_naissance ? new Date(profile.date_naissance).toLocaleDateString('fr-FR') : '�'}</span>
                     </div>
                   </div>
                 )}
@@ -401,7 +401,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                   <div className="space-y-3">
                     <input type="text" placeholder="Adresse" value={formData.adresse || ''} onChange={e => setFormData({...formData, adresse: e.target.value})}
                       className="w-full px-3 py-2.5 bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
-                    <input type="text" placeholder="ComplÃ©ment d'adresse" value={formData.complement_adresse || ''} onChange={e => setFormData({...formData, complement_adresse: e.target.value})}
+                    <input type="text" placeholder="Complément d'adresse" value={formData.complement_adresse || ''} onChange={e => setFormData({...formData, complement_adresse: e.target.value})}
                       className="w-full px-3 py-2.5 bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
                     <div className="grid grid-cols-3 gap-3">
                       <input type="text" placeholder="Code postal" value={formData.code_postal || ''} onChange={e => setFormData({...formData, code_postal: e.target.value})}
@@ -417,7 +417,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                 ) : (
                   <address className="not-italic text-sm text-text space-y-1.5">
                     <p className="font-medium">{profile?.prenom || ''} {profile?.nom || ''}</p>
-                    <p>{profile?.adresse || <span className="text-text-muted italic">Non renseignÃ©e</span>}</p>
+                    <p>{profile?.adresse || <span className="text-text-muted italic">Non renseignée</span>}</p>
                     {profile?.complement_adresse && <p>{profile.complement_adresse}</p>}
                     <p>{profile?.code_postal || ''} {profile?.ville || ''}</p>
                     <p className="text-text-muted">{profile?.pays || 'France'}</p>
@@ -432,7 +432,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                 <h3 className="font-serif text-lg text-text mb-4">Parrainez vos amis</h3>
                 <p className="text-sm text-text-light mb-3">Votre code de parrainage</p>
                 <div className="bg-background border border-primary/30 rounded-2xl px-4 py-3 text-center mb-3">
-                  <p className="text-2xl font-bold tracking-widest text-primary">{referralCode || 'â€”'}</p>
+                  <p className="text-2xl font-bold tracking-widest text-primary">{referralCode || '�'}</p>
                 </div>
                 <button
                   onClick={handleCopyReferralLink}
@@ -442,22 +442,22 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                   <Copy size={14} /> Copier le lien
                 </button>
                 {copySuccess && (
-                  <p className="text-sm text-emerald-400 mt-2 text-center">Lien copiÃ© !</p>
+                  <p className="text-sm text-emerald-400 mt-2 text-center">Lien copié !</p>
                 )}
-                <p className="text-sm text-text-light mt-3 text-center">{referralCount} ami(s) parrainÃ©(s)</p>
+                <p className="text-sm text-text-light mt-3 text-center">{referralCount} ami(s) parrainé(s)</p>
                 <p className="text-sm text-text-muted mt-3 text-center">
                   Parrainez un ami et gagnez 50 Plumes. <br />
-                  Votre ami reÃ§oit âˆ’5% sur sa premiÃ¨re commande.
+                  Votre ami reçoit ��5% sur sa première commande.
                 </p>
               </motion.section>
 
-              {/* DÃ©connexion */}
+              {/* Déconnexion */}
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
                 <button 
                   onClick={handleSignOut}
                   className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-colors text-sm font-medium"
                 >
-                  <LogOut size={16} /> Se dÃ©connecter
+                  <LogOut size={16} /> Se déconnecter
                 </button>
               </motion.div>
 
@@ -472,14 +472,14 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
               </motion.div>
             </div>
 
-            {/* Colonne droite â€” Commandes */}
+            {/* Colonne droite � Commandes */}
             <div className="lg:col-span-2">
               <motion.section 
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                 className="bg-surface p-6 rounded-3xl border border-surface-border h-full"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-serif text-xl text-text flex items-center gap-2"><Package size={20} className="text-primary"/> Mes commandes rÃ©centes</h3>
+                  <h3 className="font-serif text-xl text-text flex items-center gap-2"><Package size={20} className="text-primary"/> Mes commandes récentes</h3>
                   {Array.isArray(orders) && orders.length > 0 && (
                     <Link to="/mes-commandes" className="text-xs font-medium text-accent hover:underline flex items-center gap-1">
                       Tout voir <ChevronRight size={14} />
@@ -492,8 +492,8 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                     <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-4 border border-surface-border">
                       <Package size={24} className="text-text-muted" />
                     </div>
-                    <p className="text-text-light mb-2">Vous n'avez pas encore passÃ© de commande.</p>
-                    <Link to="/" className="inline-block mt-2 text-primary font-medium hover:underline">DÃ©couvrir nos produits</Link>
+                    <p className="text-text-light mb-2">Vous n'avez pas encore passé de commande.</p>
+                    <Link to="/" className="inline-block mt-2 text-primary font-medium hover:underline">Découvrir nos produits</Link>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -507,14 +507,14 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                             </span>
                           </div>
                           <p className="text-xs text-text-light flex items-center gap-1.5">
-                            <Clock size={12} /> {order?.date_creation ? new Date(order.date_creation).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) : 'â€”'}
+                            <Clock size={12} /> {order?.date_creation ? new Date(order.date_creation).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) : '�'}
                           </p>
                           <p className="text-xs text-text-muted mt-1">
                             {Array.isArray(order?.produits) ? order.produits.map(p => p?.name).filter(Boolean).join(', ') : ''}
                           </p>
                         </div>
                         <div className="flex items-center justify-between sm:flex-col sm:items-end gap-1">
-                          <span className="font-bold text-accent text-lg">{Number(order?.total || 0).toFixed(2)} â‚¬</span>
+                          <span className="font-bold text-accent text-lg">{Number(order?.total || 0).toFixed(2)} ��</span>
                           <span className="text-xs text-text-light">{Array.isArray(order?.produits) ? order.produits.length : 0} article(s)</span>
                         </div>
                       </div>
@@ -533,8 +533,8 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-xl font-serif text-text mb-2">Une erreur d'affichage est survenue</h2>
-        <p className="text-text-light mb-4">DÃ©solÃ© pour ce dÃ©sagrÃ©ment.</p>
-        <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-xl">RÃ©essayer</button>
+        <p className="text-text-light mb-4">Désolé pour ce désagrément.</p>
+        <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-xl">Réessayer</button>
       </div>
     );
   }

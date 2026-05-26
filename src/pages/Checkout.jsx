@@ -47,10 +47,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
 
   useEffect(() => {
     if (user) {
-      // PrÃ©-remplir l'email
+      // Pré-remplir l'email
       setFormData(prev => ({ ...prev, email: user.email || '' }));
 
-      // RÃ©cupÃ©rer le profil complet pour l'adresse
+      // Récupérer le profil complet pour l'adresse
       const fetchProfile = async () => {
         try {
           const profile = await getUserProfile();
@@ -75,7 +75,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             expiration: loyalty?.anniversaire_expiration || null
           });
         } catch (err) {
-          console.error("Erreur lors de la rÃ©cupÃ©ration du profil pour le checkout", err);
+          console.error("Erreur lors de la récupération du profil pour le checkout", err);
         }
       };
       fetchProfile();
@@ -143,7 +143,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
   const validateForm = () => {
     const errors = {};
 
-    if (!formData.fname?.trim()) errors.fname = 'Veuillez saisir votre prÃ©nom';
+    if (!formData.fname?.trim()) errors.fname = 'Veuillez saisir votre prénom';
     if (!formData.lname?.trim()) errors.lname = 'Veuillez saisir votre nom';
     if (!formData.email?.trim()) errors.email = 'Veuillez saisir un email';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = 'Veuillez saisir un email valide';
@@ -218,11 +218,11 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       console.log('[CHECKOUT] clic bouton');
       console.log('[CHECKOUT] orderData =', orderData);
 
-      // 1. CrÃ©er la commande en attente dans la BDD (gÃ©nÃ¨re aussi le RIB en backend)
+      // 1. Créer la commande en attente dans la BDD (génère aussi le RIB en backend)
       const orderResponse = await createOrder(orderData);
       const orderId = orderResponse.orderId;
       const reference = orderResponse.reference || buildOrderReference(orderId);
-      console.log('[CHECKOUT] orderId crÃ©Ã© =', orderId);
+      console.log('[CHECKOUT] orderId créé =', orderId);
 
       // 2. Nettoyer le panier local
       setCartItems([]);
@@ -234,11 +234,11 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
 
     } catch (error) {
       console.error('Erreur lors de la commande:', error);
-      let errorMsg = error.message || 'Veuillez rÃ©essayer.';
+      let errorMsg = error.message || 'Veuillez réessayer.';
       if (error.message === 'Failed to fetch') {
-        errorMsg = "Erreur de connexion au serveur. VÃ©rifiez que le backend est lancÃ©.";
+        errorMsg = "Erreur de connexion au serveur. Vérifiez que le backend est lancé.";
       }
-      alert("âŒ Erreur : " + errorMsg);
+      alert("�R Erreur : " + errorMsg);
       setIsSubmitting(false);
     }
   };
@@ -259,7 +259,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
         setPromoCode('');
       }
     } catch (err) {
-      setPromoError(err.message || 'Code invalide ou expirÃ©');
+      setPromoError(err.message || 'Code invalide ou expiré');
       setAppliedCoupon(null);
     } finally {
       setIsApplyingPromo(false);
@@ -281,11 +281,11 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
         >
           <CheckCircle2 size={80} className="text-green-500 mx-auto mb-6" />
         </MotionDiv>
-        <h2 className="text-3xl font-serif mb-4 text-text">Commande confirmÃ©e ! ðŸŽ‰</h2>
-        <p className="text-text-light mb-2 max-w-md">Merci pour votre achat. Votre commande a Ã©tÃ© enregistrÃ©e avec succÃ¨s.</p>
-        <p className="text-text-muted text-sm mb-8">Vous allez Ãªtre redirigÃ© vers l'accueil...</p>
+        <h2 className="text-3xl font-serif mb-4 text-text">Commande confirmée ! �x}0</h2>
+        <p className="text-text-light mb-2 max-w-md">Merci pour votre achat. Votre commande a été enregistrée avec succès.</p>
+        <p className="text-text-muted text-sm mb-8">Vous allez être redirigé vers l'accueil...</p>
         <Link to="/" className="px-8 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors">
-          Retour Ã  la boutique
+          Retour à la boutique
         </Link>
       </div>
     );
@@ -295,9 +295,9 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-3xl font-serif mb-4 text-text">Votre panier est vide</h2>
-        <p className="text-text-light mb-8 max-w-md">Retournez Ã  la boutique pour dÃ©couvrir nos produits.</p>
+        <p className="text-text-light mb-8 max-w-md">Retournez à la boutique pour découvrir nos produits.</p>
         <Link to="/" className="px-8 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors">
-          Retour Ã  la boutique
+          Retour à la boutique
         </Link>
       </div>
     );
@@ -325,15 +325,15 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
         {/* Formulaire */}
         <div className="lg:col-span-7 order-last lg:order-first">
           <div className="mb-8 flex items-center justify-between text-sm font-medium text-text-muted">
-            <span className="text-primary font-bold">1. CoordonnÃ©es & Livraison</span>
+            <span className="text-primary font-bold">1. Coordonnées & Livraison</span>
             <span className="flex-1 h-px bg-surface-border mx-4"></span>
-            <span>2. Paiement sÃ©curisÃ©</span>
+            <span>2. Paiement sécurisé</span>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-10" noValidate>
             {birthdayBonus.active && (
               <section className="bg-primary/10 border border-primary/30 p-5 rounded-2xl">
-                <p className="text-primary font-semibold text-sm">Joyeux anniversaire ! -25% appliquÃ© automatiquement sur votre commande.</p>
+                <p className="text-primary font-semibold text-sm">Joyeux anniversaire ! -25% appliqué automatiquement sur votre commande.</p>
                 {birthdayBonus.expiration && (
                   <p className="text-text-light text-xs mt-1">
                     Offre valable jusqu&apos;au {new Date(birthdayBonus.expiration).toLocaleString('fr-FR')}
@@ -346,7 +346,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-serif text-2xl text-text">Livraison</h2>
                 {!user && (
-                  <Link to="/login" className="text-xs text-primary hover:underline font-medium">DÃ©jÃ  client ? Se connecter</Link>
+                  <Link to="/login" className="text-xs text-primary hover:underline font-medium">Déjà client ? Se connecter</Link>
                 )}
               </div>
 
@@ -364,7 +364,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <input type="text" name="fname" placeholder="PrÃ©nom" value={formData.fname} onChange={handleChange} required
+                    <input type="text" name="fname" placeholder="Prénom" value={formData.fname} onChange={handleChange} required
                       className={`w-full px-4 py-3 min-h-[48px] bg-background border rounded-xl focus:outline-none focus:ring-1 transition-all text-text placeholder:text-text-muted ${fieldErrors.fname ? 'border-primary' : 'border-surface-border focus:border-primary focus:ring-primary'
                         }`} />
                     {fieldErrors.fname && <p className="text-primary text-xs mt-1 font-medium">{fieldErrors.fname}</p>}
@@ -378,13 +378,13 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                 </div>
 
                 <div>
-                  <input type="tel" name="telephone" placeholder="TÃ©lÃ©phone (Optionnel) - Ex: 06 12 34 56 78" value={formData.telephone} onChange={handleChange}
+                  <input type="tel" name="telephone" placeholder="Téléphone (Optionnel) - Ex: 06 12 34 56 78" value={formData.telephone} onChange={handleChange}
                     className="w-full px-4 py-3 min-h-[48px] bg-background border border-surface-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-text placeholder:text-text-muted"
                   />
                 </div>
 
                 <div>
-                  <input type="text" name="address" placeholder="Adresse complÃ¨te" value={formData.address} onChange={handleChange} required
+                  <input type="text" name="address" placeholder="Adresse complète" value={formData.address} onChange={handleChange} required
                     className={`w-full px-4 py-3 min-h-[48px] bg-background border rounded-xl focus:outline-none focus:ring-1 transition-all text-text placeholder:text-text-muted ${fieldErrors.address ? 'border-primary' : 'border-surface-border focus:border-primary focus:ring-primary'
                       }`} />
                   {fieldErrors.address && <p className="text-primary text-xs mt-1 font-medium">{fieldErrors.address}</p>}
@@ -407,7 +407,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
 
                 <label className="flex items-center gap-3 mt-4 cursor-pointer group">
                   <input type="checkbox" name="createAccount" checked={formData.createAccount} onChange={handleChange} className="w-5 h-5 rounded border-surface-border text-primary focus:ring-primary accent-primary bg-background" />
-                  <span className="text-sm font-medium text-text-light group-hover:text-accent transition-colors">CrÃ©er un compte pour ma prochaine commande (Optionnel)</span>
+                  <span className="text-sm font-medium text-text-light group-hover:text-accent transition-colors">Créer un compte pour ma prochaine commande (Optionnel)</span>
                 </label>
               </div>
             </section>
@@ -436,8 +436,8 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                             <strong>{opt.label}</strong>
                             <span className="font-bold">
                               {opt.free
-                                ? (<><span className="text-accent">GRATUIT</span><small className="line-through ml-2 text-text-muted">{opt.originalPrice.toFixed(2)} â‚¬</small></>)
-                                : (<span>{opt.price.toFixed(2)} â‚¬</span>)}
+                                ? (<><span className="text-accent">GRATUIT</span><small className="line-through ml-2 text-text-muted">{opt.originalPrice.toFixed(2)} ��</small></>)
+                                : (<span>{opt.price.toFixed(2)} ��</span>)}
                             </span>
                           </div>
                           <p className="text-sm text-text-light">{opt.description}</p>
@@ -474,7 +474,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               {isSubmitting ? (
                 <>
                   <MotionDiv animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full" />
-                  GÃ©nÃ©ration en cours...
+                  Génération en cours...
                 </>
               ) : (
                 <>{user ? "VALIDER ET PAYER VIA REVOLUT" : "SE CONNECTER POUR COMMANDER"}</>
@@ -486,12 +486,12 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
           </form>
         </div>
 
-        {/* RÃ©capitulatif */}
+        {/* Récapitulatif */}
         <div className="lg:col-span-5 relative order-first lg:order-last">
           <div className="sticky top-28 space-y-6">
 
             <div className="bg-surface p-6 md:p-8 rounded-3xl border border-surface-border">
-              <h3 className="font-serif text-xl mb-6 text-accent">RÃ©capitulatif</h3>
+              <h3 className="font-serif text-xl mb-6 text-accent">Récapitulatif</h3>
               <div className="space-y-4 mb-6">
                 {cartItems.map(item => (
                   <div key={item.id} className="flex gap-4 items-center">
@@ -501,9 +501,9 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium text-text">{item.name}</h4>
-                      <p className="text-sm text-text-light">{item.price} â‚¬</p>
+                      <p className="text-sm text-text-light">{item.price} ��</p>
                     </div>
-                    <div className="font-medium text-accent">{(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} â‚¬</div>
+                    <div className="font-medium text-accent">{(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} ��</div>
                   </div>
                 ))}
               </div>
@@ -514,10 +514,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                   <div className="flex items-center justify-between p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 size={16} className="text-emerald-500" />
-                      <span className="text-emerald-400 font-medium text-sm">Code {appliedCoupon.code} appliquÃ©</span>
+                      <span className="text-emerald-400 font-medium text-sm">Code {appliedCoupon.code} appliqué</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-emerald-400 font-bold">- {discountAmount.toFixed(2)} â‚¬</span>
+                      <span className="text-emerald-400 font-bold">- {discountAmount.toFixed(2)} ��</span>
                       <button type="button" onClick={handleRemovePromo} className="text-emerald-500 hover:text-emerald-300 p-1">
                         <X size={16} />
                       </button>
@@ -550,39 +550,39 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               <div className="border-t border-surface-border pt-4 space-y-3 mt-6">
                 <div className="flex justify-between text-text-light">
                   <span>Sous-total</span>
-                  <span>{parseFloat(subtotal).toFixed(2)} â‚¬</span>
+                  <span>{parseFloat(subtotal).toFixed(2)} ��</span>
                 </div>
                 <div className="flex justify-between text-text-light">
                   <span>Frais de livraison</span>
                   <span>
                     {loadingShipping ? (
-                      'Calcul en coursâ€¦'
+                      'Calcul en cours⬦'
                     ) : selectedShipping ? (
                       selectedShipping.price === 0 ? (
                         <span style={{ color: '#4ade80' }}>Offerte</span>
                       ) : (
-                        <span>{Number(selectedShipping.price).toFixed(2)} â‚¬</span>
+                        <span>{Number(selectedShipping.price).toFixed(2)} ��</span>
                       )
                     ) : (
-                      <span>â€”</span>
+                      <span>�</span>
                     )}
                   </span>
                 </div>
                 {birthdayBonus.active && (
                   <div className="flex justify-between text-primary font-medium">
-                    <span>RÃ©duction membre anniversaire (-25%)</span>
-                    <span>- {birthdayDiscount.toFixed(2)} â‚¬</span>
+                    <span>Réduction membre anniversaire (-25%)</span>
+                    <span>- {birthdayDiscount.toFixed(2)} ��</span>
                   </div>
                 )}
                 {appliedCoupon && (
                   <div className="flex justify-between text-emerald-400 font-medium">
-                    <span>RÃ©duction ({appliedCoupon.code})</span>
-                    <span>- {discountAmount.toFixed(2)} â‚¬</span>
+                    <span>Réduction ({appliedCoupon.code})</span>
+                    <span>- {discountAmount.toFixed(2)} ��</span>
                   </div>
                 )}
                 <div className="flex justify-between items-center text-xl font-serif font-bold pt-4 border-t border-surface-border text-accent">
                   <span>Total TTC</span>
-                  <span>{parseFloat(total).toFixed(2)} â‚¬</span>
+                  <span>{parseFloat(total).toFixed(2)} ��</span>
                 </div>
               </div>
 
@@ -591,37 +591,37 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               </div>
             </div>
 
-            {/* Badges de rÃ©assurance */}
+            {/* Badges de réassurance */}
             <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10 space-y-4">
               <div className="flex items-start gap-4">
                 <div className="p-2 bg-surface rounded-full text-primary shadow-sm"><Lock size={20} /></div>
                 <div>
-                  <h4 className="font-medium text-sm text-text">Paiement chiffrÃ© et protÃ©gÃ©</h4>
-                  <p className="text-xs text-text-muted mt-1">DonnÃ©es chiffrÃ©es (SSL 256-bits). Vos coordonnÃ©es bancaires ne sont jamais stockÃ©es.</p>
+                  <h4 className="font-medium text-sm text-text">Paiement chiffré et protégé</h4>
+                  <p className="text-xs text-text-muted mt-1">Données chiffrées (SSL 256-bits). Vos coordonnées bancaires ne sont jamais stockées.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="p-2 bg-surface rounded-full text-accent shadow-sm"><ShieldCheck size={20} /></div>
                 <div>
                   <h4 className="font-medium text-sm text-text">Sans nicotine</h4>
-                  <p className="text-xs text-text-muted mt-1">Plantes sÃ©lectionnÃ©es avec soin et informations produit claires.</p>
+                  <p className="text-xs text-text-muted mt-1">Plantes sélectionnées avec soin et informations produit claires.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="p-2 bg-surface rounded-full text-primary shadow-sm"><Heart size={20} /></div>
                 <div>
-                  <h4 className="font-medium text-sm text-text">QualitÃ© artisanale contrÃ´lÃ©e</h4>
-                  <p className="text-xs text-text-muted mt-1">Disponible 7j/7 pour vous accompagner dans votre dÃ©marche de bien-Ãªtre.</p>
+                  <h4 className="font-medium text-sm text-text">Qualité artisanale contrôlée</h4>
+                  <p className="text-xs text-text-muted mt-1">Disponible 7j/7 pour vous accompagner dans votre démarche de bien-être.</p>
                 </div>
               </div>
             </div>
 
-            {/* Micro TÃ©moignage */}
+            {/* Micro Témoignage */}
             <div className="p-5 border border-surface-border rounded-2xl bg-surface/50 relative">
               <span className="text-4xl text-accent/20 font-serif absolute top-2 left-3">"</span>
               <p className="text-sm font-light italic relative z-10 text-text-light">
-                Le colis est arrivÃ© trÃ¨s vite et de maniÃ¨re hyper discrÃ¨te. La qualitÃ© est au rendez-vous. Merci !
-                <br /><strong className="text-text mt-2 block not-italic font-medium">â€” Thomas V. (Achat vÃ©rifiÃ©)</strong>
+                Le colis est arrivé très vite et de manière hyper discrète. La qualité est au rendez-vous. Merci !
+                <br /><strong className="text-text mt-2 block not-italic font-medium">� Thomas V. (Achat vérifié)</strong>
               </p>
             </div>
 
@@ -631,9 +631,9 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
 
       {/* Footer minimal (checkout only) */}
       <footer className="border-t border-surface-border py-6 px-6 text-center text-xs text-text-muted">
-        <span>Â© Doiry Shop â€” </span>
+        <span>© Doiry Shop � </span>
         <Link to="/mentions-legales" className="hover:text-primary transition-colors">
-          Mentions lÃ©gales
+          Mentions légales
         </Link>
         <span> | </span>
         <Link to="/cgv" className="hover:text-primary transition-colors">

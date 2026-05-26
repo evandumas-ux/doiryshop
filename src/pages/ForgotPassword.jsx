@@ -23,8 +23,8 @@ export default function ForgotPassword() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden font-sans">
       <SEO
-        title="Mot de passe oubliÃ© - Doiry Shop"
-        description="RÃ©initialisez votre mot de passe Doiry Shop"
+        title="Mot de passe oublié - Doiry Shop"
+        description="Réinitialisez votre mot de passe Doiry Shop"
         url="https://doiryshop.com/mot-de-passe-oublie"
         robots="noindex, nofollow"
       />
@@ -48,8 +48,8 @@ export default function ForgotPassword() {
               <img src="/logo.jpg" alt="DOIRY SHOP" className="w-20 h-20 object-contain rounded-xl" />
               <span className="font-display text-2xl font-bold tracking-widest text-primary">DOIRY SHOP</span>
             </Link>
-            <h1 className="text-2xl font-serif font-bold text-text mt-4">Mot de passe oubliÃ©</h1>
-            <p className="text-text-muted text-sm mt-2">Nous allons vous envoyer un lien de rÃ©initialisation</p>
+            <h1 className="text-2xl font-serif font-bold text-text mt-4">Mot de passe oublié</h1>
+            <p className="text-text-muted text-sm mt-2">Nous allons vous envoyer un lien de réinitialisation</p>
           </div>
 
           {isSubmitted ? (
@@ -64,13 +64,13 @@ export default function ForgotPassword() {
                 </svg>
               </div>
               <p className="text-text font-medium">
-                Si un compte existe avec cet email, vous recevrez un lien de rÃ©initialisation.
+                Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.
               </p>
               <Link 
                 to="/login" 
                 className="inline-block mt-6 text-[14px] text-accent font-semibold hover:underline"
               >
-                Retour Ã  la connexion
+                Retour à la connexion
               </Link>
             </motion.div>
           ) : (
@@ -94,12 +94,12 @@ export default function ForgotPassword() {
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
-                ) : "Envoyer le lien de rÃ©initialisation"}
+                ) : "Envoyer le lien de réinitialisation"}
               </button>
 
               <p className="text-center text-[13px] mt-6 text-text-muted">
                 <Link to="/login" className="text-accent font-medium hover:underline">
-                  Retour Ã  la connexion
+                  Retour à la connexion
                 </Link>
               </p>
             </form>

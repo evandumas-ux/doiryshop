@@ -70,7 +70,7 @@ const SavingsCalculator = () => {
     return () => clearTimeout(timer);
   }, [inputs.packs, inputs.cigarettes, pricePerPack, monthlySavings, yearlySavings]);
 
-  const formatPrice = (val) => val.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' â‚¬';
+  const formatPrice = (val) => val.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' ��';
 
   return (
     <div className="bg-surface border border-surface-border rounded-3xl p-8 shadow-2xl relative overflow-hidden">
@@ -80,7 +80,7 @@ const SavingsCalculator = () => {
         <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
           <Calculator size={24} />
         </div>
-        <h3 className="text-2xl font-serif text-text">Calculez vos Ã©conomies</h3>
+        <h3 className="text-2xl font-serif text-text">Calculez vos économies</h3>
       </div>
       
       <div className="grid md:grid-cols-3 gap-4 mb-3">
@@ -109,7 +109,7 @@ const SavingsCalculator = () => {
           </div>
         </div>
         <div className="space-y-3">
-          <label className="block text-sm text-text-light font-medium">Prix du paquet (â‚¬)</label>
+          <label className="block text-sm text-text-light font-medium">Prix du paquet (��)</label>
           <div className="flex items-center bg-background border border-surface-border rounded-xl px-4 py-3">
             <input 
               type="number" 
@@ -142,10 +142,10 @@ const SavingsCalculator = () => {
       <div className="mt-10 text-center">
         <a 
           href="#doiryshop-alternative" 
-          onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'DÃ©couvrir nos alternatives (calculator)', section: 'calculator' })}
+          onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Découvrir nos alternatives (calculator)', section: 'calculator' })}
           className="inline-flex items-center gap-2 px-6 py-3 bg-surface border border-primary/30 text-primary rounded-xl font-medium hover:bg-primary/5 transition-colors"
         >
-          DÃ©couvrir nos alternatives sans nicotine <ArrowRight size={16} />
+          Découvrir nos alternatives sans nicotine <ArrowRight size={16} />
         </a>
       </div>
     </div>
@@ -210,8 +210,8 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
   return (
     <>
       <SEO 
-        title="ArrÃªter de fumer : Les vrais bÃ©nÃ©fices et Ã©conomies | DoiryShop"
-        description="DÃ©couvrez les bÃ©nÃ©fices concrets de l'arrÃªt du tabac : santÃ©, souffle, et calculez vos Ã©conomies. DoiryShop vous accompagne avec des alternatives sans nicotine."
+        title="Arrêter de fumer : Les vrais bénéfices et économies | DoiryShop"
+        description="Découvrez les bénéfices concrets de l'arrêt du tabac : santé, souffle, et calculez vos économies. DoiryShop vous accompagne avec des alternatives sans nicotine."
         url="https://doiryshop.com/arret-tabac"
       />
 
@@ -249,29 +249,29 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase mb-8">
-                <Heart size={14} /> La dÃ©cision qui change tout
+                <Heart size={14} /> La décision qui change tout
               </span>
               <h1 className="text-4xl md:text-6xl font-serif text-text mb-6 leading-tight">
-                Ce que vous gagnez en arrÃªtant de fumer
+                Ce que vous gagnez en arrêtant de fumer
               </h1>
               <p className="text-lg md:text-xl text-text-light font-light max-w-2xl mx-auto mb-10 leading-relaxed">
-                Retrouvez du souffle, une respiration plus aisÃ©e, et rÃ©alisez des Ã©conomies immÃ©diates tout en abaissant vos risques Ã  long terme. Le changement commence ici.
+                Retrouvez du souffle, une respiration plus aisée, et réalisez des économies immédiates tout en abaissant vos risques à long terme. Le changement commence ici.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a 
                   href="#benefices" 
-                  onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Voir les bÃ©nÃ©fices', section: 'hero' })}
+                  onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Voir les bénéfices', section: 'hero' })}
                   className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-medium hover:bg-[#6e1515] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
                 >
-                  Voir les bÃ©nÃ©fices <ArrowRight size={18} />
+                  Voir les bénéfices <ArrowRight size={18} />
                 </a>
                 <a 
                   href="#calculateur" 
-                  onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Calculer mes Ã©conomies', section: 'hero' })}
+                  onClick={() => trackEvent('arret_tabac_cta_click', { cta_name: 'Calculer mes économies', section: 'hero' })}
                   className="w-full sm:w-auto px-8 py-4 bg-surface border border-surface-border text-text rounded-xl font-medium hover:border-accent/40 transition-colors flex items-center justify-center gap-2"
                 >
-                  <Calculator size={18} /> Calculer mes Ã©conomies
+                  <Calculator size={18} /> Calculer mes économies
                 </a>
               </div>
             </motion.div>
@@ -282,9 +282,9 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
         <section id="benefices" className="py-20 bg-background-light border-y border-surface-border">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-serif text-text mb-4">Un corps qui rÃ©cupÃ¨re, Ã©tape par Ã©tape</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-text mb-4">Un corps qui récupère, étape par étape</h2>
               <p className="text-text-light max-w-2xl mx-auto">
-                DÃ¨s les premiers jours, votre organisme entame son processus de nettoyage. Les bÃ©nÃ©fices documentÃ©s s'accumulent au fil du temps.
+                Dès les premiers jours, votre organisme entame son processus de nettoyage. Les bénéfices documentés s'accumulent au fil du temps.
               </p>
             </div>
 
@@ -292,37 +292,37 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               <TimelineItem 
                 index={0}
                 time="72 Heures"
-                title="Respiration facilitÃ©e"
-                description="La respiration devient plus facile. Les bronches commencent Ã  se relÃ¢cher et l'Ã©nergie augmente."
+                title="Respiration facilitée"
+                description="La respiration devient plus facile. Les bronches commencent à se relâcher et l'énergie augmente."
               />
               <TimelineItem 
                 index={1}
-                time="2 Ã  12 Semaines"
-                title="Circulation amÃ©liorÃ©e"
-                description="La circulation sanguine s'amÃ©liore, rendant la marche et l'effort physique plus aisÃ©s."
+                time="2 à 12 Semaines"
+                title="Circulation améliorée"
+                description="La circulation sanguine s'améliore, rendant la marche et l'effort physique plus aisés."
               />
               <TimelineItem 
                 index={2}
-                time="3 Ã  9 Mois"
+                time="3 à 9 Mois"
                 title="Moins de toux"
-                description="Diminution de la toux et de l'essoufflement. La fonction pulmonaire peut augmenter jusqu'Ã  10 %."
+                description="Diminution de la toux et de l'essoufflement. La fonction pulmonaire peut augmenter jusqu'à 10 %."
               />
               <TimelineItem 
                 index={3}
                 time="1 An"
-                title="Risque cardiaque rÃ©duit"
+                title="Risque cardiaque réduit"
                 description="Le risque de crise cardiaque est environ 50 % plus faible que chez un fumeur."
               />
               <TimelineItem 
                 index={4}
                 time="10 Ans"
-                title="Protection Ã  long terme"
+                title="Protection à long terme"
                 description="Le risque de cancer du poumon est environ 50 % plus faible que chez une personne qui continue de fumer."
               />
             </div>
             
             <p className="text-center text-xs text-text-muted mt-10 italic">
-              * DonnÃ©es basÃ©es sur les observations gÃ©nÃ©rales de l'arrÃªt du tabac (OMS, MinistÃ¨re de la SantÃ©).
+              * Données basées sur les observations générales de l'arrêt du tabac (OMS, Ministère de la Santé).
             </p>
           </div>
         </section>
@@ -331,9 +331,9 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
         <section id="calculateur" className="py-24">
           <div className="max-w-3xl mx-auto px-6">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-serif text-text mb-4">Le coÃ»t d'une habitude</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-text mb-4">Le coût d'une habitude</h2>
               <p className="text-text-light">
-                Au-delÃ  de la santÃ©, l'arrÃªt du tabac reprÃ©sente un gain financier majeur.
+                Au-delà de la santé, l'arrêt du tabac représente un gain financier majeur.
               </p>
             </div>
             
@@ -345,12 +345,12 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
         <section className="py-16 bg-background">
           <div className="max-w-3xl mx-auto px-6 text-center">
             <HelpCircle className="w-10 h-10 text-primary/40 mx-auto mb-6" />
-            <h3 className="text-2xl font-serif text-text mb-4">Pourquoi parler de l'arrÃªt du tabac ici ?</h3>
+            <h3 className="text-2xl font-serif text-text mb-4">Pourquoi parler de l'arrêt du tabac ici ?</h3>
             <p className="text-text-light leading-relaxed">
-              Chez DoiryShop, nous refusons les fausses promesses. L'arrÃªt du tabac est un parcours personnel complexe. 
-              Cependant, nous savons que l'une des plus grandes difficultÃ©s rÃ©side dans la perte du "rituel" quotidien ou du simple geste. 
+              Chez DoiryShop, nous refusons les fausses promesses. L'arrêt du tabac est un parcours personnel complexe. 
+              Cependant, nous savons que l'une des plus grandes difficultés réside dans la perte du "rituel" quotidien ou du simple geste. 
               C'est pour cela que nous proposons une alternative douce et transparente, pour accompagner la transition gestuelle, sans la moindre trace de nicotine. 
-              La dÃ©cision d'arrÃªter vous appartient. Si le geste vous manque, nous avons une solution.
+              La décision d'arrêter vous appartient. Si le geste vous manque, nous avons une solution.
             </p>
           </div>
         </section>
@@ -362,7 +362,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
             <Leaf className="w-12 h-12 text-accent mx-auto mb-6 opacity-80" />
             <h2 className="text-3xl md:text-4xl font-serif text-text mb-6">Conserver le geste, retirer la nicotine.</h2>
             <p className="text-lg text-text-light font-light leading-relaxed mb-10 max-w-2xl mx-auto">
-              L'une des plus grandes difficultÃ©s lors de l'arrÃªt du tabac est la perte du rituel. DoiryShop s'inscrit comme une alternative vÃ©gÃ©tale, pensÃ©e pour vous accompagner dans votre transition sans introduire de nouvelle dÃ©pendance Ã  la nicotine.
+              L'une des plus grandes difficultés lors de l'arrêt du tabac est la perte du rituel. DoiryShop s'inscrit comme une alternative végétale, pensée pour vous accompagner dans votre transition sans introduire de nouvelle dépendance à la nicotine.
             </p>
             
             <div className="grid sm:grid-cols-3 gap-6 mb-12">
@@ -373,7 +373,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               </div>
               <div className="bg-background p-6 rounded-2xl border border-surface-border">
                 <CheckCircle2 className="w-8 h-8 text-emerald-500 mb-4" />
-                <h4 className="text-lg font-serif text-text mb-2">Rituel prÃ©servÃ©</h4>
+                <h4 className="text-lg font-serif text-text mb-2">Rituel préservé</h4>
                 <p className="text-sm text-text-light">Garder le geste pour faciliter la transition.</p>
               </div>
               <div className="bg-background p-6 rounded-2xl border border-surface-border">
@@ -388,7 +388,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               onClick={() => trackEvent('arret_tabac_shop_click', { section: 'doiryshop' })}
               className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-medium hover:bg-[#6e1515] transition-all shadow-lg shadow-primary/20"
             >
-              DÃ©couvrir nos alternatives <ArrowRight size={18} />
+              Découvrir nos alternatives <ArrowRight size={18} />
             </Link>
 
             <div className="mt-16 p-6 bg-red-950/10 border border-red-900/20 rounded-2xl text-left flex gap-4 items-start">
@@ -396,7 +396,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               <div>
                 <h5 className="text-primary font-medium mb-1">Avertissement important</h5>
                 <p className="text-sm text-text-muted leading-relaxed">
-                  Les produits proposÃ©s par DoiryShop ne sont pas des traitements mÃ©dicaux ni des mÃ©dicaments de sevrage. Ils constituent une alternative rÃ©crÃ©ative ou rituelle sans nicotine. En cas de dÃ©pendance forte au tabac, l'accompagnement par un professionnel de santÃ© (mÃ©decin, tabacologue) ou l'utilisation de substituts nicotiniques pharmaceutiques reste la dÃ©marche la plus recommandÃ©e.
+                  Les produits proposés par DoiryShop ne sont pas des traitements médicaux ni des médicaments de sevrage. Ils constituent une alternative récréative ou rituelle sans nicotine. En cas de dépendance forte au tabac, l'accompagnement par un professionnel de santé (médecin, tabacologue) ou l'utilisation de substituts nicotiniques pharmaceutiques reste la démarche la plus recommandée.
                 </p>
               </div>
             </div>
@@ -406,23 +406,23 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
         {/* SECTION FAQ */}
         <section className="py-24">
           <div className="max-w-3xl mx-auto px-6">
-            <h2 className="text-3xl font-serif text-text mb-10 text-center">Questions frÃ©quentes</h2>
+            <h2 className="text-3xl font-serif text-text mb-10 text-center">Questions fréquentes</h2>
             <div className="space-y-2">
               <FAQItem 
                 question="En combien de temps le souffle revient-il ?"
-                answer="GÃ©nÃ©ralement, on observe une nette amÃ©lioration de la respiration entre 72 heures et quelques semaines aprÃ¨s l'arrÃªt. Les bronches se relÃ¢chent et la capacitÃ© pulmonaire globale peut augmenter progressivement de 10% sur les premiers mois."
+                answer="Généralement, on observe une nette amélioration de la respiration entre 72 heures et quelques semaines après l'arrêt. Les bronches se relâchent et la capacité pulmonaire globale peut augmenter progressivement de 10% sur les premiers mois."
               />
               <FAQItem 
-                question="Combien peut-on Ã©conomiser en arrÃªtant ?"
-                answer="Tout dÃ©pend de votre consommation quotidienne. Ã€ raison d'un paquet Ã  13â‚¬ par jour, l'Ã©conomie s'Ã©lÃ¨ve Ã  prÃ¨s de 400â‚¬ par mois, et plus de 4700â‚¬ par an. N'hÃ©sitez pas Ã  utiliser notre calculateur plus haut pour obtenir votre propre estimation."
+                question="Combien peut-on économiser en arrêtant ?"
+                answer="Tout dépend de votre consommation quotidienne. ì raison d'un paquet à 13�� par jour, l'économie s'élève à près de 400�� par mois, et plus de 4700�� par an. N'hésitez pas à utiliser notre calculateur plus haut pour obtenir votre propre estimation."
               />
               <FAQItem 
-                question="DoiryShop remplace-t-il un traitement mÃ©dical ?"
-                answer="Absolument pas. DoiryShop propose des plantes sÃ©chÃ©es et infusions sans nicotine pour accompagner votre rituel. Ce n'est pas un substitut nicotinique vendu en pharmacie ni un traitement mÃ©dical."
+                question="DoiryShop remplace-t-il un traitement médical ?"
+                answer="Absolument pas. DoiryShop propose des plantes séchées et infusions sans nicotine pour accompagner votre rituel. Ce n'est pas un substitut nicotinique vendu en pharmacie ni un traitement médical."
               />
               <FAQItem 
-                question="S'agit-il d'une dÃ©marche de sevrage ?"
-                answer="L'utilisation de nos produits peut s'inscrire dans une dÃ©marche personnelle de changement d'habitude en palliant le Â« manque du geste Â», mais elle ne traite pas la dÃ©pendance physique Ã  la nicotine. Pour un sevrage complet, l'avis d'un mÃ©decin est conseillÃ©."
+                question="S'agit-il d'une démarche de sevrage ?"
+                answer="L'utilisation de nos produits peut s'inscrire dans une démarche personnelle de changement d'habitude en palliant le « manque du geste », mais elle ne traite pas la dépendance physique à la nicotine. Pour un sevrage complet, l'avis d'un médecin est conseillé."
               />
             </div>
           </div>

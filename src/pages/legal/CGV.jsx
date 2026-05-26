@@ -8,7 +8,7 @@ const CGV = () => {
     <div className="min-h-screen bg-background text-text">
       <SEO
         title="CGV"
-        description="Conditions gÃ©nÃ©rales de vente Doiry Shop."
+        description="Conditions générales de vente Doiry Shop."
         url="https://doiryshop.com/cgv"
         robots="noindex, nofollow"
       />
@@ -19,7 +19,7 @@ const CGV = () => {
             className="inline-flex items-center gap-2 text-text-light hover:text-primary transition-colors text-sm font-medium"
           >
             <ArrowLeft size={18} />
-            Retour Ã  l'accueil
+            Retour à l'accueil
           </Link>
         </div>
       </div>
@@ -29,13 +29,13 @@ const CGV = () => {
           Conditions de vente
         </p>
         <h1 className="text-4xl md:text-5xl font-serif mb-6">CGV</h1>
-        <p className="text-text-muted text-sm mb-10">DerniÃ¨re mise Ã  jour : Avril 2026</p>
+        <p className="text-text-muted text-sm mb-10">Dernière mise à jour : Avril 2026</p>
 
         <div className="space-y-6 text-text-light leading-relaxed">
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
             <h2 className="text-2xl font-serif mb-3">1. Objet et champ d'application</h2>
             <p>
-              Les prÃ©sentes conditions gÃ©nÃ©rales de vente rÃ©gissent l'ensemble des commandes passÃ©es
+              Les présentes conditions générales de vente régissent l'ensemble des commandes passées
               sur le site Doiry Shop.
             </p>
           </section>
@@ -43,26 +43,26 @@ const CGV = () => {
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
             <h2 className="text-2xl font-serif mb-3">2. Produits</h2>
             <p>
-              Les produits proposÃ©s sont des plantes sÃ©chÃ©es et infusions naturelles, des bases en vrac, des
-              prÃ©-roulÃ©s Ã  base de plantes et des tisanes ou infusions. Les descriptions, compositions
-              et conseils d'utilisation sont prÃ©sentÃ©es sur chaque fiche produit.
+              Les produits proposés sont des plantes séchées et infusions naturelles, des bases en vrac, des
+              pré-roulés à base de plantes et des tisanes ou infusions. Les descriptions, compositions
+              et conseils d'utilisation sont présentées sur chaque fiche produit.
             </p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
             <h2 className="text-2xl font-serif mb-3">3. Prix TTC et paiement</h2>
             <p>
-              Les prix affichÃ©s sont exprimÃ©s en euros TTC. Le paiement est dÃ» Ã  la commande via les
-              moyens proposÃ©s sur la boutique.
+              Les prix affichés sont exprimés en euros TTC. Le paiement est dû à la commande via les
+              moyens proposés sur la boutique.
             </p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
             <h2 className="text-2xl font-serif mb-3">4. Moyens de paiement</h2>
-            <p>Les moyens de paiement acceptÃ©s sur la boutique sont :</p>
+            <p>Les moyens de paiement acceptés sur la boutique sont :</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
               <li>Carte bancaire (Visa, Mastercard, CB)</li>
-              <li>Paiement sÃ©curisÃ© via <strong>Stripe</strong> (prestataire de paiement)</li>
+              <li>Paiement sécurisé via <strong>Stripe</strong> (prestataire de paiement)</li>
             </ul>
           </section>
 
@@ -70,67 +70,67 @@ const CGV = () => {
             <h2 className="text-2xl font-serif mb-3">5. Livraison</h2>
             <div className="space-y-3">
               <p>
-                La livraison est assurÃ©e en <strong>France mÃ©tropolitaine uniquement</strong>.
+                La livraison est assurée en <strong>France métropolitaine uniquement</strong>.
               </p>
               <p>
-                Les dÃ©lais indicatifs sont de <strong>48 Ã  72h</strong> pour <strong>Colissimo Domicile (La Poste)</strong> (jours ouvrÃ©s), aprÃ¨s expÃ©dition.
+                Les délais indicatifs sont de <strong>48 à 72h</strong> pour <strong>Colissimo Domicile (La Poste)</strong> (jours ouvrés), après expédition.
               </p>
               <p>
-                Les frais de livraison sont de <strong>7,59â‚¬</strong> par commande (Colissimo Domicile, La Poste, livraison en 2-3 jours ouvrÃ©s).
-                La livraison est offerte pour toute commande d'un montant supÃ©rieur ou Ã©gal Ã  <strong>35â‚¬</strong>.
+                Les frais de livraison sont de <strong>7,59��</strong> par commande (Colissimo Domicile, La Poste, livraison en 2-3 jours ouvrés).
+                La livraison est offerte pour toute commande d'un montant supérieur ou égal à <strong>35��</strong>.
               </p>
               <p className="text-sm text-text-muted">
-                Les frais et dÃ©lais exacts sont rappelÃ©s au moment du paiement, avant validation de la commande.
+                Les frais et délais exacts sont rappelés au moment du paiement, avant validation de la commande.
               </p>
             </div>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3">6. Droit de rÃ©tractation</h2>
+            <h2 className="text-2xl font-serif mb-3">6. Droit de rétractation</h2>
             <p>
-              ConformÃ©ment au Code de la consommation, le client dispose d'un dÃ©lai de 14 jours pour
-              exercer son droit de rÃ©tractation.
+              Conformément au Code de la consommation, le client dispose d'un délai de 14 jours pour
+              exercer son droit de rétractation.
             </p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3">7. ModalitÃ©s de rÃ©tractation</h2>
+            <h2 className="text-2xl font-serif mb-3">7. Modalités de rétractation</h2>
             <p>
-              Le client dispose de 14 jours pour se rÃ©tracter sans justification en envoyant un email Ã {' '}
+              Le client dispose de 14 jours pour se rétracter sans justification en envoyant un email à{' '}
               <a className="text-accent hover:underline" href="mailto:contact@doiryshop.com">
                 contact@doiryshop.com
               </a>
               .
             </p>
             <p className="mt-2">
-              Le remboursement sera effectuÃ© sous 14 jours aprÃ¨s rÃ©ception du retour. Les frais de
-              retour sont Ã  la charge du client.
+              Le remboursement sera effectué sous 14 jours après réception du retour. Les frais de
+              retour sont à la charge du client.
             </p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3">8. Vente rÃ©servÃ©e aux majeurs</h2>
-            <p>La vente est strictement rÃ©servÃ©e aux personnes majeures de 18 ans.</p>
+            <h2 className="text-2xl font-serif mb-3">8. Vente réservée aux majeurs</h2>
+            <p>La vente est strictement réservée aux personnes majeures de 18 ans.</p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3">9. ResponsabilitÃ© et garanties</h2>
+            <h2 className="text-2xl font-serif mb-3">9. Responsabilité et garanties</h2>
             <p>
-              Le vendeur est tenu des garanties lÃ©gales applicables. La responsabilitÃ© ne peut Ãªtre
-              engagÃ©e en cas de mauvaise utilisation des produits.
+              Le vendeur est tenu des garanties légales applicables. La responsabilité ne peut être
+              engagée en cas de mauvaise utilisation des produits.
             </p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
             <h2 className="text-2xl font-serif mb-3">10. Litiges et droit applicable</h2>
-            <p>Les prÃ©sentes CGV sont soumises au droit franÃ§ais.</p>
+            <p>Les présentes CGV sont soumises au droit français.</p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
-            <h2 className="text-2xl font-serif mb-3">11. MÃ©diation</h2>
+            <h2 className="text-2xl font-serif mb-3">11. Médiation</h2>
             <p>
-              En cas de litige, le client peut recourir gratuitement au service de mÃ©diation de la
-              consommation via la plateforme europÃ©enne :
+              En cas de litige, le client peut recourir gratuitement au service de médiation de la
+              consommation via la plateforme européenne :
             </p>
             <p className="mt-2">
               <a
