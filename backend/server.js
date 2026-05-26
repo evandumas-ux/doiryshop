@@ -459,11 +459,11 @@ app.post('/api/auth/custom-verify', async (req, res) => {
         try {
           // addLoyaltyPoints(newUserId, 20, 'inscription', null) - Need to require or use local function
           db.run(
-            \`INSERT OR IGNORE INTO loyalty_points (user_id, points_actuels, points_cumules_total, niveau) VALUES (?, 20, 20, 'initie')\`,
+            `INSERT OR IGNORE INTO loyalty_points (user_id, points_actuels, points_cumules_total, niveau) VALUES (?, 20, 20, 'initie')`,
             [user.id]
           );
           db.run(
-            \`INSERT INTO loyalty_transactions (user_id, points, type, raison) VALUES (?, 20, 'gain', 'inscription')\`,
+            `INSERT INTO loyalty_transactions (user_id, points, type, raison) VALUES (?, 20, 'gain', 'inscription')`,
             [user.id]
           );
         } catch (e) {
