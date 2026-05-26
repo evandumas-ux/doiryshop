@@ -88,8 +88,9 @@ const Footer = () => {
                 placeholder="Ton email"
                 className={`min-w-0 flex-1 px-4 h-12 bg-surface border rounded-xl focus:outline-none focus:border-primary text-text placeholder:text-text-muted transition-colors ${emailError ? 'border-primary' : 'border-surface-border'}`}
               />
-              <button type="submit" disabled={status === 'loading'} className="h-12 px-5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-60 inline-flex items-center gap-2">
+              <button type="submit" disabled={status === 'loading'} className="h-12 px-5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-60 inline-flex items-center gap-2" onClick={() => alert('Button clicked successfully!')}>
                 <Mail size={17} /> OK
+                {/* V2 TEST COUCOU */}
               </button>
             </div>
             {emailError && <p className="text-primary text-xs mt-2 font-medium">{emailErrorMessage}</p>}
