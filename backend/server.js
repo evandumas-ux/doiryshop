@@ -86,21 +86,21 @@ const parseJsonArrayField = (value) => {
 app.use(cookieParser());
 app.use(express.json());
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  'http://localhost:5173',
-  'http://localhost:3000'
-].filter(Boolean);
+const allowedOrigins = ['https://doiryshop.com', 'http://localhost:3000'];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+  origin: function (origin, callback) {
+    // Permet les requêtes sans origine (comme les outils Postman ou les requêtes internes)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'La politique CORS de ce site ne permet pas l\'accès depuis l\'origine spécifiée.';
+      return callback(new Error(msg), false);
     }
+    return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use('/uploads', express.static(path.resolve(__dirname, 'uploads')));
 
