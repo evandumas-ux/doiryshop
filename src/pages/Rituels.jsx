@@ -27,37 +27,37 @@ const productGuides = [
     id: 'pre-roules',
     order: '01',
     label: 'A utiliser en premier',
-    title: 'Pré-roulés botaniques',
-    subtitle: 'Le geste prêt, sans nicotine.',
+    title: 'PrÃ©-roulÃ©s botaniques',
+    subtitle: 'Le geste prÃªt, sans nicotine.',
     image: '/images/etui_preroules.png',
     icon: Flame,
     intro:
-      "Les pré-roulés Doiry sont pensés pour les moments où l'envie arrive vite : une pause, une tension, une soirée, une transition. Vous gardez la gestuelle, la fumée texturée, la combustion lente, mais vous sortez du réflexe tabac.",
-    cta: 'Voir les pré-roulés',
+      "Les prÃ©-roulÃ©s Doiry sont pensÃ©s pour les moments oÃ¹ l'envie arrive vite : une pause, une tension, une soirÃ©e, une transition. Vous gardez la gestuelle, la fumÃ©e texturÃ©e, la combustion lente, mais vous sortez du rÃ©flexe tabac.",
+    cta: 'Voir les prÃ©-roulÃ©s',
     moments: [
       {
-        name: 'Pause de journée',
+        name: 'Pause de journÃ©e',
         when: 'Quand le stress monte ou que la main cherche une cigarette.',
-        how: "Allumez lentement, tirez peu, laissez la fumée s'installer. Le but n'est pas de reproduire l'urgence, mais de ralentir le geste.",
+        how: "Allumez lentement, tirez peu, laissez la fumÃ©e s'installer. Le but n'est pas de reproduire l'urgence, mais de ralentir le geste.",
         benefit: 'Retrouver une pause nette, sans nicotine.'
       },
       {
-        name: 'Transition après repas',
-        when: 'Quand le besoin automatique apparaît après manger.',
-        how: 'Remplacez la cigarette réflexe par un pré-roulé botanique. Même rituel, autre intention, autre matière.',
-        benefit: 'Garder le geste sans relancer la dépendance.'
+        name: 'Transition aprÃ¨s repas',
+        when: 'Quand le besoin automatique apparaÃ®t aprÃ¨s manger.',
+        how: 'Remplacez la cigarette rÃ©flexe par un prÃ©-roulÃ© botanique. MÃªme rituel, autre intention, autre matiÃ¨re.',
+        benefit: 'Garder le geste sans relancer la dÃ©pendance.'
       },
       {
-        name: 'Soirée et moment social',
+        name: 'SoirÃ©e et moment social',
         when: 'Au milieu des verres, des discussions et des sorties.',
-        how: 'Sortez-le comme un accessoire discret. Une fumée aromatique, intrigante, plus élégante qu’une cigarette classique.',
-        benefit: 'Créer la curiosité sans odeur lourde ni vape artificielle.'
+        how: 'Sortez-le comme un accessoire discret. Une fumÃ©e aromatique, intrigante, plus Ã©lÃ©gante quâ€™une cigarette classique.',
+        benefit: 'CrÃ©er la curiositÃ© sans odeur lourde ni vape artificielle.'
       },
       {
-        name: 'Fin de journée',
+        name: 'Fin de journÃ©e',
         when: 'Quand vous voulez marquer le passage vers le calme.',
-        how: 'Associez-le à une lumière basse et à une infusion du soir. Quelques bouffées suffisent pour installer un rythme plus doux.',
-        benefit: 'Préparer le retour au calme.'
+        how: 'Associez-le Ã  une lumiÃ¨re basse et Ã  une infusion du soir. Quelques bouffÃ©es suffisent pour installer un rythme plus doux.',
+        benefit: 'PrÃ©parer le retour au calme.'
       }
     ]
   },
@@ -66,37 +66,37 @@ const productGuides = [
     order: '02',
     label: 'Le vrac pour fumer',
     title: 'Vrac Botanique Doiry',
-    subtitle: 'L’alternative pure au tabac dans vos mélanges.',
+    subtitle: 'Lâ€™alternative pure au tabac dans vos mÃ©langes.',
     image: '/images/pochon_kraft_noir.png',
     icon: Leaf,
     intro:
-      "Le Vrac Botanique Doiry est fait pour rouler, doser et composer. Il remplace le tabac industriel dans vos mélanges, notamment avec vos fleurs de CBD, afin de préserver les arômes, éviter la nicotine et reprendre le contrôle de ce que vous consommez.",
+      "Le Vrac Botanique Doiry est fait pour rouler, doser et composer. Il remplace le tabac industriel dans vos mÃ©langes, notamment avec vos fleurs de CBD, afin de prÃ©server les arÃ´mes, Ã©viter la nicotine et reprendre le contrÃ´le de ce que vous consommez.",
     cta: 'Remplacer mon tabac',
     featured: true,
     moments: [
       {
         name: 'Mixer avec des fleurs de CBD',
-        when: 'Quand vous voulez profiter de vos fleurs sans les gâcher avec du tabac.',
-        how: 'Effritez votre fleur, ajoutez une base de Vrac Doiry, puis ajustez selon la texture voulue. Roulez doucement pour garder une combustion régulière.',
-        benefit: 'Arômes préservés, mélange plus pur, sans nicotine.'
+        when: 'Quand vous voulez profiter de vos fleurs sans les gÃ¢cher avec du tabac.',
+        how: 'Effritez votre fleur, ajoutez une base de Vrac Doiry, puis ajustez selon la texture voulue. Roulez doucement pour garder une combustion rÃ©guliÃ¨re.',
+        benefit: 'ArÃ´mes prÃ©servÃ©s, mÃ©lange plus pur, sans nicotine.'
       },
       {
-        name: 'Rouler votre propre pré-roll',
-        when: 'Quand le roulage devient un rituel de détente en soi.',
-        how: 'Préparez votre papier, votre filtre, votre dosage. Prenez le temps de façonner un cône propre, léger, adapté à votre moment.',
+        name: 'Rouler votre propre prÃ©-roll',
+        when: 'Quand le roulage devient un rituel de dÃ©tente en soi.',
+        how: 'PrÃ©parez votre papier, votre filtre, votre dosage. Prenez le temps de faÃ§onner un cÃ´ne propre, lÃ©ger, adaptÃ© Ã  votre moment.',
         benefit: 'Votre papier, votre filtre, votre rythme.'
       },
       {
         name: 'Remplacer le tabac progressivement',
-        when: 'Quand vous voulez garder le geste sans subir la dépendance physique.',
-        how: 'Commencez par remplacer une partie du tabac, puis augmentez la proportion de Vrac Doiry jusqu’à basculer vers une alternative pure.',
+        when: 'Quand vous voulez garder le geste sans subir la dÃ©pendance physique.',
+        how: 'Commencez par remplacer une partie du tabac, puis augmentez la proportion de Vrac Doiry jusquâ€™Ã  basculer vers une alternative pure.',
         benefit: 'Une transition plus douce, plus consciente.'
       },
       {
-        name: 'Créer un mélange neutre et subtil',
-        when: 'Quand vous cherchez une base végétale qui ne domine pas tout.',
-        how: 'Dosez léger. Le Vrac Doiry doit soutenir la fumée, la texture et la combustion, pas saturer votre mélange.',
-        benefit: 'Une fumée botanique douce et maîtrisée.'
+        name: 'CrÃ©er un mÃ©lange neutre et subtil',
+        when: 'Quand vous cherchez une base vÃ©gÃ©tale qui ne domine pas tout.',
+        how: 'Dosez lÃ©ger. Le Vrac Doiry doit soutenir la fumÃ©e, la texture et la combustion, pas saturer votre mÃ©lange.',
+        benefit: 'Une fumÃ©e botanique douce et maÃ®trisÃ©e.'
       }
     ]
   },
@@ -109,26 +109,26 @@ const productGuides = [
     image: '/images/boite_infusion_kraft.png',
     icon: Sun,
     intro:
-      "Les infusions Doiry accompagnent les moments où le corps a besoin de chaleur, de clarté ou d’un retour au calme. Elles ne remplacent pas le geste fumé : elles l’encadrent, l’adoucissent et créent une routine plus complète.",
-    cta: 'Découvrir les infusions',
+      "Les infusions Doiry accompagnent les moments oÃ¹ le corps a besoin de chaleur, de clartÃ© ou dâ€™un retour au calme. Elles ne remplacent pas le geste fumÃ© : elles lâ€™encadrent, lâ€™adoucissent et crÃ©ent une routine plus complÃ¨te.",
+    cta: 'DÃ©couvrir les infusions',
     moments: [
       {
         name: 'Matin clair',
         when: 'Avant les messages, avant la vitesse.',
-        how: 'Infusez quelques minutes, respirez la vapeur, buvez lentement. Le matin devient un point d’ancrage plutôt qu’une course.',
-        benefit: 'Clarté, éveil doux, esprit plus net.'
+        how: 'Infusez quelques minutes, respirez la vapeur, buvez lentement. Le matin devient un point dâ€™ancrage plutÃ´t quâ€™une course.',
+        benefit: 'ClartÃ©, Ã©veil doux, esprit plus net.'
       },
       {
-        name: 'Après-midi focus',
-        when: 'Quand l’énergie descend mais que la journée continue.',
-        how: 'Préparez une tasse légère et gardez-la près de vous pendant le travail. Une pause calme, sans excitation brutale.',
-        benefit: 'Focus plus posé, moins de nervosité.'
+        name: 'AprÃ¨s-midi focus',
+        when: 'Quand lâ€™Ã©nergie descend mais que la journÃ©e continue.',
+        how: 'PrÃ©parez une tasse lÃ©gÃ¨re et gardez-la prÃ¨s de vous pendant le travail. Une pause calme, sans excitation brutale.',
+        benefit: 'Focus plus posÃ©, moins de nervositÃ©.'
       },
       {
-        name: 'Soir apaisé',
-        when: 'Quand la journée doit enfin ralentir.',
-        how: 'Associez l’infusion à un pré-roulé doux ou à un rituel sans écran. L’idée : relâcher, pas stimuler.',
-        benefit: 'Retour au calme et préparation au sommeil.'
+        name: 'Soir apaisÃ©',
+        when: 'Quand la journÃ©e doit enfin ralentir.',
+        how: 'Associez lâ€™infusion Ã  un prÃ©-roulÃ© doux ou Ã  un rituel sans Ã©cran. Lâ€™idÃ©e : relÃ¢cher, pas stimuler.',
+        benefit: 'Retour au calme et prÃ©paration au sommeil.'
       }
     ]
   },
@@ -141,25 +141,25 @@ const productGuides = [
     image: '/images/coffret_complet_flatlay.png',
     icon: Package,
     intro:
-      "Les coffrets rassemblent les gestes essentiels : découvrir, tester, comparer, puis choisir son rituel. Ils sont faits pour celles et ceux qui veulent une transition guidée, belle et simple à suivre.",
+      "Les coffrets rassemblent les gestes essentiels : dÃ©couvrir, tester, comparer, puis choisir son rituel. Ils sont faits pour celles et ceux qui veulent une transition guidÃ©e, belle et simple Ã  suivre.",
     cta: 'Voir les coffrets',
     moments: [
       {
-        name: 'Première transition',
+        name: 'PremiÃ¨re transition',
         when: 'Quand vous ne savez pas par quoi commencer.',
-        how: 'Utilisez le coffret comme une semaine d’essai : pré-roulé pour les envies fortes, infusion pour encadrer les moments sensibles, vrac si vous aimez rouler.',
+        how: 'Utilisez le coffret comme une semaine dâ€™essai : prÃ©-roulÃ© pour les envies fortes, infusion pour encadrer les moments sensibles, vrac si vous aimez rouler.',
         benefit: 'Un parcours clair, sans dispersion.'
       },
       {
         name: 'Routine du soir',
         when: 'Quand le stress retombe mal et que le sommeil tarde.',
-        how: 'Créez une séquence stable : ranger la journée, préparer l’infusion, puis choisir une volute douce si le geste vous apaise.',
+        how: 'CrÃ©ez une sÃ©quence stable : ranger la journÃ©e, prÃ©parer lâ€™infusion, puis choisir une volute douce si le geste vous apaise.',
         benefit: 'Un rituel nocturne plus profond.'
       },
       {
-        name: 'Cadeau bien-être',
-        when: 'Pour offrir une alternative élégante, intime et utile.',
-        how: 'Choisissez un coffret selon le moment de vie : transition tabac, soirée, sérénité, découverte botanique.',
+        name: 'Cadeau bien-Ãªtre',
+        when: 'Pour offrir une alternative Ã©lÃ©gante, intime et utile.',
+        how: 'Choisissez un coffret selon le moment de vie : transition tabac, soirÃ©e, sÃ©rÃ©nitÃ©, dÃ©couverte botanique.',
         benefit: 'Un cadeau sensoriel, pas un objet banal.'
       }
     ]
@@ -239,7 +239,7 @@ const ProductGuideSection = ({ guide, index }) => {
                     <p className="text-sm leading-6 text-text-light">{moment.how}</p>
                   </div>
                   <div>
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent">Effet recherché</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent">Effet recherchÃ©</p>
                     <p className="text-sm leading-6 text-text-light">{moment.benefit}</p>
                   </div>
                 </div>
@@ -269,7 +269,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
     <>
       <SEO
         title="Les Rituels Doiry | Guide d'utilisation botanique"
-        description="Comment utiliser les pré-roulés, le Vrac Botanique, les infusions et les coffrets Doiry selon chaque moment de la journée."
+        description="Comment utiliser les prÃ©-roulÃ©s, le Vrac Botanique, les infusions et les coffrets Doiry selon chaque moment de la journÃ©e."
         url="https://doiryshop.com/rituels"
       />
 
@@ -316,7 +316,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
               Comment utiliser chaque produit, au bon moment.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-text-light md:text-xl">
-              Un guide simple et sensoriel pour choisir entre pré-roulés, Vrac Botanique à fumer, infusions et coffrets. Le bon geste, la bonne plante, la bonne intensité.
+              Un guide simple et sensoriel pour choisir entre prÃ©-roulÃ©s, Vrac Botanique Ã  fumer, infusions et coffrets. Le bon geste, la bonne plante, la bonne intensitÃ©.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <button
@@ -324,7 +324,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
                 onClick={() => scrollToSection('pre-roules')}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-medium text-white transition-colors hover:bg-primary-dark"
               >
-                Commencer par les pré-roulés
+                Commencer par les prÃ©-roulÃ©s
                 <ArrowRight size={18} />
               </button>
               <button
@@ -332,7 +332,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
                 onClick={() => scrollToSection('vrac-fumer')}
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-surface-border bg-black/45 px-6 py-4 font-medium text-text backdrop-blur transition-colors hover:border-accent/40"
               >
-                Voir le vrac à fumer
+                Voir le vrac Ã  fumer
               </button>
             </div>
           </MotionDiv>
@@ -368,7 +368,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
                 <h2 className="mt-3 font-serif text-3xl text-text md:text-4xl">Tous les moments d'utilisation</h2>
               </div>
               <p className="hidden max-w-sm text-sm leading-6 text-text-muted md:block">
-                Cliquez sur un moment pour accéder au produit adapté et à sa méthode d'utilisation.
+                Cliquez sur un moment pour accÃ©der au produit adaptÃ© et Ã  sa mÃ©thode d'utilisation.
               </p>
             </div>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
@@ -391,10 +391,10 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
         <section className="bg-background-light px-5 py-14 md:px-8">
           <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-4">
             {[
-              { icon: ShieldCheck, title: 'Sans nicotine', text: 'Pour garder le rituel sans entretenir la dépendance physique.' },
-              { icon: Flame, title: 'Combustion lente', text: 'Une fumée plus posée, plus douce, moins brutale.' },
-              { icon: Wind, title: 'Arômes préservés', text: 'Idéal pour ne pas couvrir vos fleurs de CBD avec le tabac.' },
-              { icon: Clock3, title: 'Moments guidés', text: 'Pause, soirée, sommeil, transition : chaque usage a son rythme.' }
+              { icon: ShieldCheck, title: 'Sans nicotine', text: 'Pour garder le rituel sans entretenir la dÃ©pendance physique.' },
+              { icon: Flame, title: 'Combustion lente', text: 'Une fumÃ©e plus posÃ©e, plus douce, moins brutale.' },
+              { icon: Wind, title: 'ArÃ´mes prÃ©servÃ©s', text: 'IdÃ©al pour ne pas couvrir vos fleurs de CBD avec le tabac.' },
+              { icon: Clock3, title: 'Moments guidÃ©s', text: 'Pause, soirÃ©e, sommeil, transition : chaque usage a son rythme.' }
             ].map((item) => {
               const Icon = item.icon;
               return (
@@ -435,7 +435,7 @@ const Rituels = ({ user, cartItems = [], setCartItems, onLogout }) => {
               Le bon rituel commence par le bon produit.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-text-light">
-              Pour une envie immédiate, commencez par les pré-roulés. Pour rouler, mixer vos fleurs ou remplacer le tabac, passez au Vrac Botanique.
+              Pour une envie immÃ©diate, commencez par les prÃ©-roulÃ©s. Pour rouler, mixer vos fleurs ou remplacer le tabac, passez au Vrac Botanique.
             </p>
             <Link
               to="/boutique"

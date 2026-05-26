@@ -81,7 +81,7 @@ const ProductGallery = ({ images: rawImages, productName }) => {
   );
 };
 
-const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} â‚¬`;
 
 const parseTags = (tags) => {
   if (Array.isArray(tags)) return tags;
@@ -99,13 +99,13 @@ const getStockMessage = (stock) => {
 };
 
 const formatCoffretDescription = (description) => {
-  if (!description || !description.includes('•')) {
+  if (!description || !description.includes('â€¢')) {
     return <p>{description}</p>;
   }
 
   const normalized = String(description).replace(/\r\n/g, '\n');
   const sections = normalized
-    .split('✦')
+    .split('âœ¦')
     .map((chunk) => chunk.trim())
     .filter(Boolean)
     .map((chunk) => {
@@ -113,7 +113,7 @@ const formatCoffretDescription = (description) => {
       const title = lines[0] || '';
       const body = lines.slice(1).join(' ');
       const bullets = body
-        .split('•')
+        .split('â€¢')
         .map((item) => item.trim())
         .filter(Boolean);
       return { title, bullets };
@@ -123,10 +123,10 @@ const formatCoffretDescription = (description) => {
   if (!sections.length) {
     return (
       <div className="space-y-2">
-        {normalized.split('•').map((item, index) => {
+        {normalized.split('â€¢').map((item, index) => {
           const line = item.trim();
           if (!line) return null;
-          return <p key={`${line}-${index}`}>• {line}</p>;
+          return <p key={`${line}-${index}`}>â€¢ {line}</p>;
         })}
       </div>
     );
@@ -136,10 +136,10 @@ const formatCoffretDescription = (description) => {
     <div className="space-y-5">
       {sections.map((section) => (
         <div key={section.title} className="space-y-2">
-          {section.title && <p className="font-medium text-text">{`✦ ${section.title}`}</p>}
+          {section.title && <p className="font-medium text-text">{`âœ¦ ${section.title}`}</p>}
           <div className="space-y-1.5">
             {section.bullets.map((bullet, bulletIndex) => (
-              <p key={`${bullet}-${bulletIndex}`}>• {bullet}</p>
+              <p key={`${bullet}-${bulletIndex}`}>â€¢ {bullet}</p>
             ))}
           </div>
         </div>
@@ -213,15 +213,15 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
   
   let emotionalBadge = null;
   if (safeSlug === 'elixir-nocturne-infusion-vrac' || safeSlug.includes('elixir-nocturne')) emotionalBadge = "PROFIL APAISANT";
-  else if (safeSlug === 'coffret-transition-kit-roulage') emotionalBadge = "ASSEMBLÉ À LA MAIN";
-  else if (tags.includes('pre-roules') || safeSlug.includes('pre-roules')) emotionalBadge = "PRÊT À L'EMPLOI";
-  else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "IDÉAL CADEAU";
+  else if (safeSlug === 'coffret-transition-kit-roulage') emotionalBadge = "ASSEMBLÃ‰ Ã€ LA MAIN";
+  else if (tags.includes('pre-roules') || safeSlug.includes('pre-roules')) emotionalBadge = "PRÃŠT Ã€ L'EMPLOI";
+  else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "IDÃ‰AL CADEAU";
 
   const isSubstitut = tags.includes('substitut');
   const isVracBotanique = product?.categorie === 'vrac' || tags.includes('vrac') || safeSlug.includes('vrac');
   const isTea = tags.includes('tisanes');
   const stockMessage = product ? getStockMessage(product.stock) : null;
-  const isCoffretDescription = /coffret transition|coffret sérénité/i.test(product?.name || '');
+  const isCoffretDescription = /coffret transition|coffret sÃ©rÃ©nitÃ©/i.test(product?.name || '');
   const ritualSuggestions = useMemo(() => {
     if (!product) return [];
     const productTags = parseTags(product.tags);
@@ -306,7 +306,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
   }
 
   const productUrl = `https://doiryshop.com/produit/${product.id}`;
-  const productDescription = product.description || `Découvrez ${product.name} sur Doiry Shop.`;
+  const productDescription = product.description || `DÃ©couvrez ${product.name} sur Doiry Shop.`;
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -335,9 +335,9 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         {isCoffretDescription ? formatCoffretDescription(product.description) : (
           <div className="space-y-4">
             <p className="font-medium text-text text-lg">{product.short_description || product.name}</p>
-            <p>{product.description || "Un assemblage végétal conçu pour offrir une alternative claire."}</p>
-            <p>Ce produit se présente sous un format optimisé pour garantir une conservation idéale et une prise en main immédiate. À l'usage, la texture se veut homogène et la sensation maîtrisée, pour accompagner vos moments de détente sans les inconvénients de la nicotine.</p>
-            <p>Pensé aussi bien pour une fin de journée apaisée que pour un usage régulier, il s'adresse à ceux qui souhaitent maintenir un geste familier tout en optant pour une composition transparente.</p>
+            <p>{product.description || "Un assemblage vÃ©gÃ©tal conÃ§u pour offrir une alternative claire."}</p>
+            <p>Ce produit se prÃ©sente sous un format optimisÃ© pour garantir une conservation idÃ©ale et une prise en main immÃ©diate. Ã€ l'usage, la texture se veut homogÃ¨ne et la sensation maÃ®trisÃ©e, pour accompagner vos moments de dÃ©tente sans les inconvÃ©nients de la nicotine.</p>
+            <p>PensÃ© aussi bien pour une fin de journÃ©e apaisÃ©e que pour un usage rÃ©gulier, il s'adresse Ã  ceux qui souhaitent maintenir un geste familier tout en optant pour une composition transparente.</p>
           </div>
         )}
       </div>
@@ -347,24 +347,24 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="p-4 bg-surface rounded-xl border border-surface-border">
             <h4 className="font-serif text-text font-medium mb-3 flex items-center gap-2">
-              <Leaf size={16} className="text-green-400" /> Détail de la composition
+              <Leaf size={16} className="text-green-400" /> DÃ©tail de la composition
             </h4>
             {product.composition_details ? (
               <p className="text-sm">{product.composition_details}</p>
             ) : (
               <ul className="text-sm space-y-2">
-                <li>• Base : {isSubstitut ? 'Feuilles de framboisier et plantes douces' : 'Plantes à infusion'}</li>
-                <li>• Additifs : Aucun</li>
-                <li>• Nicotine : 0mg</li>
-                <li>• Traitement : Séchage naturel</li>
+                <li>â€¢ Base : {isSubstitut ? 'Feuilles de framboisier et plantes douces' : 'Plantes Ã  infusion'}</li>
+                <li>â€¢ Additifs : Aucun</li>
+                <li>â€¢ Nicotine : 0mg</li>
+                <li>â€¢ Traitement : SÃ©chage naturel</li>
               </ul>
             )}
           </div>
           <div className="p-4 bg-surface rounded-xl border border-surface-border">
             <h4 className="font-serif text-text font-medium mb-3 flex items-center gap-2">
-              <Package size={16} className="text-accent" /> Préparation
+              <Package size={16} className="text-accent" /> PrÃ©paration
             </h4>
-            <p className="text-sm">Chaque composant est sélectionné pour garantir l'absence de résidus inutiles, assurant ainsi une texture homogène et une utilisation stable.</p>
+            <p className="text-sm">Chaque composant est sÃ©lectionnÃ© pour garantir l'absence de rÃ©sidus inutiles, assurant ainsi une texture homogÃ¨ne et une utilisation stable.</p>
           </div>
         </div>
       </div>
@@ -378,15 +378,15 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
           </div>
           <div className="p-4 border border-surface-border rounded-xl">
             <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Poids net</span>
-            <span className="text-text font-medium">{product.weight_grams ? `${product.weight_grams} g` : 'Donnée à compléter'}</span>
+            <span className="text-text font-medium">{product.weight_grams ? `${product.weight_grams} g` : 'DonnÃ©e Ã  complÃ©ter'}</span>
           </div>
           <div className="p-4 border border-surface-border rounded-xl">
-            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Rythme d'usage suggéré</span>
-            <span className="text-text font-medium">{product.usage_indication || 'Adaptable selon vos besoins réguliers.'}</span>
+            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Rythme d'usage suggÃ©rÃ©</span>
+            <span className="text-text font-medium">{product.usage_indication || 'Adaptable selon vos besoins rÃ©guliers.'}</span>
           </div>
           <div className="p-4 border border-surface-border rounded-xl">
             <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Conservation</span>
-            <span className="text-text font-medium">{product.conservation_tips || 'À conserver au sec et à l\'abri de la lumière.'}</span>
+            <span className="text-text font-medium">{product.conservation_tips || 'Ã€ conserver au sec et Ã  l\'abri de la lumiÃ¨re.'}</span>
           </div>
         </div>
       </div>
@@ -397,16 +397,16 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         <div className="space-y-3">
           {(isTea
             ? [
-                { step: '1', text: "Faites chauffer l'eau sans la porter à ébullition trop forte." },
-                { step: '2', text: 'Dosez selon la recommandation indiquée sur le produit.' },
-                { step: '3', text: 'Laissez infuser le temps conseillé, puis prenez le temps de ralentir.' },
+                { step: '1', text: "Faites chauffer l'eau sans la porter Ã  Ã©bullition trop forte." },
+                { step: '2', text: 'Dosez selon la recommandation indiquÃ©e sur le produit.' },
+                { step: '3', text: 'Laissez infuser le temps conseillÃ©, puis prenez le temps de ralentir.' },
                 { step: '4', text: 'Conservez le sachet ou le pochon dans un endroit sec.' },
               ]
             : [
-                { step: '1', text: "Utilisez votre base ou votre pré-roulé au moment qui vous convient." },
+                { step: '1', text: "Utilisez votre base ou votre prÃ©-roulÃ© au moment qui vous convient." },
                 { step: '2', text: 'Avancez doucement pour garder un geste simple et confortable.' },
-                { step: '3', text: 'Refermez proprement le conditionnement après usage.' },
-                { step: '4', text: "Conservez le produit à l'abri de l'humidité et de la lumière." },
+                { step: '3', text: 'Refermez proprement le conditionnement aprÃ¨s usage.' },
+                { step: '4', text: "Conservez le produit Ã  l'abri de l'humiditÃ© et de la lumiÃ¨re." },
               ]).map((item) => (
             <div key={item.step} className="flex gap-4 items-start p-3 rounded-xl hover:bg-surface/50 transition-colors">
               <span className="w-8 h-8 rounded-full bg-primary/10 text-primary font-serif font-bold text-sm flex items-center justify-center shrink-0">
@@ -417,7 +417,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
           ))}
         </div>
         <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-4">
-          <p className="text-sm text-primary font-medium">Produit réservé aux personnes majeures (+18 ans).</p>
+          <p className="text-sm text-primary font-medium">Produit rÃ©servÃ© aux personnes majeures (+18 ans).</p>
         </div>
       </div>
     ),
@@ -487,7 +487,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 <div className="flex items-center gap-2 mb-4">
                   <StarRating rating={reviewStats.moyenne} size={16} />
                   <span className="text-sm text-text-muted">
-                    {reviewStats.moyenne.toFixed(1)} · {reviewStats.total} avis
+                    {reviewStats.moyenne.toFixed(1)} Â· {reviewStats.total} avis
                   </span>
                 </div>
               )}
@@ -503,7 +503,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 </div>
                 {product.price_per_unit && product.unit_label && (
                   <p className="text-xs text-text-muted mt-[-0.25rem]">
-                    soit {formatPrice(product.price_per_unit)} / {product.unit_label === 'pre-roule' ? 'pré-roulé' : product.unit_label}
+                    soit {formatPrice(product.price_per_unit)} / {product.unit_label === 'pre-roule' ? 'prÃ©-roulÃ©' : product.unit_label}
                   </p>
                 )}
               </div>
@@ -513,10 +513,10 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   <ShieldCheck size={14} className="mr-1.5 text-accent" /> Sans nicotine
                 </span>
                 <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
-                  <Leaf size={14} className="mr-1.5 text-primary" /> Assemblé avec soin
+                  <Leaf size={14} className="mr-1.5 text-primary" /> AssemblÃ© avec soin
                 </span>
                 <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
-                  <Package size={14} className="mr-1.5 text-accent" /> Prêt à l'emploi
+                  <Package size={14} className="mr-1.5 text-accent" /> PrÃªt Ã  l'emploi
                 </span>
               </div>
 
@@ -547,7 +547,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                     <AnimatePresence mode="wait">
                       {added ? (
                         <MotionSpan key="added" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
-                          <CheckCircle2 size={20} /> Ajouté !
+                          <CheckCircle2 size={20} /> AjoutÃ© !
                         </MotionSpan>
                       ) : (
                         <MotionSpan key="add" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
@@ -569,10 +569,10 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-3 text-accent">
                       <Leaf size={18} />
-                      <h2 className="font-serif text-xl text-text">L'alternative pure pour vos mélanges</h2>
+                      <h2 className="font-serif text-xl text-text">L'alternative pure pour vos mÃ©langes</h2>
                     </div>
                     <p className="text-sm md:text-base leading-7 text-text-light font-light">
-                      « Ne gâchez plus les bienfaits et les arômes de vos fleurs de CBD avec du tabac chimique chargé de nicotine. Notre Vrac Botanique est le substitut ultime : 100% naturel, sans aucune substance addictive, avec une combustion douce et un goût subtil qui respecte vos plantes. Reprenez le contrôle de votre rituel. »
+                      Â« Ne gÃ¢chez plus les bienfaits et les arÃ´mes de vos fleurs de CBD avec du tabac chimique chargÃ© de nicotine. Notre Vrac Botanique est le substitut ultime : 100% naturel, sans aucune substance addictive, avec une combustion douce et un goÃ»t subtil qui respecte vos plantes. Reprenez le contrÃ´le de votre rituel. Â»
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {['Sans nicotine', '100% naturel', 'Mix CBD', 'Combustion douce'].map((item) => (
@@ -587,25 +587,25 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
               <div className="text-text-light font-light leading-relaxed text-base mb-6">
                 <UseCasePills useCases={
-                  isSubstitut ? ["Alternative végétale", "Séchage naturel", "Format adapté"] :
+                  isSubstitut ? ["Alternative vÃ©gÃ©tale", "SÃ©chage naturel", "Format adaptÃ©"] :
                   isTea ? ["Infusion douce", "Sans excitant"] :
-                  ["Prêt à l'emploi", "Soin et qualité"]
+                  ["PrÃªt Ã  l'emploi", "Soin et qualitÃ©"]
                 } className="mb-4" />
                 {isCoffretDescription ? formatCoffretDescription(product.short_description || product.description) : (product.short_description || product.description)}
               </div>
               
               {product.categorie === 'pre-roules' && (
                 <p className="text-xs text-text-muted mb-8 -mt-4 italic">
-                  Ce produit ne contient ni tabac ni nicotine. Vente réservée aux personnes majeures.
+                  Ce produit ne contient ni tabac ni nicotine. Vente rÃ©servÃ©e aux personnes majeures.
                 </p>
               )}
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
                 {[
                   { icon: <ShieldCheck size={18} />, label: 'Sans nicotine' },
-                  { icon: <Package size={18} />, label: 'Expédition sous 24h' },
-                  { icon: <Lock size={18} />, label: 'Paiement sécurisé' },
-                  { icon: isTea ? <Gift size={18} /> : <Wind size={18} />, label: isTea ? 'Coffrets soignés' : 'Rituel discret' },
+                  { icon: <Package size={18} />, label: 'ExpÃ©dition sous 24h' },
+                  { icon: <Lock size={18} />, label: 'Paiement sÃ©curisÃ©' },
+                  { icon: isTea ? <Gift size={18} /> : <Wind size={18} />, label: isTea ? 'Coffrets soignÃ©s' : 'Rituel discret' },
                 ].map((item) => (
                   <div key={item.label} className="flex flex-col items-center text-center gap-2 p-4 bg-surface/50 rounded-xl border border-surface-border">
                     <span className="text-accent">{item.icon}</span>
@@ -649,7 +649,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
             <div className="max-w-7xl mx-auto px-6">
               <MotionDiv initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
                 <p className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-2">Suggestion</p>
-                <h2 className="text-2xl md:text-3xl font-serif text-text">Complétez votre rituel</h2>
+                <h2 className="text-2xl md:text-3xl font-serif text-text">ComplÃ©tez votre rituel</h2>
               </MotionDiv>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -713,12 +713,12 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 {isTea ? 'Le moment calme' : 'Le geste autrement'}
               </span>
               <h2 className="text-3xl md:text-4xl font-serif text-text mb-4">
-                {isTea ? "Une routine d'infusion simple à installer" : 'Une base végétale pensée pour la transition'}
+                {isTea ? "Une routine d'infusion simple Ã  installer" : 'Une base vÃ©gÃ©tale pensÃ©e pour la transition'}
               </h2>
               <p className="text-text-light font-light max-w-2xl mx-auto text-lg">
                 {isTea
-                  ? "Des compositions courtes, un usage lisible et des formats qui s'adaptent facilement aux soirs chargés comme aux pauses lentes."
-                  : "Des références faites pour conserver le rituel tout en simplifiant la composition et en gardant un repère clair : sans nicotine."}
+                  ? "Des compositions courtes, un usage lisible et des formats qui s'adaptent facilement aux soirs chargÃ©s comme aux pauses lentes."
+                  : "Des rÃ©fÃ©rences faites pour conserver le rituel tout en simplifiant la composition et en gardant un repÃ¨re clair : sans nicotine."}
               </p>
             </MotionDiv>
 
@@ -726,22 +726,22 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
               {[
                 {
                   icon: <Leaf className="w-8 h-8 text-primary" />,
-                  title: isTea ? 'Mélanges lisibles' : 'Feuilles de framboisier',
-                  description: isTea ? 'Des plantes identifiées clairement, sans narration floue.' : 'Une base végétale douce, sélectionnée pour accompagner le geste.',
+                  title: isTea ? 'MÃ©langes lisibles' : 'Feuilles de framboisier',
+                  description: isTea ? 'Des plantes identifiÃ©es clairement, sans narration floue.' : 'Une base vÃ©gÃ©tale douce, sÃ©lectionnÃ©e pour accompagner le geste.',
                 },
                 {
                   icon: <ShieldCheck className="w-8 h-8 text-accent" />,
                   title: 'Sans nicotine',
-                  description: "Un point de repère simple pour différencier la gamme et garder une lecture claire du produit.",
+                  description: "Un point de repÃ¨re simple pour diffÃ©rencier la gamme et garder une lecture claire du produit.",
                 },
                 {
                   icon: <Clock className="w-8 h-8 text-primary" />,
                   title: isTea ? 'Rituel du soir' : 'Format quotidien',
-                  description: isTea ? 'Des formats vrac ou infusettes faciles à intégrer à une routine calme.' : 'Des formats vrac, pré-roulés et coffrets adaptés aux usages du quotidien.',
+                  description: isTea ? 'Des formats vrac ou infusettes faciles Ã  intÃ©grer Ã  une routine calme.' : 'Des formats vrac, prÃ©-roulÃ©s et coffrets adaptÃ©s aux usages du quotidien.',
                 },
                 {
                   icon: isTea ? <Gift className="w-8 h-8 text-accent" /> : <Wind className="w-8 h-8 text-accent" />,
-                  title: isTea ? 'Prêt à offrir' : 'Composition plus simple',
+                  title: isTea ? 'PrÃªt Ã  offrir' : 'Composition plus simple',
                   description: isTea ? 'Boites, pochons et coffrets soignes pour soi ou pour offrir.' : 'Moins de surcharge, plus de lisibilite, dans un conditionnement propre.',
                 },
               ].map((item) => (
@@ -756,23 +756,23 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         </section>
 
         <section className="max-w-3xl mx-auto px-6 py-20 mt-10 border-t border-surface-border">
-          <h2 className="text-2xl md:text-3xl font-serif text-text mb-8 text-center">Questions fréquentes</h2>
+          <h2 className="text-2xl md:text-3xl font-serif text-text mb-8 text-center">Questions frÃ©quentes</h2>
           <div className="space-y-2">
             <ProductFAQItem 
-              question="Ce produit est-il légal ?"
-              answer="Oui. La totalité de notre gamme respecte le cadre légal en vigueur. Nos produits ne contiennent aucune substance prohibée, ni tabac, ni CBD au-delà des normes autorisées le cas échéant, ni nicotine."
+              question="Ce produit est-il lÃ©gal ?"
+              answer="Oui. La totalitÃ© de notre gamme respecte le cadre lÃ©gal en vigueur. Nos produits ne contiennent aucune substance prohibÃ©e, ni tabac, ni CBD au-delÃ  des normes autorisÃ©es le cas Ã©chÃ©ant, ni nicotine."
             />
             <ProductFAQItem 
-              question="Que contient concrètement ce produit ?"
-              answer={`Ce produit est constitué à 100% de plantes naturelles. Il n'y a aucun agent de texture, de saveur ou de conservation artificiel. Juste la plante, séchée et préparée.`}
+              question="Que contient concrÃ¨tement ce produit ?"
+              answer={`Ce produit est constituÃ© Ã  100% de plantes naturelles. Il n'y a aucun agent de texture, de saveur ou de conservation artificiel. Juste la plante, sÃ©chÃ©e et prÃ©parÃ©e.`}
             />
             <ProductFAQItem 
-              question="À quelle fréquence puis-je l'utiliser ?"
-              answer="L'utilisation dépend de vos besoins personnels. Étant donné l'absence de nicotine, ce produit ne crée pas de dépendance physique. Vous pouvez l'utiliser pour remplacer progressivement un ancien rituel ou pour une pause ponctuelle."
+              question="Ã€ quelle frÃ©quence puis-je l'utiliser ?"
+              answer="L'utilisation dÃ©pend de vos besoins personnels. Ã‰tant donnÃ© l'absence de nicotine, ce produit ne crÃ©e pas de dÃ©pendance physique. Vous pouvez l'utiliser pour remplacer progressivement un ancien rituel ou pour une pause ponctuelle."
             />
             <ProductFAQItem 
               question="Combien de temps se conserve-t-il ?"
-              answer="S'il est maintenu dans son emballage d'origine, à l'abri de la lumière et de l'humidité, le produit conserve ses propriétés et sa texture optimale pendant plusieurs mois."
+              answer="S'il est maintenu dans son emballage d'origine, Ã  l'abri de la lumiÃ¨re et de l'humiditÃ©, le produit conserve ses propriÃ©tÃ©s et sa texture optimale pendant plusieurs mois."
             />
           </div>
         </section>
@@ -780,7 +780,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         <section className="py-16">
           <div className="max-w-3xl mx-auto px-6 text-center">
             <p className="text-text-light font-light mb-6">
-              Vous avez des questions ? Écrivez-nous à <strong className="text-accent">contact@doiryshop.com</strong>
+              Vous avez des questions ? Ã‰crivez-nous Ã  <strong className="text-accent">contact@doiryshop.com</strong>
             </p>
             <Link to="/" className="inline-flex items-center gap-2 text-primary font-medium hover:text-primary-light transition-colors">
               <ArrowLeft size={16} /> Voir tous nos produits
@@ -797,7 +797,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         <button onClick={handleAddToCart} disabled={product.stock <= 0} className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-medium transition-all ${
           added ? 'bg-[#8b1a1a] text-white' : product.stock > 0 ? 'bg-[#8b1a1a] text-white hover:bg-[#6e1515] shadow-lg shadow-[#8b1a1a]/25' : 'bg-surface text-text-muted cursor-not-allowed'
         }`}>
-          {added ? <><CheckCircle2 size={18} /> Ajouté !</> : <><ShoppingCart size={18} /> Ajouter au panier</>}
+          {added ? <><CheckCircle2 size={18} /> AjoutÃ© !</> : <><ShoppingCart size={18} /> Ajouter au panier</>}
         </button>
       </div>
 

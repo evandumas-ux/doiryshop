@@ -18,7 +18,7 @@ const getHeaders = () => {
 };
 
 /**
- * Récupère les tarifs depuis Packlink pour un code postal et un poids
+ * RÃ©cupÃ¨re les tarifs depuis Packlink pour un code postal et un poids
  */
 const fetchRates = async (destZip, destCountry = 'FR', packages, orderSubtotal = 0) => {
   try {
@@ -38,8 +38,8 @@ const fetchRates = async (destZip, destCountry = 'FR', packages, orderSubtotal =
 
     const allServices = response.data || [];
 
-    // Console log pour débogage
-    console.log("Services Packlink retournés:", JSON.stringify(allServices, null, 2));
+    // Console log pour dÃ©bogage
+    console.log("Services Packlink retournÃ©s:", JSON.stringify(allServices, null, 2));
 
     const ALLOWED_SERVICE_IDS = [30463, 20247, 21511];
 
@@ -60,7 +60,7 @@ const fetchRates = async (destZip, destCountry = 'FR', packages, orderSubtotal =
     if (orderSubtotal >= 35) {
       filteredRates.unshift({
         id: 'free',
-        name: 'Livraison offerte 🌿',
+        name: 'Livraison offerte ðŸŒ¿',
         carrier: 'Doiryshop',
         price: 0,
         transit_hours: 96,
@@ -71,12 +71,12 @@ const fetchRates = async (destZip, destCountry = 'FR', packages, orderSubtotal =
     return filteredRates;
   } catch (error) {
     console.error("Packlink fetchRates error:", error?.response?.data || error.message);
-    throw new Error('Erreur lors de la récupération des tarifs Packlink');
+    throw new Error('Erreur lors de la rÃ©cupÃ©ration des tarifs Packlink');
   }
 };
 
 /**
- * Récupère les points relais pour un code postal et un service Packlink
+ * RÃ©cupÃ¨re les points relais pour un code postal et un service Packlink
  */
 const getDropoffs = async (serviceId, zip, country = 'FR') => {
   const url = `${API_URL}/dropoffs`;
@@ -100,19 +100,19 @@ const getDropoffs = async (serviceId, zip, country = 'FR') => {
 };
 
 /**
- * Crée une expédition (Shipment)
+ * CrÃ©e une expÃ©dition (Shipment)
  */
 const createShipment = async (orderData) => {
   try {
     const payload = {
       service: orderData.serviceId,
-      content: "Produits de bien-être",
+      content: "Produits de bien-Ãªtre",
       contentvalue: orderData.total,
       packages: orderData.packages,
       from: {
         name: "Doiryshop",
-        surname: "Expédition",
-        street1: "Votre rue (à compléter)",
+        surname: "ExpÃ©dition",
+        street1: "Votre rue (Ã  complÃ©ter)",
         city: "Schiltigheim",
         zip: SENDER_ZIP,
         country: SENDER_COUNTRY,
@@ -143,12 +143,12 @@ const createShipment = async (orderData) => {
     return response.data; // contient { reference: 'FR...' }
   } catch (error) {
     console.error("Packlink createShipment error:", error?.response?.data || error.message);
-    throw new Error('Erreur lors de la création de l\'expédition Packlink');
+    throw new Error('Erreur lors de la crÃ©ation de l\'expÃ©dition Packlink');
   }
 };
 
 /**
- * Récupère les labels (bordereaux) pour une expédition
+ * RÃ©cupÃ¨re les labels (bordereaux) pour une expÃ©dition
  */
 const getLabels = async (reference) => {
   try {
@@ -158,7 +158,7 @@ const getLabels = async (reference) => {
     return response.data; // ex: [ "https://..." ]
   } catch (error) {
     console.error("Packlink getLabels error:", error?.response?.data || error.message);
-    throw new Error('Erreur lors de la récupération du bordereau Packlink');
+    throw new Error('Erreur lors de la rÃ©cupÃ©ration du bordereau Packlink');
   }
 };
 

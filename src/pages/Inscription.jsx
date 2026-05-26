@@ -65,7 +65,7 @@ export default function Inscription({ setUser }) {
       return;
     }
     if (password.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractères.');
+      setError('Le mot de passe doit contenir au moins 8 caractÃ¨res.');
       return;
     }
 
@@ -74,7 +74,7 @@ export default function Inscription({ setUser }) {
       await customRegister(firstName.trim(), lastName.trim(), email.trim(), password);
       setStep(2);
     } catch (err) {
-      setError(err.message || 'Erreur lors de la création du compte.');
+      setError(err.message || 'Erreur lors de la crÃ©ation du compte.');
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +99,7 @@ export default function Inscription({ setUser }) {
       if (setUser && data?.user) setUser(data.user);
       navigate('/profil');
     } catch (err) {
-      setError(err.message || 'Code de vérification invalide ou expiré.');
+      setError(err.message || 'Code de vÃ©rification invalide ou expirÃ©.');
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +109,7 @@ export default function Inscription({ setUser }) {
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden font-sans">
       <SEO
         title="Inscription - Doiry Shop"
-        description="Créez votre compte Doiry Shop."
+        description="CrÃ©ez votre compte Doiry Shop."
         url="https://doiryshop.com/inscription"
         robots="noindex, nofollow"
       />
@@ -131,14 +131,14 @@ export default function Inscription({ setUser }) {
               <span className="font-display text-2xl font-bold tracking-widest text-primary">DOIRY SHOP</span>
             </Link>
             <h1 className="text-2xl font-serif font-bold text-text mt-4">
-              {step === 1 ? 'Créer mon compte' : 'Vérification Email'}
+              {step === 1 ? 'CrÃ©er mon compte' : 'VÃ©rification Email'}
             </h1>
             <p className="text-text-muted text-sm mt-2">
-              {step === 1 ? 'Rejoignez-nous pour accéder à votre espace' : 'Entrez le code à 6 chiffres envoyé à ' + email}
+              {step === 1 ? 'Rejoignez-nous pour accÃ©der Ã  votre espace' : 'Entrez le code Ã  6 chiffres envoyÃ© Ã  ' + email}
             </p>
             {step === 1 && referralCode && (
               <p className="text-emerald-400 text-sm mt-2">
-                Code parrainage appliqué : <span className="font-semibold">{referralCode}</span>
+                Code parrainage appliquÃ© : <span className="font-semibold">{referralCode}</span>
               </p>
             )}
           </div>
@@ -178,14 +178,14 @@ export default function Inscription({ setUser }) {
               <form onSubmit={handleRegisterSubmit} className="flex flex-col gap-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[13px] font-medium text-text-light mb-1.5">Prénom</label>
+                    <label className="block text-[13px] font-medium text-text-light mb-1.5">PrÃ©nom</label>
                     <input
                       type="text"
                       required
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       className="w-full px-4 h-12 bg-background border border-surface-border rounded-[12px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-[15px] text-text placeholder:text-text-muted"
-                      placeholder="Votre prénom"
+                      placeholder="Votre prÃ©nom"
                       autoComplete="given-name"
                     />
                   </div>
@@ -226,7 +226,7 @@ export default function Inscription({ setUser }) {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full pl-4 pr-10 h-12 bg-background border border-surface-border rounded-[12px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-[15px] text-text placeholder:text-text-muted"
-                      placeholder="••••••••"
+                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                       autoComplete="new-password"
                     />
                     <button
@@ -252,7 +252,7 @@ export default function Inscription({ setUser }) {
                         />
                       </div>
                       {password.length < 8 && (
-                        <p className="text-primary text-[11px] mt-1 font-medium">Le mot de passe doit contenir au moins 8 caractères</p>
+                        <p className="text-primary text-[11px] mt-1 font-medium">Le mot de passe doit contenir au moins 8 caractÃ¨res</p>
                       )}
                     </div>
                   )}
@@ -268,7 +268,7 @@ export default function Inscription({ setUser }) {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className={`w-full pl-4 pr-10 h-12 bg-background border rounded-[12px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-[15px] text-text placeholder:text-text-muted ${passwordError ? 'border-primary focus:ring-primary' : 'border-surface-border'}`}
-                      placeholder="••••••••"
+                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                       autoComplete="new-password"
                     />
                     <button
@@ -292,13 +292,13 @@ export default function Inscription({ setUser }) {
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
                   ) : (
-                    "Créer mon compte"
+                    "CrÃ©er mon compte"
                   )}
                 </button>
               </form>
 
               <p className="text-center text-[13px] mt-8 text-text-muted">
-                Déjà un compte ?{' '}
+                DÃ©jÃ  un compte ?{' '}
                 <Link to="/login" className="text-accent font-medium hover:underline">
                   Se connecter
                 </Link>
@@ -316,7 +316,7 @@ export default function Inscription({ setUser }) {
               </div>
               
               <div>
-                <label className="block text-[13px] font-medium text-text-light mb-1.5 text-center">Code secret à 6 chiffres</label>
+                <label className="block text-[13px] font-medium text-text-light mb-1.5 text-center">Code secret Ã  6 chiffres</label>
                 <input
                   type="text"
                   required
@@ -337,7 +337,7 @@ export default function Inscription({ setUser }) {
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
                 ) : (
-                  "Valider mon accès"
+                  "Valider mon accÃ¨s"
                 )}
               </button>
 
@@ -346,7 +346,7 @@ export default function Inscription({ setUser }) {
                 onClick={() => setStep(1)}
                 className="text-text-muted text-sm hover:text-text transition-colors mt-2"
               >
-                ← Retour
+                â† Retour
               </button>
             </motion.form>
           )}

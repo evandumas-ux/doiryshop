@@ -39,7 +39,7 @@ export default function Login({ user, setUser }) {
 
   const handleLocalLogin = async (e) => {
     e.preventDefault();
-    console.log('[LOGIN UI] submit déclenché');
+    console.log('[LOGIN UI] submit dÃ©clenchÃ©');
     console.log('[LOGIN UI] email =', email);
     console.log('[LOGIN UI] password length =', password?.length);
 
@@ -55,11 +55,11 @@ export default function Login({ user, setUser }) {
     try {
       console.log('[LOGIN UI] appel login()');
       const data = await localLogin(email, password);
-      console.log('[LOGIN UI] login() réussi', data);
+      console.log('[LOGIN UI] login() rÃ©ussi', data);
       if (setUser) setUser(data.user);
       navigate(redirectParam || '/');
     } catch (err) {
-      console.error('[LOGIN UI] erreur attrapée =', err);
+      console.error('[LOGIN UI] erreur attrapÃ©e =', err);
       setError(err.message || 'Erreur inconnue');
       setIsLoading(false);
     }
@@ -69,7 +69,7 @@ export default function Login({ user, setUser }) {
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden font-sans">
       <SEO
         title="Connexion - Doiry Shop"
-        description="Connectez-vous à votre compte Doiry Shop"
+        description="Connectez-vous Ã  votre compte Doiry Shop"
         url="https://doiryshop.com/login"
         robots="noindex, nofollow"
       />
@@ -93,7 +93,7 @@ export default function Login({ user, setUser }) {
               <img src="/logo.jpg" alt="DOIRY SHOP" className="w-20 h-20 object-contain rounded-xl" />
               <span className="font-display text-2xl font-bold tracking-widest text-primary">DOIRY SHOP</span>
             </Link>
-            <p className="text-text-muted text-sm mt-3">Bienvenue dans votre espace privilégié</p>
+            <p className="text-text-muted text-sm mt-3">Bienvenue dans votre espace privilÃ©giÃ©</p>
           </div>
 
           {redirectParam && (
@@ -102,7 +102,7 @@ export default function Login({ user, setUser }) {
               animate={{ opacity: 1, height: 'auto' }}
               className="mb-6 p-4 bg-primary/10 text-primary rounded-xl text-[13px] font-medium text-center border border-primary/20"
             >
-              Connectez-vous pour accéder à votre profil.
+              Connectez-vous pour accÃ©der Ã  votre profil.
             </motion.div>
           )}
 
@@ -148,7 +148,7 @@ export default function Login({ user, setUser }) {
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
                   className="w-full pl-4 pr-10 h-12 bg-background border border-surface-border rounded-[12px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-[15px] text-text placeholder:text-text-muted" 
-                  placeholder="••••••••" 
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" 
                   autoComplete="new-password"
                 />
                 <button
@@ -160,7 +160,7 @@ export default function Login({ user, setUser }) {
                 </button>
               </div>
               <div className="flex justify-end mt-1.5">
-                <Link to="/mot-de-passe-oublie" className="text-[12px] text-accent hover:underline">Mot de passe oublié ?</Link>
+                <Link to="/mot-de-passe-oublie" className="text-[12px] text-accent hover:underline">Mot de passe oubliÃ© ?</Link>
               </div>
             </div>
 
