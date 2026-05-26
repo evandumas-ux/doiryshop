@@ -56,6 +56,16 @@ const Hero = () => (
         Une alternative végétale sans nicotine. Conservez votre rituel et entamez votre transition en douceur.
       </p>
 
+      <div className="text-xl md:text-2xl font-semibold text-white animate-fade-slide-up delay-300 tracking-wide mt-2">
+        🌿 0% Nicotine <span className="opacity-50 mx-1">·</span> 100% Plantes
+      </div>
+
+      <div className="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 text-xs md:text-sm text-gray-400 animate-fade-slide-up delay-300 mt-2 mb-2">
+        <span className="flex items-center gap-1.5">📦 Livraison discrète sous 48h</span>
+        <span className="flex items-center gap-1.5">✅ 100% Légal en France</span>
+        <span className="flex items-center gap-1.5">🔒 Paiement Revolut sécurisé</span>
+      </div>
+
       <div className="flex flex-col sm:flex-row items-center md:items-start gap-4 mt-2 w-full md:w-auto justify-center md:justify-start animate-fade-slide-up delay-400">
         <a href="#boutique" className="bg-primary text-white px-8 py-4 rounded-full text-base font-medium transition-all w-full sm:w-auto text-center flex items-center justify-center gap-2 group btn-primary-glow">
           Découvrir nos produits <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />

@@ -335,8 +335,10 @@ function App() {
     try {
       console.log("1. Nettoyage de la session locale du site...");
       setUser(null); // Vider le state React local immédiatement
+      setCartItems([]); // Vider le state React local du panier
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('cartItems'); // Vider le panier du stockage local
       
       await logout(); // Appel API pour détruire le cookie de session (credentials) côté serveur
 

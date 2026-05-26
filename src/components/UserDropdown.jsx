@@ -45,7 +45,9 @@ const UserDropdown = ({ user, onLogout }) => {
                 </div>
                 <div className="min-w-0">
                   <p className="font-medium text-text text-sm truncate">{user.prenom ? `${user.prenom} ${user.nom || ''}` : user.name}</p>
-                  <p className="text-xs text-text-muted truncate">{user.email}</p>
+                  {user.role === 'admin' && (
+                    <p className="text-xs text-text-muted truncate">{user.email}</p>
+                  )}
                 </div>
               </div>
             </div>
