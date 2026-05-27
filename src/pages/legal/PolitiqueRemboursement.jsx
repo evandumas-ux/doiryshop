@@ -72,7 +72,7 @@ const PolitiqueRemboursement = () => {
               Une fois votre retour réceptionné et inspecté par nos soins, nous vous informerons de l'approbation ou du refus de votre remboursement :
             </p>
             <ul className="list-disc pl-5 space-y-2">
-              <li>En cas d'approbation, le remboursement sera traité et appliqué automatiquement sur votre mode de paiement initial (carte bancaire, etc.).</li>
+              <li>En cas d'approbation, le remboursement sera traité. Le règlement des achats sur le site s'effectuant de manière sécurisée via notre partenaire de paiement Revolut, le remboursement sera émis via ce même canal.</li>
               <li>Le traitement prend généralement entre 5 et 10 jours ouvrés selon les délais bancaires.</li>
               <li>Sauf erreur de notre part lors de la préparation, les frais d'expédition initiaux ne sont pas remboursables.</li>
             </ul>

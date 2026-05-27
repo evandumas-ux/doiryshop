@@ -59,11 +59,7 @@ const CGV = () => {
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
             <h2 className="text-2xl font-serif mb-3">4. Moyens de paiement</h2>
-            <p>Les moyens de paiement acceptés sur la boutique sont :</p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li>Carte bancaire (Visa, Mastercard, CB)</li>
-              <li>Paiement sécurisé via <strong>Stripe</strong> (prestataire de paiement)</li>
-            </ul>
+            <p>Le règlement des achats sur le site s'effectue de manière sécurisée via notre partenaire de paiement Revolut.</p>
           </section>
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">

@@ -39,7 +39,7 @@ const PolitiqueConfidentialite = () => {
               <p>Evan DUMAS</p>
               <p>3 avenues de Londres, 67300 Schiltigheim, France</p>
               <p>
-                Email : <a href="mailto:doiryshop.pro@gmail.com" className="text-accent hover:underline">doiryshop.pro@gmail.com</a>
+                Email : <a href="mailto:contact@doiryshop.com" className="text-accent hover:underline">contact@doiryshop.com</a>
               </p>
             </div>
           </section>
@@ -102,7 +102,7 @@ const PolitiqueConfidentialite = () => {
               <li>Droit d'opposition au traitement</li>
             </ul>
             <p>
-              Pour exercer ces droits, contactez-nous à : <a href="mailto:doiryshop.pro@gmail.com" className="text-accent hover:underline">doiryshop.pro@gmail.com</a>. Nous répondrons dans un délai de 30 jours.
+              Pour exercer ces droits, contactez-nous à : <a href="mailto:contact@doiryshop.com" className="text-accent hover:underline">contact@doiryshop.com</a>. Nous répondrons dans un délai de 30 jours.
             </p>
           </section>
 
@@ -128,7 +128,7 @@ const PolitiqueConfidentialite = () => {
 
           <section className="bg-surface/60 border border-surface-border rounded-2xl p-6">
             <h2 className="text-2xl font-serif mb-3 text-text">9. CONTACT & RÉCLAMATION</h2>
-            <p className="mb-4">Pour toute question : <a href="mailto:doiryshop.pro@gmail.com" className="text-accent hover:underline">doiryshop.pro@gmail.com</a></p>
+            <p className="mb-4">Pour toute question : <a href="mailto:contact@doiryshop.com" className="text-accent hover:underline">contact@doiryshop.com</a></p>
             <p>
               Vous pouvez également adresser une réclamation à la CNIL :<br />
               <a href="https://www.cnil.fr" target="_blank" rel="noreferrer" className="text-accent hover:underline">cnil.fr</a> € 3 Place de Fontenoy, 75007 Paris
