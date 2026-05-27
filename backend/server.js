@@ -634,7 +634,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
           html: `<div style="background-color: #1a1a1a; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #222222; border-radius: 8px; border: 1px solid #333333; overflow: hidden;">
     <div style="text-align: center; padding: 30px 20px 20px;">
-      <img src="https://doiryshop-api.onrender.com/favicon.jpg" alt="Logo Doiry Shop" style="width: 60px; height: auto; margin-bottom: 15px;" />
+      <img src="https://doiryshop.com/favicon.jpg" alt="Logo Doiry Shop" style="width: 60px; height: auto; margin-bottom: 15px;" />
       <h2 style="color: #ffffff; font-size: 22px; font-family: monospace, sans-serif; letter-spacing: 2px; margin: 0;">Doiry Shop</h2>
     </div>
     <hr style="border: 0; border-top: 1px solid #333333; margin: 0;" />
@@ -790,7 +790,7 @@ app.post('/api/newsletter', authLimiter, async (req, res) => {
       html: `<div style="background-color: #1a1a1a; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #222222; border-radius: 8px; border: 1px solid #333333; overflow: hidden;">
     <div style="text-align: center; padding: 30px 20px 20px;">
-      <img src="https://doiryshop-api.onrender.com/favicon.jpg" alt="Logo Doiry Shop" style="width: 60px; height: auto; margin-bottom: 15px;" />
+      <img src="https://doiryshop.com/favicon.jpg" alt="Logo Doiry Shop" style="width: 60px; height: auto; margin-bottom: 15px;" />
       <h2 style="color: #ffffff; font-size: 22px; font-family: monospace, sans-serif; letter-spacing: 2px; margin: 0;">Doiry Shop</h2>
     </div>
     <hr style="border: 0; border-top: 1px solid #333333; margin: 0;" />
@@ -952,11 +952,22 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
   console.log("Body reçu:", JSON.stringify(req.body));
   console.log("User:", JSON.stringify(req.user));
 
-  const { prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete } = req.body;
+  const { name, email, prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete } = req.body;
+
+  // Validation des données entrantes
+  if (name !== undefined && typeof name === 'string' && name.trim() === '') {
+    return res.status(400).json({ error: "Le nom ne peut pas être vide." });
+  }
+  if (email !== undefined) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Format d'email invalide." });
+    }
+  }
 
   const query = `
     UPDATE users 
-    SET prenom = ?, nom = ?, age = ?, telephone = ?, adresse = ?, complement_adresse = ?, code_postal = ?, ville = ?, pays = ?, date_naissance = ?, avatar_url = ?, profil_complete = ?
+    SET prenom = ?, nom = ?, age = ?, telephone = ?, adresse = ?, complement_adresse = ?, code_postal = ?, ville = ?, pays = ?, date_naissance = ?, avatar_url = ?, profil_complete = ?, name = COALESCE(?, name), email = COALESCE(?, email)
     WHERE id = ?
   `;
 
@@ -971,8 +982,10 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
     ville || null,
     pays || 'France',
     date_naissance || null,
-    avatar_url || null,
+    avatar_url !== undefined ? avatar_url : null,
     profil_complete ? 1 : 0,
+    name !== undefined ? name : null,
+    email !== undefined ? email : null,
     req.user.id
   ];
 

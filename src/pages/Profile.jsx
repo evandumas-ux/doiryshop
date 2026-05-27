@@ -88,17 +88,70 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
     fetchData();
   }, [user, navigate, isInitializing]);
 
+  const [generalInfoData, setGeneralInfoData] = useState({ name: '', email: '', avatar_url: '' });
+  const [editName, setEditName] = useState(false);
+  const [editEmail, setEditEmail] = useState(false);
+
+  useEffect(() => {
+    if (profile) {
+      setGeneralInfoData({
+        name: profile.name || user?.name || '',
+        email: profile.email || user?.email || '',
+        avatar_url: profile.avatar_url || ''
+      });
+    }
+  }, [profile, user]);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setGeneralInfoData(prev => ({ ...prev, avatar_url: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeAvatar = () => {
+    setGeneralInfoData(prev => ({ ...prev, avatar_url: null }));
+  };
+
+  const cancelGeneralInfoEditing = () => {
+    setEditName(false);
+    setEditEmail(false);
+    if (profile) {
+      setGeneralInfoData({
+        name: profile.name || user?.name || '',
+        email: profile.email || user?.email || '',
+        avatar_url: profile.avatar_url || ''
+      });
+    }
+  };
+
+  const handleSaveGeneralInfo = async () => {
+    setIsSaving(true);
+    setSaveMessage('');
+    try {
+      const updateData = { ...profile, ...generalInfoData };
+      await updateUserProfile(updateData);
+      setProfile(prev => ({ ...prev, ...generalInfoData }));
+      setEditName(false);
+      setEditEmail(false);
+      setSaveMessage('Modifications enregistrées !');
+      setTimeout(() => setSaveMessage(''), 3000);
+    } catch (err) {
+      console.error('Erreur sauvegarde:', err);
+      setSaveMessage('Erreur lors de la sauvegarde.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const startEditing = (section) => {
     setEditingSection(section);
     setSaveMessage('');
-    if (section === 'info') {
-      setFormData({
-        prenom: profile?.prenom || '',
-        nom: profile?.nom || '',
-        telephone: profile?.telephone || '',
-        date_naissance: profile?.date_naissance || '',
-      });
-    } else if (section === 'address') {
+    if (section === 'address') {
       setFormData({
         adresse: profile?.adresse || '',
         complement_adresse: profile?.complement_adresse || '',
@@ -285,12 +338,16 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col md:flex-row items-center md:items-end gap-6 mb-10"
           >
-            <div className="w-24 h-24 rounded-full shadow-lg shadow-primary/20 border-4 border-surface bg-gradient-to-br from-primary to-primary-dark text-white flex items-center justify-center text-3xl font-serif">
-              {initials}
+            <div className="w-24 h-24 rounded-full shadow-lg shadow-primary/20 border-4 border-surface bg-gradient-to-br from-primary to-primary-dark text-white flex items-center justify-center text-3xl font-serif overflow-hidden">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
             <div className="text-center md:text-left mb-2">
               <div className="flex items-center gap-3 justify-center md:justify-start">
-                <h1 className="text-3xl font-serif text-text">{profile?.prenom || user?.name || 'Client'}</h1>
+                <h1 className="text-3xl font-serif text-text">{profile?.name || user?.name || 'Client'}</h1>
                 {profile?.profil_complete && (
                   <span className="inline-flex items-center gap-1 text-xs font-medium bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20">
                     <CheckCircle2 size={12} /> Client vérifié
@@ -321,62 +378,94 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
             
             {/* Colonne gauche */}
             <div className="lg:col-span-1 space-y-6">
-              
-              {/* Informations personnelles */}
+              {/* Informations générales */}
               <motion.section 
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
                 className="bg-surface p-6 rounded-3xl border border-surface-border"
               >
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="font-serif text-lg text-text flex items-center gap-2"><User size={18} className="text-primary"/> Informations personnelles</h3>
-                  {editingSection !== 'info' ? (
-                    <button onClick={() => startEditing('info')} className="flex items-center gap-1 text-xs font-medium text-accent hover:underline">
-                      <Edit3 size={12} /> Modifier
-                    </button>
-                  ) : (
-                    <button onClick={cancelEditing} className="flex items-center gap-1 text-xs font-medium text-text-muted hover:text-primary">
-                      <X size={12} /> Annuler
-                    </button>
-                  )}
+                <div className="mb-6">
+                  <h3 className="font-serif text-xl text-text mb-1">Informations générales</h3>
+                  <p className="text-sm text-text-light">Mettez à jour votre photo et vos informations de contact.</p>
                 </div>
 
-                {editingSection === 'info' ? (
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <input type="text" placeholder="Prénom" value={formData.prenom || ''} onChange={e => setFormData({...formData, prenom: e.target.value})}
-                        className="px-3 py-2.5 min-h-[48px] bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
-                      <input type="text" placeholder="Nom" value={formData.nom || ''} onChange={e => setFormData({...formData, nom: e.target.value})}
-                        className="px-3 py-2.5 min-h-[48px] bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
+                <div className="space-y-6">
+                  {/* Avatar Upload */}
+                  <div className="flex items-center gap-4 border-b border-surface-border pb-6">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border border-surface-border bg-background flex items-center justify-center text-xl text-text font-serif">
+                      {generalInfoData.avatar_url ? (
+                        <img src={generalInfoData.avatar_url} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        initials
+                      )}
                     </div>
-                    <input type="tel" placeholder="Téléphone" value={formData.telephone || ''} onChange={e => setFormData({...formData, telephone: e.target.value})}
-                      className="w-full px-3 py-2.5 bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
-                    <input type="date" value={formData.date_naissance || ''} onChange={e => setFormData({...formData, date_naissance: e.target.value})}
-                      className="w-full px-3 py-2.5 bg-background border border-surface-border rounded-xl text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
-                    <button onClick={handleSave} disabled={isSaving}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50">
-                      <Save size={14} /> {isSaving ? 'Sauvegarde...' : 'Enregistrer'}
+                    <div className="flex flex-col gap-2">
+                      <label className="cursor-pointer text-sm font-medium px-4 py-2 bg-background border border-surface-border rounded-lg hover:border-primary transition-colors inline-block text-center text-text">
+                        Mettre à jour
+                        <input type="file" className="hidden" accept="image/*" onChange={handleAvatarChange} />
+                      </label>
+                      <button onClick={removeAvatar} className="text-xs text-text-light hover:text-red-400 text-left transition-colors">
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Name Input */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-medium text-text">Nom Complet</label>
+                      <button onClick={() => setEditName(!editName)} className="text-xs text-primary font-medium hover:underline">
+                        {editName ? 'Fermer' : 'Modifier'}
+                      </button>
+                    </div>
+                    <input 
+                      type="text" 
+                      readOnly={!editName}
+                      value={generalInfoData.name}
+                      onChange={e => setGeneralInfoData({...generalInfoData, name: e.target.value})}
+                      className={`w-full px-4 py-2.5 rounded-xl text-sm transition-colors border ${editName ? 'bg-background text-text border-primary focus:outline-none focus:ring-1 focus:ring-primary' : 'bg-background/50 text-text-light border-surface-border cursor-not-allowed'}`}
+                    />
+                  </div>
+
+                  {/* Email Input */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-medium text-text">Adresse e-mail</label>
+                      <button onClick={() => setEditEmail(!editEmail)} className="text-xs text-primary font-medium hover:underline">
+                        {editEmail ? 'Fermer' : 'Modifier'}
+                      </button>
+                    </div>
+                    <input 
+                      type="email" 
+                      readOnly={!editEmail}
+                      value={generalInfoData.email}
+                      onChange={e => setGeneralInfoData({...generalInfoData, email: e.target.value})}
+                      className={`w-full px-4 py-2.5 rounded-xl text-sm transition-colors border ${editEmail ? 'bg-background text-text border-primary focus:outline-none focus:ring-1 focus:ring-primary' : 'bg-background/50 text-text-light border-surface-border cursor-not-allowed'}`}
+                    />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 pt-4">
+                    <button 
+                      onClick={cancelGeneralInfoEditing}
+                      disabled={isSaving}
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-surface-border text-text hover:bg-background transition-colors text-sm font-medium disabled:opacity-50"
+                    >
+                      Annuler
+                    </button>
+                    <button 
+                      onClick={handleSaveGeneralInfo}
+                      disabled={isSaving}
+                      className="flex-1 px-4 py-2.5 rounded-xl bg-[#801524] hover:bg-[#6a111e] text-white transition-colors text-sm font-medium flex items-center justify-center disabled:opacity-50"
+                    >
+                      {isSaving ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      ) : (
+                        'Sauvegarder'
+                      )}
                     </button>
                   </div>
-                ) : (
-                  <div className="space-y-3 text-sm text-text">
-                    <div className="flex justify-between border-b border-surface-border pb-2.5">
-                      <span className="text-text-light flex items-center gap-2"><User size={13} /> Nom complet</span>
-                      <span className="font-medium text-right">{profile?.prenom || ''} {profile?.nom || ''}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-surface-border pb-2.5">
-                      <span className="text-text-light flex items-center gap-2"><Mail size={13} /> Email</span>
-                      <span className="font-medium text-right break-words max-w-[150px]">{profile?.email || ''}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-surface-border pb-2.5">
-                      <span className="text-text-light flex items-center gap-2"><Phone size={13} /> Téléphone</span>
-                      <span className="font-medium text-right">{profile?.telephone || ''}</span>
-                    </div>
-                    <div className="flex justify-between pb-1">
-                      <span className="text-text-light flex items-center gap-2"><Calendar size={13} /> Naissance</span>
-                      <span className="font-medium text-right">{profile?.date_naissance ? new Date(profile.date_naissance).toLocaleDateString('fr-FR') : ''}</span>
-                    </div>
-                  </div>
-                )}
+                </div>
+              </motion.section> )}
               </motion.section>
 
               {/* Adresse de livraison */}
