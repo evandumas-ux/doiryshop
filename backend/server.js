@@ -8,6 +8,9 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 require('dotenv').config();
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 console.log('Toutes les vars env chargées:', {
   RESEND_API_KEY: process.env.RESEND_API_KEY ? 'OK' : 'UNDEFINED'
 });
@@ -641,8 +644,15 @@ app.post('/api/auth/forgot-password', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Erreur réinitialisation mdp :", error);
-    return res.status(500).json({ error: "Erreur interne du serveur." });
+    console.error("❌ ERREUR CRITIQUE FORGOT-PASSWORD :", error.message);
+    console.error(error.stack);
+
+    if (!res.headersSent) {
+      return res.status(500).json({ 
+        error: "Internal server error", 
+        details: error.message 
+      });
+    }
   }
 });
 
