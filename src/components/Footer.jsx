@@ -58,14 +58,31 @@ const Footer = () => {
     setEmailErrorMessage('');
     setStatus('loading');
     try {
-      const res = await subscribeNewsletter(email, 'footer');
-      setCode(res.code || 'BIENVENUE10');
-      setStatus('success');
-      setEmail('');
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 5000);
+      const response = await fetch('https://doiryshop-api.onrender.com/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: emailValue }),
+      });
+
+      if (response.ok) {
+        const res = await response.json();
+        setCode(res.code || 'BIENVENUE10');
+        setStatus('success');
+        setEmail('');
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 5000);
+      } else {
+        setStatus('error');
+        setEmailError(true);
+        setEmailErrorMessage("Une erreur est survenue lors de l'inscription.");
+      }
     } catch (err) {
+      console.error('Erreur réseau :', err);
       setStatus('error');
+      setEmailError(true);
+      setEmailErrorMessage("Erreur réseau. Veuillez réessayer plus tard.");
     }
   };
 
@@ -88,9 +105,8 @@ const Footer = () => {
                 placeholder="Ton email"
                 className={`min-w-0 flex-1 px-4 h-12 bg-surface border rounded-xl focus:outline-none focus:border-primary text-text placeholder:text-text-muted transition-colors ${emailError ? 'border-primary' : 'border-surface-border'}`}
               />
-              <button type="submit" disabled={status === 'loading'} className="h-12 px-5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-60 inline-flex items-center gap-2" onClick={() => alert('Button clicked successfully!')}>
-                <Mail size={17} /> OK
-                {/* V2 TEST COUCOU */}
+              <button type="submit" disabled={status === 'loading'} className="h-12 px-5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-60 inline-flex items-center gap-2">
+                <Mail size={17} /> {status === 'loading' ? '...' : 'OK'}
               </button>
             </div>
             {emailError && <p className="text-primary text-xs mt-2 font-medium">{emailErrorMessage}</p>}
