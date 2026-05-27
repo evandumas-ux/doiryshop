@@ -598,6 +598,41 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ success: true });
 });
 
+app.post('/api/auth/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  console.log("Demande de réinitialisation reçue pour :", email);
+
+  if (!email) {
+    return res.status(400).json({ error: "L'adresse e-mail est obligatoire." });
+  }
+
+  try {
+    // 1. Vérifier si l'utilisateur existe dans la base SQLite
+    db.get("SELECT * FROM users WHERE email = ?", [email], async (err, user) => {
+      if (err || !user) {
+        // Sécurité : on renvoie un message générique pour éviter le brute-force d'e-mails
+        return res.status(200).json({ message: "Si le compte existe, un e-mail a été envoyé." });
+      }
+
+      // 2. Générer un token ou un lien temporaire (ici un exemple simple vers ton domaine)
+      const resetLink = `https://doiryshop.com/reset-password?email=${encodeURIComponent(email)}`;
+
+      // 3. Envoyer l'e-mail officiel avec ton domaine validé Resend
+      await resend.emails.send({
+        from: 'Doiry Shop <contact@doiryshop.com>',
+        to: email,
+        subject: 'Réinitialisation de votre mot de passe 🌿',
+        html: `<p>Bonjour,</p><p>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe :</p><a href="${resetLink}">Réinitialiser mon mot de passe</a>`
+      });
+
+      return res.status(200).json({ message: "E-mail de récupération envoyé avec succès !" });
+    });
+  } catch (error) {
+    console.error("Erreur réinitialisation mdp :", error);
+    return res.status(500).json({ error: "Erreur interne du serveur." });
+  }
+});
+
 // Vérifier et Récupérer infos utilisateur ('Me' endpoint)
 app.get('/api/auth/me', verifyToken, (req, res) => {
   const query = `SELECT id, name, email, role, prenom, nom, profil_complete, created_at FROM users WHERE id = ?`;
