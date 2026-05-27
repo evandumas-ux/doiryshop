@@ -10,24 +10,25 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return;
-    
+    console.log("handleForgotPassword déclenché avec :", email); // LOG DE SÉCURITÉ
     setIsLoading(true);
+
     try {
       const response = await fetch('https://doiryshop-api.onrender.com/api/auth/forgot-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email.trim() }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() })
       });
+
       if (response.ok) {
         setIsSubmitted(true);
+      } else {
+        alert("Une erreur est survenue.");
       }
     } catch (error) {
-      console.error("Erreur lors de la réinitialisation:", error);
+      console.error("Erreur réseau formulaire mdp oublié :", error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // S'assurer que le spinner s'arrête
     }
   };
 
