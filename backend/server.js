@@ -673,6 +673,45 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   }
 });
 
+// POST /api/auth/reset-password
+app.post('/api/auth/reset-password', async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  if (!email || !newPassword) {
+    return res.status(400).json({ error: "Email et nouveau mot de passe sont requis." });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: "Le mot de passe doit contenir au moins 6 caractères." });
+  }
+
+  try {
+    db.get("SELECT id FROM users WHERE email = ?", [email], async (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: "Erreur serveur de base de données." });
+      }
+
+      if (!user) {
+        return res.status(404).json({ error: "Aucun utilisateur trouvé avec cet e-mail." });
+      }
+
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+      db.run("UPDATE users SET password = ? WHERE email = ?", [hashedPassword, email], function(updateErr) {
+        if (updateErr) {
+          console.error("Erreur lors de la mise à jour du mot de passe:", updateErr);
+          return res.status(500).json({ error: "Erreur lors de la réinitialisation du mot de passe." });
+        }
+        return res.status(200).json({ message: "Mot de passe mis à jour avec succès." });
+      });
+    });
+  } catch (err) {
+    console.error("Erreur critique dans reset-password:", err);
+    return res.status(500).json({ error: "Erreur serveur interne." });
+  }
+});
+
 // Vérifier et Récupérer infos utilisateur ('Me' endpoint)
 app.get('/api/auth/me', verifyToken, (req, res) => {
   const query = `SELECT id, name, email, role, prenom, nom, profil_complete, created_at FROM users WHERE id = ?`;
