@@ -642,62 +642,67 @@ app.delete('/api/auth/delete-account', verifyToken, (req, res) => {
 // ROUTE NEWSLETTER
 // ============================================================
 
-app.post('/api/newsletter', authLimiter, (req, res) => {
+app.post('/api/newsletter', authLimiter, async (req, res) => {
   const email = String(req.body?.email || '').trim().toLowerCase();
   const source = String(req.body?.source || 'footer').trim().slice(0, 40);
+  console.log("Nouvelle inscription newsletter reçue pour :", email);
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'Adresse email invalide.' });
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Adresse email invalide ou manquante.' });
   }
 
-  db.run(
-    `INSERT INTO newsletter (email, source) VALUES (?, ?)
-     ON CONFLICT(email) DO UPDATE SET source = excluded.source`,
-    [email, source || 'footer'],
-    (err) => {
-      if (err) {
-        console.error('[Newsletter] Erreur insertion newsletter:', err);
-        return res.status(500).json({ error: 'Erreur lors de l inscription newsletter.' });
-      }
+  try {
+    await new Promise((resolve, reject) => {
+      db.run(
+        `INSERT INTO newsletter (email, source) VALUES (?, ?)
+         ON CONFLICT(email) DO UPDATE SET source = excluded.source`,
+        [email, source || 'footer'],
+        (err) => {
+          if (err) reject(err);
+          else resolve();
+        }
+      );
+    });
 
-      // Ensure BIENVENUE10 coupon exists
-      const PROMO_CODE = 'BIENVENUE10';
+    // Ensure BIENVENUE10 coupon exists
+    const PROMO_CODE = 'BIENVENUE10';
+    await new Promise((resolve, reject) => {
       db.get(
         `SELECT id FROM coupons WHERE code = ? AND actif = 1`,
         [PROMO_CODE],
         (err, row) => {
           if (err) {
             console.error('[Newsletter] Erreur vérification coupon:', err);
+            return resolve(); // ignore error
           }
-
           if (!row) {
-            // Create the coupon if it doesn't exist
             console.log('[Newsletter] Création du coupon BIENVENUE10');
             db.run(
               `INSERT INTO coupons (code, type, valeur, nombre_utilisations_max, actif) VALUES (?, ?, ?, NULL, 1)`,
               [PROMO_CODE, 'pourcentage', 10],
               (err) => {
-                if (err) {
-                  console.error('[Newsletter] Erreur création coupon:', err);
-                } else {
-                  console.log('[Newsletter] Coupon BIENVENUE10 créé avec succès');
-                }
+                if (err) console.error('[Newsletter] Erreur création coupon:', err);
+                else console.log('[Newsletter] Coupon BIENVENUE10 créé avec succès');
+                resolve();
               }
             );
           } else {
-            console.log('[Newsletter] Coupon BIENVENUE10 existe déjà');
+            resolve();
           }
         }
       );
+    });
 
-      // Send the welcome email
-      sendNewsletterWelcomeEmail(email).catch(err => {
-        console.error('[Newsletter] Failed to send welcome email:', err);
-      });
+    // Send the welcome email
+    await sendNewsletterWelcomeEmail(email);
 
-      res.json({ message: 'Inscription newsletter enregistree.', code: PROMO_CODE });
+    return res.status(200).json({ message: 'Inscription newsletter enregistrée.', code: PROMO_CODE });
+  } catch (error) {
+    console.error("Erreur critique newsletter :", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Erreur interne du serveur lors de l'envoi" });
     }
-  );
+  }
 });
 
 

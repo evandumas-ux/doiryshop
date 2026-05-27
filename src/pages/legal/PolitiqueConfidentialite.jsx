@@ -54,7 +54,7 @@ const PolitiqueConfidentialite = () => {
               <li>Données de commande (produits achetés, montant, date)</li>
             </ul>
             <p className="p-3 bg-primary/10 border-l-4 border-primary rounded-r-lg text-sm italic">
-              Nous ne stockons JAMAIS vos données bancaires. Le paiement est traité par Stripe (stripe.com) qui applique ses propres règles de sécurité.
+              Nous ne stockons JAMAIS vos données bancaires. Le paiement est traité par Revolut (revolut.com) qui applique ses propres règles de sécurité.
             </p>
           </section>
 
@@ -83,10 +83,10 @@ const PolitiqueConfidentialite = () => {
             <h2 className="text-2xl font-serif mb-3 text-text">5. PARTAGE DES DONNÉES</h2>
             <p className="mb-3">Vos données sont partagées uniquement avec :</p>
             <ul className="list-disc pl-5 space-y-2 mb-4">
-              <li><span className="font-medium text-text">Stripe</span> (paiement) € <a href="https://stripe.com/fr/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">stripe.com/fr/privacy</a></li>
-              <li><span className="font-medium text-text">Resend</span> (emails transactionnels) € <a href="https://resend.com/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">resend.com/privacy</a></li>
-              <li><span className="font-medium text-text">La Poste</span> (expédition) € <a href="https://www.laposte.fr/politique-de-confidentialite" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">laposte.fr/politique-de-confidentialite</a></li>
-              <li><span className="font-medium text-text">Logto</span> (authentification) € <a href="https://logto.io/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">logto.io/privacy</a></li>
+              <li><span className="font-medium text-text">Revolut</span> (paiement) — <a href="https://www.revolut.com/legal/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">revolut.com/legal/privacy</a></li>
+              <li><span className="font-medium text-text">Resend</span> (emails transactionnels) €  <a href="https://resend.com/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">resend.com/privacy</a></li>
+              <li><span className="font-medium text-text">La Poste</span> (expédition) €  <a href="https://www.laposte.fr/politique-de-confidentialite" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">laposte.fr/politique-de-confidentialite</a></li>
+              <li><span className="font-medium text-text">Logto</span> (authentification) €  <a href="https://logto.io/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">logto.io/privacy</a></li>
             </ul>
             <p className="text-sm font-medium">Aucune donnée n'est vendue ou partagée à des fins publicitaires.</p>
           </section>
