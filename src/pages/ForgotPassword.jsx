@@ -23,7 +23,8 @@ export default function ForgotPassword() {
       if (response.ok) {
         setIsSubmitted(true);
       } else {
-        alert("Une erreur est survenue.");
+        const data = await response.json();
+        alert(data.error || "Une erreur est survenue.");
       }
     } catch (error) {
       console.error("Erreur réseau formulaire mdp oublié :", error);

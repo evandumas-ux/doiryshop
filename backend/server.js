@@ -619,7 +619,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 
       if (!user) {
         console.log(`⚠️ Aucun utilisateur trouvé en base avec l'e-mail : ${email}`);
-        return res.status(200).json({ message: "Si le compte existe, un e-mail a été envoyé." });
+        return res.status(404).json({ error: "This email does not exist in the SQLite database. Please sign up first." });
       }
 
       console.log(`✅ Utilisateur trouvé : ${user.name}. Tentative d'envoi du mail avec Resend...`);
