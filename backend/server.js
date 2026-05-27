@@ -609,23 +609,36 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   try {
     // 1. Vérifier si l'utilisateur existe dans la base SQLite
     db.get("SELECT * FROM users WHERE email = ?", [email], async (err, user) => {
-      if (err || !user) {
-        // Sécurité : on renvoie un message générique pour éviter le brute-force d'e-mails
+      if (err) {
+        console.error("❌ Erreur SQL lors de la recherche de l'utilisateur :", err);
+        return res.status(500).json({ error: "Erreur base de données." });
+      }
+
+      if (!user) {
+        console.log(`⚠️ Aucun utilisateur trouvé en base avec l'e-mail : ${email}`);
         return res.status(200).json({ message: "Si le compte existe, un e-mail a été envoyé." });
       }
 
-      // 2. Générer un token ou un lien temporaire (ici un exemple simple vers ton domaine)
-      const resetLink = `https://doiryshop.com/reset-password?email=${encodeURIComponent(email)}`;
+      console.log(`✅ Utilisateur trouvé : ${user.name}. Tentative d'envoi du mail avec Resend...`);
 
-      // 3. Envoyer l'e-mail officiel avec ton domaine validé Resend
-      await resend.emails.send({
-        from: 'Doiry Shop <contact@doiryshop.com>',
-        to: email,
-        subject: 'Réinitialisation de votre mot de passe 🌿',
-        html: `<p>Bonjour,</p><p>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe :</p><a href="${resetLink}">Réinitialiser mon mot de passe</a>`
-      });
+      try {
+        const resetLink = `https://doiryshop.com/reset-password?email=${encodeURIComponent(email)}`;
+        
+        // Temporairement, on utilise l'adresse de test pour vérifier si le flux fonctionne
+        const sendResult = await resend.emails.send({
+          from: 'Doiry Shop <onboarding@resend.dev>',
+          to: email,
+          subject: 'Réinitialisation de votre mot de passe 🌿',
+          html: `<p>Bonjour ${user.name || ''},</p><p>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe :</p><a href="${resetLink}">Réinitialiser mon mot de passe</a>`
+        });
 
-      return res.status(200).json({ message: "E-mail de récupération envoyé avec succès !" });
+        console.log("🚀 Resend a accepté l'envoi :", sendResult);
+        return res.status(200).json({ message: "E-mail de récupération envoyé avec succès !" });
+
+      } catch (resendError) {
+        console.error("❌ ÉCHEC CRITIQUE DE L'APPEL RESEND :", resendError);
+        return res.status(500).json({ error: "Erreur lors de l'envoi de l'e-mail." });
+      }
     });
   } catch (error) {
     console.error("Erreur réinitialisation mdp :", error);
