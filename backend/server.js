@@ -625,22 +625,21 @@ app.post('/api/auth/forgot-password', async (req, res) => {
       console.log(`✅ Utilisateur trouvé : ${user.name}. Tentative d'envoi du mail avec Resend...`);
 
       try {
-        const resetLink = `https://doiryshop.com/reset-password?email=${encodeURIComponent(email)}`;
+        const resetLink = `https://doiryshop.com/reset-password?email=${encodeURIComponent(user.email)}`;
         
-        // Temporairement, on utilise l'adresse de test pour vérifier si le flux fonctionne
         const sendResult = await resend.emails.send({
-          from: 'Doiry Shop <onboarding@resend.dev>',
-          to: email,
+          from: 'Doiry Shop <contact@doiryshop.com>',
+          to: user.email,
           subject: 'Réinitialisation de votre mot de passe 🌿',
-          html: `<p>Bonjour ${user.name || ''},</p><p>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe :</p><a href="${resetLink}">Réinitialiser mon mot de passe</a>`
+          html: `<p>Bonjour ${user.name || ''},</p><p>Cliquez ici pour réinitialiser votre mot de passe : <a href="${resetLink}">Lien</a></p>`
         });
 
         console.log("🚀 Resend a accepté l'envoi :", sendResult);
         return res.status(200).json({ message: "E-mail de récupération envoyé avec succès !" });
 
-      } catch (resendError) {
-        console.error("❌ ÉCHEC CRITIQUE DE L'APPEL RESEND :", resendError);
-        return res.status(500).json({ error: "Erreur lors de l'envoi de l'e-mail." });
+      } catch (emailError) {
+        console.error("Resend crash in forgot-password:", emailError);
+        return res.status(500).json({ error: "Email delivery failed", details: emailError.message });
       }
     });
   } catch (error) {
@@ -766,20 +765,18 @@ app.post('/api/newsletter', authLimiter, async (req, res) => {
     });
 
     // Send the welcome email
-    await sendNewsletterWelcomeEmail(email);
+    await resend.emails.send({
+      from: 'Doiry Shop <contact@doiryshop.com>',
+      to: email,
+      subject: 'Rejoins la communauté Doiry 🌿',
+      html: '<p>Merci pour votre inscription à notre newsletter !</p>'
+    });
 
-    return res.status(200).json({ message: 'Inscription newsletter enregistrée.', code: PROMO_CODE });
+    return res.status(200).json({ message: "Inscription réussie !", code: PROMO_CODE });
   } catch (error) {
-    console.error("=== CRITICAL NEWSLETTER ERROR START ===");
-    console.error("Message:", error.message);
-    console.error("Stack Trace:", error.stack);
-    if (error.response) {
-      console.error("Resend API Response Data:", error.response.data);
-    }
-    console.error("=== CRITICAL NEWSLETTER ERROR END ===");
-
+    console.error("Newsletter error details:", error);
     if (!res.headersSent) {
-      res.status(500).json({ error: "Internal server error", details: error.message });
+      res.status(500).json({ error: "Server error", details: error.message });
     }
   }
 });
