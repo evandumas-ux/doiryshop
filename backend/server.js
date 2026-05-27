@@ -698,7 +698,12 @@ app.post('/api/newsletter', authLimiter, async (req, res) => {
 
     return res.status(200).json({ message: 'Inscription newsletter enregistrée.', code: PROMO_CODE });
   } catch (error) {
-    console.error("Erreur critique newsletter :", error);
+    console.error("Erreur critique newsletter :");
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
+    if (error.response?.data) {
+      console.error("Resend API Error Data:", error.response.data);
+    }
     if (!res.headersSent) {
       res.status(500).json({ error: "Erreur interne du serveur lors de l'envoi" });
     }
