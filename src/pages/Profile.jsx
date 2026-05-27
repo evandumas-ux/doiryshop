@@ -465,7 +465,6 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                     </button>
                   </div>
                 </div>
-              </motion.section> )}
               </motion.section>
 
               {/* Adresse de livraison */}
