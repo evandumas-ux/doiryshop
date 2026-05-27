@@ -42,7 +42,7 @@ const getEmailLogoDataUri = () => {
 async function sendNewsletterWelcomeEmail(email) {
   try {
     const data = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: FROM_CONTACT,
       to: email,
       subject: `🌿 Bienvenue dans la communauté Doiry`,
       html: `
