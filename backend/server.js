@@ -85,6 +85,7 @@ const parseJsonArrayField = (value) => {
 
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = ['https://doiryshop.com', 'http://localhost:3000'];
 
@@ -502,37 +503,50 @@ app.post('/api/auth/custom-verify', async (req, res) => {
 
 // Inscription (Legacy)
 app.post('/api/auth/register', async (req, res) => {
-  const { prenom, nom, email, password } = req.body;
+  const { email, password, name, prenom, nom } = req.body;
+  
+  const finalName = name || `${prenom || ''} ${nom || ''}`.trim() || email.split('@')[0];
 
-  if (!prenom || !email || !password) {
-    return res.status(400).json({ error: 'Tous les champs sont requis.' });
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email et mot de passe obligatoires." });
   }
 
   try {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const fullName = `${prenom} ${nom || ''}`.trim();
-
-    const query = `INSERT INTO users (name, prenom, nom, email, password) VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [fullName, prenom, nom || '', email, hashedPassword], function (err) {
+    // 1. Vérifier si l'utilisateur existe déjà
+    db.get("SELECT * FROM users WHERE email = ?", [email], async (err, user) => {
       if (err) {
-        if (err.message.includes('UNIQUE constraint failed')) {
-          return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
-        }
-        return res.status(500).json({ error: 'Erreur lors de la création du compte.' });
+        console.error(err);
+        return res.status(500).json({ error: "Erreur base de données." });
+      }
+      if (user) {
+        return res.status(400).json({ error: "Un compte existe déjà avec cet e-mail." });
       }
 
-      const newUserId = this.lastID;
+      // 2. Insérer le nouvel utilisateur (hachage du mot de passe avec bcrypt)
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      // Attribution des points de fidélité pour l'inscription (+20 Plumes)
-      addLoyaltyPoints(newUserId, 20, 'inscription', null).catch(err => {
-        console.error('Erreur attribution points inscription:', err);
+      const query = "INSERT INTO users (name, prenom, nom, email, password) VALUES (?, ?, ?, ?, ?)";
+      db.run(query, [finalName, prenom || '', nom || '', email, hashedPassword], function(insertErr) {
+        if (insertErr) {
+          console.error(insertErr);
+          return res.status(500).json({ error: "Erreur lors de l'inscription." });
+        }
+        
+        const newUserId = this.lastID;
+        
+        // Attribution des points de fidélité pour l'inscription (+20 Plumes)
+        addLoyaltyPoints(newUserId, 20, 'inscription', null).catch(err => {
+          console.error('Erreur attribution points inscription:', err);
+        });
+
+        // Inscription réussie
+        return res.status(201).json({ message: "Compte créé avec succès !", userId: newUserId });
       });
-
-      res.status(201).json({ message: 'Compte créé avec succès !', userId: newUserId });
     });
   } catch (error) {
-    res.status(500).json({ error: 'Erreur serveur.' });
+    console.error("Erreur critique inscription :", error);
+    res.status(500).json({ error: "Erreur interne du serveur." });
   }
 });
 
