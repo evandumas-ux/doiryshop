@@ -631,7 +631,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
 
       {/* Footer minimal (checkout only) */}
       <footer className="border-t border-surface-border py-6 px-6 text-center text-xs text-text-muted">
-        <span>© Doiry Shop € </span>
+        <span>© Doiry Shop — </span>
         <Link to="/mentions-legales" className="hover:text-primary transition-colors">
           Mentions légales
         </Link>

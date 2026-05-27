@@ -346,7 +346,7 @@ export default function Inscription({ setUser }) {
                 onClick={() => setStep(1)}
                 className="text-text-muted text-sm hover:text-text transition-colors mt-2"
               >
-                € Retour
+                ← Retour
               </button>
             </motion.form>
           )}

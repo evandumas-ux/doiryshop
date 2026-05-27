@@ -127,7 +127,7 @@ const PolitiqueConfidentialite = () => {
 
           <Section number="7" title="Sécurité des données" icon={Lock}>
             <p>
-              DOIRY SHOP met en €uvre toutes les mesures techniques et organisationnelles appropriées pour garantir 
+              DOIRY SHOP met en œuvre toutes les mesures techniques et organisationnelles appropriées pour garantir 
               la sécurité de vos données, avec l'utilisation du protocole HTTPS, le hachage des mots de passe (via Logto), 
               et des accès restreints aux bases de données.
             </p>

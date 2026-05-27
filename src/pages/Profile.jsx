@@ -153,7 +153,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
 
     try {
       console.log('[DeleteAccount] confirmed, calling DELETE /api/auth/delete-account');
-      const response = await fetch('/api/auth/delete-account', {
+      const response = await fetch('https://doiryshop-api.onrender.com/api/auth/delete-account', {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -447,7 +447,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
                 <p className="text-sm text-text-light mt-3 text-center">{referralCount} ami(s) parrainé(s)</p>
                 <p className="text-sm text-text-muted mt-3 text-center">
                   Parrainez un ami et gagnez 50 Plumes. <br />
-                  Votre ami reçoit €5% sur sa première commande.
+                  Votre ami reçoit -5% sur sa première commande.
                 </p>
               </motion.section>
 
@@ -472,7 +472,7 @@ const Profile = ({ user, setUser, onLogout, isInitializing }) => {
               </motion.div>
             </div>
 
-            {/* Colonne droite € Commandes */}
+            {/* Colonne droite - Commandes */}
             <div className="lg:col-span-2">
               <motion.section 
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}

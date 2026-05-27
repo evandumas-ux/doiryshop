@@ -84,9 +84,9 @@ const PolitiqueConfidentialite = () => {
             <p className="mb-3">Vos données sont partagées uniquement avec :</p>
             <ul className="list-disc pl-5 space-y-2 mb-4">
               <li><span className="font-medium text-text">Revolut</span> (paiement) — <a href="https://www.revolut.com/legal/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">revolut.com/legal/privacy</a></li>
-              <li><span className="font-medium text-text">Resend</span> (emails transactionnels) €  <a href="https://resend.com/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">resend.com/privacy</a></li>
-              <li><span className="font-medium text-text">La Poste</span> (expédition) €  <a href="https://www.laposte.fr/politique-de-confidentialite" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">laposte.fr/politique-de-confidentialite</a></li>
-              <li><span className="font-medium text-text">Logto</span> (authentification) €  <a href="https://logto.io/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">logto.io/privacy</a></li>
+              <li><span className="font-medium text-text">Resend</span> (emails transactionnels) — <a href="https://resend.com/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">resend.com/privacy</a></li>
+              <li><span className="font-medium text-text">La Poste</span> (expédition) — <a href="https://www.laposte.fr/politique-de-confidentialite" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">laposte.fr/politique-de-confidentialite</a></li>
+              <li><span className="font-medium text-text">Logto</span> (authentification) — <a href="https://logto.io/privacy" target="_blank" rel="noreferrer" className="text-accent hover:underline text-sm">logto.io/privacy</a></li>
             </ul>
             <p className="text-sm font-medium">Aucune donnée n'est vendue ou partagée à des fins publicitaires.</p>
           </section>
@@ -131,7 +131,7 @@ const PolitiqueConfidentialite = () => {
             <p className="mb-4">Pour toute question : <a href="mailto:contact@doiryshop.com" className="text-accent hover:underline">contact@doiryshop.com</a></p>
             <p>
               Vous pouvez également adresser une réclamation à la CNIL :<br />
-              <a href="https://www.cnil.fr" target="_blank" rel="noreferrer" className="text-accent hover:underline">cnil.fr</a> € 3 Place de Fontenoy, 75007 Paris
+              <a href="https://www.cnil.fr" target="_blank" rel="noreferrer" className="text-accent hover:underline">cnil.fr</a> — 3 Place de Fontenoy, 75007 Paris
             </p>
           </section>
         </div>
