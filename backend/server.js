@@ -631,7 +631,15 @@ app.post('/api/auth/forgot-password', async (req, res) => {
           from: 'Doiry Shop <contact@doiryshop.com>',
           to: user.email,
           subject: 'Réinitialisation de votre mot de passe 🌿',
-          html: `<p>Bonjour ${user.name || ''},</p><p>Cliquez ici pour réinitialiser votre mot de passe : <a href="${resetLink}">Lien</a></p>`
+          html: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #111; text-align: center;">
+  <img src="https://doiryshop.com/favicon.jpg" alt="Doiry Shop Logo" style="width: 80px; height: auto; margin-bottom: 20px;" />
+  <h3 style="color: #222; font-weight: normal;">Bonjour ${user.name || 'DUMAS Evan'},</h3>
+  <p style="font-size: 16px; line-height: 1.5; color: #444;">Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.</p>
+  <div style="margin: 30px 0;">
+    <a href="${resetLink}" style="background-color: #801524; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block;">Réinitialiser mon mot de passe</a>
+  </div>
+  <p style="font-size: 12px; color: #777;">Si vous n'avez pas demandé ce changement, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+</div>`
         });
 
         console.log("🚀 Resend a accepté l'envoi :", sendResult);
@@ -769,7 +777,12 @@ app.post('/api/newsletter', authLimiter, async (req, res) => {
       from: 'Doiry Shop <contact@doiryshop.com>',
       to: email,
       subject: 'Rejoins la communauté Doiry 🌿',
-      html: '<p>Merci pour votre inscription à notre newsletter !</p>'
+      html: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #111; text-align: center;">
+  <img src="https://doiryshop.com/favicon.jpg" alt="Doiry Shop Logo" style="width: 80px; height: auto; margin-bottom: 20px;" />
+  <h2 style="color: #801524; letter-spacing: 1px;">REJOINS LA COMMUNAUTÉ DOIRY</h2>
+  <p style="font-size: 16px; line-height: 1.5; color: #444;">Merci pour votre inscription à notre newsletter !</p>
+  <p style="font-size: 14px; color: #777; margin-top: 30px;">Recettes, rituels calmes et offres douces, directement par email.</p>
+</div>`
     });
 
     return res.status(200).json({ message: "Inscription réussie !", code: PROMO_CODE });
