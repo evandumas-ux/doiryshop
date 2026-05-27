@@ -631,14 +631,24 @@ app.post('/api/auth/forgot-password', async (req, res) => {
           from: 'Doiry Shop <contact@doiryshop.com>',
           to: user.email,
           subject: 'Réinitialisation de votre mot de passe 🌿',
-          html: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #111; text-align: center;">
-  <img src="https://doiryshop.com/favicon.jpg" alt="Doiry Shop Logo" style="width: 80px; height: auto; margin-bottom: 20px;" />
-  <h3 style="color: #222; font-weight: normal;">Bonjour ${user.name || 'DUMAS Evan'},</h3>
-  <p style="font-size: 16px; line-height: 1.5; color: #444;">Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.</p>
-  <div style="margin: 30px 0;">
-    <a href="${resetLink}" style="background-color: #801524; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block;">Réinitialiser mon mot de passe</a>
+          html: `<div style="background-color: #1a1a1a; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #222222; border-radius: 8px; border: 1px solid #333333; overflow: hidden;">
+    <div style="text-align: center; padding: 30px 20px 20px;">
+      <img src="https://doiryshop-api.onrender.com/favicon.jpg" alt="Logo Doiry Shop" style="width: 60px; height: auto; margin-bottom: 15px;" />
+      <h2 style="color: #ffffff; font-size: 22px; font-family: monospace, sans-serif; letter-spacing: 2px; margin: 0;">Doiry Shop</h2>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #333333; margin: 0;" />
+    <div style="padding: 40px 30px; text-align: center;">
+      <h1 style="color: #ffffff; font-size: 22px; font-weight: bold; margin-top: 0; margin-bottom: 24px;">Réinitialisation de mot de passe</h1>
+      <p style="color: #cccccc; font-size: 15px; line-height: 1.6; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
+        Bonjour ${user.name || 'DUMAS Evan'},<br><br>Nous avons reçu une demande pour réinitialiser le mot de passe de votre compte. Cliquez sur le bouton ci-dessous pour configurer un nouveau mot de passe.
+      </p>
+      <a href="${resetLink}" style="background-color: #801524; color: #ffffff; padding: 14px 32px; text-decoration: none; font-weight: bold; font-size: 15px; border-radius: 6px; display: inline-block; margin-bottom: 30px;">Réinitialiser mon mot de passe</a>
+      <p style="color: #888888; font-size: 13px; margin: 0; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+        Si vous n'avez pas fait cette demande, vous pouvez ignorer cet e-mail en toute sécurité.
+      </p>
+    </div>
   </div>
-  <p style="font-size: 12px; color: #777;">Si vous n'avez pas demandé ce changement, vous pouvez ignorer cet e-mail en toute sécurité.</p>
 </div>`
         });
 
@@ -777,11 +787,27 @@ app.post('/api/newsletter', authLimiter, async (req, res) => {
       from: 'Doiry Shop <contact@doiryshop.com>',
       to: email,
       subject: 'Rejoins la communauté Doiry 🌿',
-      html: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #111; text-align: center;">
-  <img src="https://doiryshop.com/favicon.jpg" alt="Doiry Shop Logo" style="width: 80px; height: auto; margin-bottom: 20px;" />
-  <h2 style="color: #801524; letter-spacing: 1px;">REJOINS LA COMMUNAUTÉ DOIRY</h2>
-  <p style="font-size: 16px; line-height: 1.5; color: #444;">Merci pour votre inscription à notre newsletter !</p>
-  <p style="font-size: 14px; color: #777; margin-top: 30px;">Recettes, rituels calmes et offres douces, directement par email.</p>
+      html: `<div style="background-color: #1a1a1a; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #222222; border-radius: 8px; border: 1px solid #333333; overflow: hidden;">
+    <div style="text-align: center; padding: 30px 20px 20px;">
+      <img src="https://doiryshop-api.onrender.com/favicon.jpg" alt="Logo Doiry Shop" style="width: 60px; height: auto; margin-bottom: 15px;" />
+      <h2 style="color: #ffffff; font-size: 22px; font-family: monospace, sans-serif; letter-spacing: 2px; margin: 0;">Doiry Shop</h2>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #333333; margin: 0;" />
+    <div style="padding: 40px 30px; text-align: center;">
+      <h1 style="color: #ffffff; font-size: 22px; font-weight: bold; margin-top: 0; margin-bottom: 24px;">Votre inscription est confirmée</h1>
+      <p style="color: #cccccc; font-size: 15px; line-height: 1.6; margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto;">
+        Bienvenue chez Doiry Shop. Plongez dans notre univers de rituels botaniques et découvrez nos plantes séchées et infusions.
+      </p>
+      <p style="color: #cccccc; font-size: 15px; line-height: 1.6; margin-bottom: 16px; max-width: 500px; margin-left: auto; margin-right: auto;">
+        Pour vous remercier, voici un code de bienvenue de 10% valable sur votre première commande :
+      </p>
+      <p style="color: #ffffff; font-size: 20px; font-weight: bold; letter-spacing: 2px; margin-bottom: 35px;">
+        BIENVENUE10
+      </p>
+      <a href="https://doiryshop.com" style="background-color: #801524; color: #ffffff; padding: 14px 32px; text-decoration: none; font-weight: bold; font-size: 15px; border-radius: 6px; display: inline-block;">Découvrir la collection</a>
+    </div>
+  </div>
 </div>`
     });
 
