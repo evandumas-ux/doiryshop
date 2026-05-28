@@ -205,6 +205,16 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
             background-color: #f0f5f0 !important;
             border-left: 4px solid #7a9e7e !important;
         }
+
+        /* --- Hide Mondial Relay demo environment warning banner --- */
+        #Zone_Widget font[color="red"],
+        #Zone_Widget .MRW-Debug,
+        #Zone_Widget div[style*="color: red"],
+        #Zone_Widget p[style*="color: red"],
+        #Zone_Widget span[style*="color: red"],
+        #Zone_Widget text[fill="red"] {
+            display: none !important;
+        }
       `}</style>
       {loading && (
         <div className="flex items-center justify-center p-8 text-text-light text-sm">
