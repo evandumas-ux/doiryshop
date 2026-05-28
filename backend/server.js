@@ -191,102 +191,48 @@ const requireAdmin = (req, res, next) => {
 // ─── TARIFS LA POSTE 2026 (source officielle laposte.fr) ───────────────────
 
 const SHIPPING_OPTIONS = {
-  LETTRE_VERTE_SUIVIE: {
-    id: 'LETTRE_VERTE_SUIVIE',
-    label: 'Lettre Verte Suivie',
-    description: 'Livraison J+3 ouvrés avec suivi — format lettre plat',
-    delay: 'J+3 ouvrés',
-    // Contraintes format lettre (source laposte.fr)
-    maxWeight: 2000,       // 2 kg max
-    maxThickness: 30,      // 3 cm épaisseur max
-    maxLength: 60,         // 60 cm longueur max
-    maxDimensionSum: 100,  // L + l + h ≤ 100 cm
-    tiers: [
-      { maxWeight: 20,   price: 2.02 },
-      { maxWeight: 100,  price: 3.60 },
-      { maxWeight: 250,  price: 5.74 },
-      { maxWeight: 500,  price: 7.91 },
-      { maxWeight: 1000, price: 9.79 },
-      { maxWeight: 2000, price: 11.64 }
-    ]
-  },
-  COLISSIMO: {
-    id: 'COLISSIMO',
-    label: 'Colissimo Domicile',
-    description: 'Livraison J+2/J+3 ouvrés avec suivi',
+  HOME_DELIVERY: {
+    id: 'HOME_DELIVERY',
+    label: 'Livraison à domicile',
+    description: 'Livraison suivie à votre domicile',
     delay: 'J+2 à J+3 ouvrés',
-    // Contraintes Colissimo (source laposte.fr)
-    maxWeight: 30000,      // 30 kg max
-    maxLength: 100,        // longueur max 100 cm
-    maxDimensionSum: 150,  // L + l + h ≤ 150 cm
+    maxWeight: 2000,
     tiers: [
-      { maxWeight: 250,   price: 5.49 },
-      { maxWeight: 500,   price: 7.59 },
-      { maxWeight: 750,   price: 9.29 },
-      { maxWeight: 1000,  price: 9.59 },
-      { maxWeight: 2000,  price: 11.19 },
-      { maxWeight: 5000,  price: 17.39 },
-      { maxWeight: 10000, price: 25.29 },
-      { maxWeight: 15000, price: 31.99 },
-      { maxWeight: 30000, price: 39.59 }
+      { maxWeight: 100,  price: 3.50 },
+      { maxWeight: 250,  price: 4.90 },
+      { maxWeight: 500,  price: 5.90 },
+      { maxWeight: 2000, price: 8.50 } // Fallback for higher weights
     ]
   }
 };
 
-const FREE_SHIPPING_THRESHOLD = 35;
+const FREE_SHIPPING_THRESHOLD = 45;
 
-// Vérifie si tous les articles du panier sont compatibles format lettre
+// Vérifie si tous les articles du panier sont compatibles format lettre (3cm max)
 function isCartLetterEligible(items) {
   return items.every(item => {
     const thickness = Number(item.thickness_mm) || 10;
-    const length = Number(item.length_cm) || 20;
-    const width = Number(item.width_cm) || 15;
-    const dimSum = length + width + (thickness / 10);
-    return (
-      thickness <= 30 &&       // épaisseur ≤ 3 cm
-      length <= 60 &&           // longueur ≤ 60 cm
-      dimSum <= 100             // L + l + h ≤ 100 cm
-    );
+    return thickness <= 30;
   });
 }
 
 function getShippingPrice(option, totalWeightGrams) {
   const tier = option.tiers.find(t => totalWeightGrams <= t.maxWeight);
-  return tier ? tier.price : null;
+  return tier ? tier.price : 8.50; // Default fallback price
 }
 
 function getAvailableShipping(cartTotal, totalWeightGrams, items) {
   const isFree = cartTotal >= FREE_SHIPPING_THRESHOLD;
-  const letterEligible = isCartLetterEligible(items);
   const options = [];
 
-  // Lettre Verte Suivie — proposée seulement si format + poids compatibles
-  if (letterEligible && totalWeightGrams <= SHIPPING_OPTIONS.LETTRE_VERTE_SUIVIE.maxWeight) {
-    const price = getShippingPrice(SHIPPING_OPTIONS.LETTRE_VERTE_SUIVIE, totalWeightGrams);
-    if (price !== null) {
-      options.push({
-        ...SHIPPING_OPTIONS.LETTRE_VERTE_SUIVIE,
-        tiers: undefined,
-        price: isFree ? 0 : price,
-        originalPrice: price,
-        free: isFree
-      });
-    }
-  }
-
-  // Colissimo — proposé si poids ≤ 30 kg
-  if (totalWeightGrams <= SHIPPING_OPTIONS.COLISSIMO.maxWeight) {
-    const price = getShippingPrice(SHIPPING_OPTIONS.COLISSIMO, totalWeightGrams);
-    if (price !== null) {
-      options.push({
-        ...SHIPPING_OPTIONS.COLISSIMO,
-        tiers: undefined,
-        price: isFree ? 0 : price,
-        originalPrice: price,
-        free: isFree
-      });
-    }
-  }
+  const price = getShippingPrice(SHIPPING_OPTIONS.HOME_DELIVERY, totalWeightGrams);
+  options.push({
+    ...SHIPPING_OPTIONS.HOME_DELIVERY,
+    tiers: undefined,
+    price: isFree ? 0 : price,
+    originalPrice: price,
+    free: isFree
+  });
 
   return options;
 }
@@ -1211,7 +1157,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
     }
 
     // Validation shipping
-    const validMethods = ['LETTRE_VERTE_SUIVIE', 'COLISSIMO'];
+    const validMethods = ['HOME_DELIVERY'];
     if (!validMethods.includes(shipping_method)) {
       return res.status(400).json({ error: 'Méthode de livraison invalide' });
     }

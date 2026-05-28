@@ -409,38 +409,41 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             </section>
 
             <section className="bg-surface p-6 md:p-8 rounded-3xl border border-surface-border">
-              <h2 className="font-serif text-2xl mb-6 text-text">Mode d'envoi</h2>
+              <h2 className="font-serif text-2xl mb-6 text-text">Livraison</h2>
 
               {loadingShipping && (
-                <p className="text-sm text-text-light mt-4">Chargement des options de livraison...</p>
+                <p className="text-sm text-text-light mt-4">Calcul des frais de livraison...</p>
               )}
               {shippingError && (
                 <p className="text-sm text-primary mt-4">{shippingError}</p>
               )}
 
               {shippingOptions.length > 0 && !loadingShipping && (
-                <div className="space-y-3 mt-4">
+                <div className="mt-4">
                   {shippingOptions.map(opt => (
-                    <label key={opt.id} className={`block border rounded-xl p-4 cursor-pointer transition-all ${selectedShipping?.id === opt.id ? 'bg-primary/5 border-primary shadow-sm' : 'bg-background border-surface-border'}`}>
-                      <div className="flex items-center gap-3">
-                        <input type="radio" name="shipping" value={opt.id}
-                               checked={selectedShipping?.id === opt.id}
-                               onChange={() => setSelectedShipping(opt)}
-                               className="w-5 h-5 text-primary accent-primary" />
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center">
-                            <strong>{opt.label}</strong>
-                            <span className="font-bold">
-                              {opt.free
-                                ? (<><span className="text-accent">GRATUIT</span><small className="line-through ml-2 text-text-muted">{opt.originalPrice.toFixed(2)} €</small></>)
-                                : (<span>{opt.price.toFixed(2)} €</span>)}
-                            </span>
+                    <div key={opt.id} className="bg-background border border-primary/20 rounded-xl p-5 shadow-sm">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                            <ShieldCheck size={20} />
                           </div>
-                          <p className="text-sm text-text-light">{opt.description}</p>
-                          <span className="text-xs text-text-muted">{opt.delay}</span>
+                          <div>
+                            <strong className="text-text block">{opt.label}</strong>
+                            <p className="text-xs text-text-muted">{opt.delay}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          {opt.free ? (
+                            <div className="flex flex-col items-end">
+                              <span className="text-emerald-500 font-bold">GRATUIT</span>
+                              <span className="text-xs text-text-muted line-through">{opt.originalPrice.toFixed(2)} €</span>
+                            </div>
+                          ) : (
+                            <span className="text-accent font-bold text-lg">{opt.price.toFixed(2)} €</span>
+                          )}
                         </div>
                       </div>
-                    </label>
+                    </div>
                   ))}
                 </div>
               )}

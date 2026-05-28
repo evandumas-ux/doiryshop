@@ -6,7 +6,7 @@ const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { m
 
 export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct, onRemove, onUpdateQuantity, onCheckout }) => {
   const subtotal = cartItems.reduce((acc, item) => acc + (parseFloat(item.price) * parseInt(item.quantity)), 0);
-  const freeShippingThreshold = 35;
+  const freeShippingThreshold = 45;
   const remaining = Math.max(0, freeShippingThreshold - subtotal);
   const crossSellProduct = remaining > 0
     ? products
