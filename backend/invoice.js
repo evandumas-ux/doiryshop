@@ -51,6 +51,7 @@ async function generateInvoicePDF(orderData) {
 
   const produits = parseProducts(orderData?.produits);
   const adresse = parseAddress(orderData?.adresse_livraison);
+  const relayInfo = orderData?.relay_info ? (typeof orderData.relay_info === 'string' ? JSON.parse(orderData.relay_info) : orderData.relay_info) : null;
   const orderId = Number(orderData?.id || orderData?.orderId || 0);
   const reference = orderData?.reference || `dry-${orderId}`;
   const invoiceNumber = `FAC-${String(orderId).padStart(6, '0')}`;
@@ -95,12 +96,20 @@ async function generateInvoicePDF(orderData) {
   y += 64;
 
   doc.roundedRect(40, y, 515, 90, 10).fill(BRAND_COLORS.card);
-  doc.fillColor(BRAND_COLORS.text).font('Helvetica-Bold').fontSize(11).text('Facturé à', 55, y + 14);
+  doc.fillColor(BRAND_COLORS.text).font('Helvetica-Bold').fontSize(11).text(relayInfo ? 'Livraison en Point Relais' : 'Facturé à', 55, y + 14);
   doc.fillColor(BRAND_COLORS.muted).font('Helvetica').fontSize(10);
-  doc.text(`${adresse.fname || ''} ${adresse.lname || ''}`.trim() || 'Client', 55, y + 33);
-  doc.text(adresse.email || '', 55, y + 47);
-  doc.text(adresse.address || '', 55, y + 61);
-  doc.text(`${adresse.zip || ''} ${adresse.city || ''}`.trim(), 55, y + 75);
+  
+  if (relayInfo) {
+    doc.text(relayInfo.name || 'Point Relais', 55, y + 33);
+    doc.text(relayInfo.address || '', 55, y + 47);
+    doc.text(`${relayInfo.zip || ''} ${relayInfo.city || ''}`.trim(), 55, y + 61);
+    doc.text(`Destinataire : ${adresse.fname || ''} ${adresse.lname || ''}`.trim(), 55, y + 75);
+  } else {
+    doc.text(`${adresse.fname || ''} ${adresse.lname || ''}`.trim() || 'Client', 55, y + 33);
+    doc.text(adresse.email || '', 55, y + 47);
+    doc.text(adresse.address || '', 55, y + 61);
+    doc.text(`${adresse.zip || ''} ${adresse.city || ''}`.trim(), 55, y + 75);
+  }
   y += 112;
 
   const tableX = 40;

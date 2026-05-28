@@ -202,6 +202,19 @@ const SHIPPING_OPTIONS = {
       { maxWeight: 500,  price: 4.90 },
       { maxWeight: 2000, price: 6.90 } // Fallback for higher weights
     ]
+  },
+  MONDIAL_RELAY: {
+    id: 'MONDIAL_RELAY',
+    label: 'Point Relais Mondial Relay',
+    description: 'Livraison dans le point relais de votre choix',
+    delay: 'J+3 à J+5 ouvrés',
+    maxWeight: 20000,
+    tiers: [
+      { maxWeight: 500,  price: 3.90 },
+      { maxWeight: 1000, price: 4.90 },
+      { maxWeight: 2000, price: 5.90 },
+      { maxWeight: 5000, price: 9.90 }
+    ]
   }
 };
 
@@ -224,12 +237,23 @@ function getAvailableShipping(cartTotal, totalWeightGrams, items) {
   const isFree = cartTotal >= FREE_SHIPPING_THRESHOLD;
   const options = [];
 
-  const price = getShippingPrice(SHIPPING_OPTIONS.HOME_DELIVERY, totalWeightGrams);
+  // Home Delivery
+  const homePrice = getShippingPrice(SHIPPING_OPTIONS.HOME_DELIVERY, totalWeightGrams);
   options.push({
     ...SHIPPING_OPTIONS.HOME_DELIVERY,
     tiers: undefined,
-    price: isFree ? 0 : price,
-    originalPrice: price,
+    price: isFree ? 0 : homePrice,
+    originalPrice: homePrice,
+    free: isFree
+  });
+
+  // Mondial Relay
+  const mrPrice = getShippingPrice(SHIPPING_OPTIONS.MONDIAL_RELAY, totalWeightGrams);
+  options.push({
+    ...SHIPPING_OPTIONS.MONDIAL_RELAY,
+    tiers: undefined,
+    price: isFree ? 0 : mrPrice,
+    originalPrice: mrPrice,
     free: isFree
   });
 
@@ -1135,7 +1159,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
     console.log('[ORDER] req.user complet:', req.user);
     console.log('[ORDER] user_id extrait:', req.user?.id);
 
-    const { produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price: client_shipping_price, coupon_code, shipping_relay_id, shipping_relay_data, relay_selection_mode, relay_address_text } = req.body;
+    const { produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price: client_shipping_price, coupon_code, shipping_relay_id, shipping_relay_data, relay_selection_mode, relay_address_text, relay_info } = req.body;
 
     let emailClient = "";
     if (typeof adresse_livraison === 'string') {
@@ -1156,7 +1180,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
     }
 
     // Validation shipping
-    const validMethods = ['HOME_DELIVERY'];
+    const validMethods = ['HOME_DELIVERY', 'MONDIAL_RELAY'];
     if (!validMethods.includes(shipping_method)) {
       return res.status(400).json({ error: 'Méthode de livraison invalide' });
     }
@@ -1176,7 +1200,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
       return res.status(400).json({ error: 'Poids total non supporté pour cette méthode' });
     }
 
-    const query = `INSERT INTO orders (user_id, produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price, tracking_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO orders (user_id, produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price, tracking_number, relay_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const params = [
       userId, // Peut être NULL pour les invités
       typeof produits === 'string' ? produits : JSON.stringify(produits),
@@ -1185,7 +1209,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
       typeof adresse_livraison === 'string' ? adresse_livraison : JSON.stringify(adresse_livraison || {}),
       shipping_method,
       recalculatedShippingPrice,
-      null // tracking_number à NULL par défaut
+      null, // tracking_number à NULL par défaut
+      typeof relay_info === 'string' ? relay_info : JSON.stringify(relay_info || null)
     ];
 
     db.run(query, params, function (err) {
@@ -1474,6 +1499,7 @@ app.get('/api/admin/orders/:id', verifyToken, requireAdmin, (req, res) => {
     order.produits = (() => { try { return JSON.parse(order.produits); } catch { return order.produits || []; } })();
     order.adresse_livraison = (() => { try { return JSON.parse(order.adresse_livraison); } catch { return order.adresse_livraison || {}; } })();
     order.shipping_relay_data = (() => { try { return JSON.parse(order.shipping_relay_data); } catch { return order.shipping_relay_data || null; } })();
+    order.relay_info = (() => { try { return JSON.parse(order.relay_info); } catch { return order.relay_info || null; } })();
 
     // Calcul des dimensions et du poids
     if (Array.isArray(order.produits) && order.produits.length > 0) {

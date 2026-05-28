@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Lock, Heart, CheckCircle2, X, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Lock, Heart, CheckCircle2, X, AlertCircle, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLogto } from '@logto/react';
 import { createOrder, getUserProfile, getLoyaltyPoints, verifyCoupon, getShippingOptions } from '../services/api';
 import PaymentBadges from '../components/PaymentBadges';
 import SEO from '../components/SEO';
+import RelayPicker from '../components/RelayPicker';
 import { buildOrderReference, buildRevolutMeUrl } from '../utils/revolutPayment';
 const MotionDiv = motion.div;
 const Checkout = ({ cartItems, setCartItems, user }) => {
@@ -15,6 +16,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
 
   const [shippingOptions, setShippingOptions] = useState([]);
   const [selectedShipping, setSelectedShipping] = useState(null);
+  const [selectedRelay, setSelectedRelay] = useState(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
   const [shippingError, setShippingError] = useState('');
   const [promoCode, setPromoCode] = useState('');
@@ -178,6 +180,12 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       return;
     }
 
+    // Validation spécifique Mondial Relay
+    if (selectedShipping.id === 'MONDIAL_RELAY' && !selectedRelay) {
+      alert("Veuillez sélectionner un point relais sur la carte avant de continuer.");
+      return;
+    }
+
     setShowIncompleteError(false);
     setIsSubmitting(true);
 
@@ -208,6 +216,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
         shipping_method: selectedShipping.id,
         shipping_price: deliveryCost,
         selectedShipping,
+        relay_info: selectedRelay,
         orderTotal
       };
 
@@ -409,25 +418,73 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             </section>
 
             <section className="bg-surface p-6 md:p-8 rounded-3xl border border-surface-border">
-              <h2 className="font-serif text-2xl mb-6 text-text">Livraison</h2>
+              <h2 className="font-serif text-2xl mb-6 text-text">Méthode de livraison</h2>
 
               {loadingShipping ? (
-                <p className="text-sm text-text-light">Calcul des frais de livraison...</p>
+                <p className="text-sm text-text-light flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                  Calcul des frais de livraison...
+                </p>
               ) : shippingError ? (
                 <p className="text-sm text-primary">{shippingError}</p>
-              ) : selectedShipping ? (
-                <div className="flex justify-between items-center py-2">
-                   <div className="flex items-center gap-3 text-text font-medium text-lg">
-                     <ShieldCheck size={22} className="text-primary" />
-                     <span>Livraison à domicile</span>
-                   </div>
-                   <span className="text-accent font-bold text-xl">
-                     {selectedShipping.price === 0 ? (
-                       <span className="text-emerald-500">GRATUIT</span>
-                     ) : (
-                       `${selectedShipping.price.toFixed(2)} €`
-                     )}
-                   </span>
+              ) : shippingOptions.length > 0 ? (
+                <div className="space-y-4">
+                  {shippingOptions.map((option) => (
+                    <div 
+                      key={option.id}
+                      onClick={() => {
+                        setSelectedShipping(option);
+                        if (option.id !== 'MONDIAL_RELAY') setSelectedRelay(null);
+                      }}
+                      className={`p-4 border rounded-2xl cursor-pointer transition-all ${selectedShipping?.id === option.id ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-surface-border hover:border-text-muted'}`}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${selectedShipping?.id === option.id ? 'border-primary' : 'border-surface-border'}`}>
+                            {selectedShipping?.id === option.id && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                          </div>
+                          <div>
+                            <div className="font-bold text-text">{option.label}</div>
+                            <div className="text-xs text-text-muted">{option.description} • {option.delay}</div>
+                          </div>
+                        </div>
+                        <div className="font-bold text-accent">
+                          {option.price === 0 ? <span className="text-emerald-500">GRATUIT</span> : `${option.price.toFixed(2)} €`}
+                        </div>
+                      </div>
+
+                      {option.id === 'MONDIAL_RELAY' && selectedShipping?.id === 'MONDIAL_RELAY' && (
+                        <div className="mt-4 pt-4 border-t border-surface-border/50">
+                          {selectedRelay ? (
+                            <div className="flex items-start gap-3 p-3 bg-white rounded-xl border border-primary/20 shadow-sm">
+                              <MapPin size={18} className="text-primary shrink-0 mt-1" />
+                              <div className="text-sm">
+                                <div className="font-bold text-text">{selectedRelay.name}</div>
+                                <div className="text-text-light">{selectedRelay.address}</div>
+                                <div className="text-text-muted text-xs">{selectedRelay.zip} {selectedRelay.city}</div>
+                                <button 
+                                  type="button" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedRelay(null);
+                                  }}
+                                  className="mt-2 text-primary font-medium hover:underline text-xs"
+                                >
+                                  Modifier le point relais
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <RelayPicker 
+                              zip={formData.zip} 
+                              country={formData.countryCode} 
+                              onSelect={setSelectedRelay} 
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="text-sm text-text-muted italic">Veuillez renseigner vos coordonnées pour calculer la livraison</p>
@@ -443,7 +500,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting ? 'opacity-70' : 'hover:-translate-y-1'}`}
+              className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping || (selectedShipping.id === 'MONDIAL_RELAY' && !selectedRelay)) && !isSubmitting ? 'opacity-70' : 'hover:-translate-y-1'}`}
               onClick={(e) => {
                 if (!isValid || shippingOptions.length === 0 || !selectedShipping) {
                   setShowIncompleteError(true);
@@ -532,7 +589,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                   <span>{parseFloat(subtotal).toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between text-text-light">
-                  <span>Livraison à domicile</span>
+                  <span>Livraison {selectedShipping?.id === 'MONDIAL_RELAY' ? 'en point relais' : 'à domicile'}</span>
                   <span>
                     {loadingShipping ? (
                       'Calcul en cours...'

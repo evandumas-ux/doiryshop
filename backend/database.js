@@ -83,6 +83,7 @@ db.serialize(() => {
       shipping_method TEXT DEFAULT 'colissimo',
       shipping_price REAL DEFAULT 0,
       shipping_relay_data TEXT, /* JSON brut du point relais sélectionné - obsolète mais conservé pour compatibilité */
+      relay_info TEXT, /* Nouvelles informations Mondial Relay - JSON string */
       relay_selection_mode TEXT, /* 'closest' ou 'manual' ou NULL */
       relay_address_text TEXT, /* Adresse manuelle du relais si manual */
       date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -114,6 +115,9 @@ db.serialize(() => {
     }
     if (!existingCols.includes('shipping_relay_data')) {
       db.run("ALTER TABLE orders ADD COLUMN shipping_relay_data TEXT", () => {});
+    }
+    if (!existingCols.includes('relay_info')) {
+      db.run("ALTER TABLE orders ADD COLUMN relay_info TEXT", () => {});
     }
     if (!existingCols.includes('relay_selection_mode')) {
       db.run("ALTER TABLE orders ADD COLUMN relay_selection_mode TEXT", () => {});

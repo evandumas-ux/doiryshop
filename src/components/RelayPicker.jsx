@@ -1,74 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { getPacklinkDropoffs } from '../services/api';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Loader2 } from 'lucide-react';
 
-const RelayPicker = ({ serviceId, zip, country, onSelect }) => {
-  const [dropoffs, setDropoffs] = useState([]);
-  const [loading, setLoading] = useState(false);
+const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedId, setSelectedId] = useState(null);
+  const widgetLoaded = useRef(false);
 
   useEffect(() => {
-    if (!serviceId || !zip) return;
-    
-    const fetchDropoffs = async () => {
-      setLoading(true);
-      setError(null);
+    // Éviter les rechargements multiples
+    if (widgetLoaded.current) return;
+
+    const loadScripts = async () => {
       try {
-        const data = await getPacklinkDropoffs(serviceId, zip, country);
-        setDropoffs(data || []);
+        // 1. Charger jQuery si pas présent
+        if (!window.jQuery) {
+          await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+            script.async = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+
+        // 2. Charger le script Mondial Relay
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+
+        initWidget();
       } catch (err) {
-        setError("Impossible de charger les points relais.");
-      } finally {
+        console.error("Erreur lors du chargement de Mondial Relay:", err);
+        setError("Impossible de charger le module de sélection de point relais.");
         setLoading(false);
       }
     };
-    
-    fetchDropoffs();
-  }, [serviceId, zip, country]);
 
-  const handleSelect = (dropoff) => {
-    setSelectedId(dropoff.id);
-    onSelect(dropoff);
-  };
+    const initWidget = () => {
+      const $ = window.jQuery;
+      if (!$) return;
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-4 text-text-light text-sm">
-        <Loader2 className="animate-spin mr-2" size={18} /> Recherche des points relais...
-      </div>
-    );
-  }
+      $("#Zone_Widget").MR_ParcelShopPicker({
+        Target: "#Target_Widget",
+        Brand: "BDTEST  ", // Code enseigne de test
+        Country: country,
+        PostCode: zip,
+        ColLivMod: "24R", // Mode de livraison standard point relais
+        NbResults: "7",
+        ShowResults: true,
+        OnParcelShopSelected: (data) => {
+          // Formatage des données pour le parent
+          onSelect({
+            id: data.ID,
+            name: data.Nom,
+            address: `${data.Adresse1}${data.Adresse2 ? ', ' + data.Adresse2 : ''}`,
+            zip: data.CP,
+            city: data.Ville,
+            country: data.Pays
+          });
+        }
+      });
+      
+      widgetLoaded.current = true;
+      setLoading(false);
+    };
 
-  if (error) {
-    return <div className="p-4 text-primary text-sm">{error}</div>;
-  }
-
-  if (dropoffs.length === 0) {
-    return <div className="p-4 text-text-light text-sm">Aucun point relais trouvé pour ce code postal.</div>;
-  }
+    loadScripts();
+  }, [zip, country, onSelect]);
 
   return (
-    <div className="mt-3 max-h-64 overflow-y-auto border border-surface-border rounded-xl bg-background divide-y divide-surface-border">
-      {dropoffs.map((d) => (
-        <div 
-          key={d.id} 
-          onClick={() => handleSelect(d)}
-          className={`p-3 cursor-pointer hover:bg-surface flex items-start gap-3 transition-colors ${selectedId === d.id ? 'bg-primary/5' : ''}`}
-        >
-          <div className={`mt-0.5 ${selectedId === d.id ? 'text-primary' : 'text-text-muted'}`}>
-            <MapPin size={18} />
-          </div>
-          <div className="flex-1 text-sm">
-            <div className="font-semibold text-text">{d.name}</div>
-            <div className="text-text-light">{d.address}</div>
-            <div className="text-text-muted text-xs mt-1">{d.zip} {d.city}</div>
-          </div>
-          {selectedId === d.id && (
-            <div className="text-primary text-xs font-bold uppercase tracking-wide">Sélectionné</div>
-          )}
+    <div className="mt-4 bg-white rounded-2xl overflow-hidden border border-surface-border">
+      {loading && (
+        <div className="flex items-center justify-center p-8 text-text-light text-sm">
+          <Loader2 className="animate-spin mr-2" size={18} /> Chargement de la carte...
         </div>
-      ))}
+      )}
+      
+      {error && (
+        <div className="p-4 text-primary text-sm bg-primary/5 border-b border-surface-border">
+          {error}
+        </div>
+      )}
+
+      {/* Conteneur pour le widget Mondial Relay */}
+      <div id="Zone_Widget" className="min-h-[400px]"></div>
+      
+      {/* Champ caché requis par le widget pour stocker l'ID sélectionné (utilisé en interne par le plugin) */}
+      <input type="hidden" id="Target_Widget" />
+      
+      <div className="p-3 bg-surface text-[10px] text-text-muted uppercase tracking-wider flex items-center gap-2">
+        <MapPin size={12} /> Sélectionnez un point relais sur la carte pour valider votre livraison
+      </div>
     </div>
   );
 };

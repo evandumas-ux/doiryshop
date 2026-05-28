@@ -421,7 +421,7 @@ const AdminOrderDetail = () => {
             </motion.div>
 
             {/* Point Relais (Si applicable) */}
-            {(order?.relay_selection_mode || order?.shipping_relay_data) && (
+            {(order?.relay_selection_mode || order?.shipping_relay_data || order?.relay_info) && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="bg-white rounded-2xl shadow-sm border border-primary/20 overflow-hidden relative">
                 <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
                 <div className="p-5 border-b border-gray-100 flex items-center gap-2">
@@ -430,7 +430,18 @@ const AdminOrderDetail = () => {
                 </div>
                 <div className="p-5">
                   <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 text-sm text-gray-800">
-                    {order?.relay_selection_mode === 'closest' ? (
+                    {order?.relay_info ? (() => {
+                      const ri = typeof order.relay_info === 'string' ? JSON.parse(order.relay_info) : order.relay_info;
+                      return (
+                        <>
+                          <p className="font-bold text-base mb-1 text-primary-dark">Mondial Relay Sélectionné :</p>
+                          <p className="font-bold">{ri.name} ({ri.id})</p>
+                          <p>{ri.address}</p>
+                          <p>{ri.zip} {ri.city}</p>
+                          <p className="text-xs text-gray-500 mt-2 uppercase">Pays: {ri.country}</p>
+                        </>
+                      );
+                    })() : order?.relay_selection_mode === 'closest' ? (
                       <div>
                         <p className="font-bold text-base mb-1 text-primary-dark">Point relais le plus proche de l'adresse client</p>
                         <p className="text-gray-600 mt-2 italic">Vous devez choisir le relais le plus proche de : {adresse.zip} {adresse.city}</p>
