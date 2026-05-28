@@ -54,11 +54,20 @@ async function generateInvoicePDF(orderData) {
   const orderId = Number(orderData?.id || orderData?.orderId || 0);
   const reference = orderData?.reference || `dry-${orderId}`;
   const invoiceNumber = `FAC-${String(orderId).padStart(6, '0')}`;
+
+  // NEW ACCOUNTING LOGIC
+  // 1. Calculate Sum TTC of items
   const subtotalTTC = produits.reduce((sum, p) => sum + sanitizeNumber(p.price) * sanitizeNumber(p.quantity || 1), 0);
+  
+  // 2. Derive HT and VAT from items only (20% rate)
+  const subtotalHT = subtotalTTC / 1.20;
+  const tvaItems = subtotalTTC - subtotalHT;
+  
+  // 3. Shipping is a separate fixed cost (usually zero-rated or handled separately in simple shops)
   const shippingPrice = sanitizeNumber(orderData?.shipping_price);
-  const totalTTC = sanitizeNumber(orderData?.total) || subtotalTTC + shippingPrice;
-  const totalHT = totalTTC / 1.2;
-  const tva = totalTTC - totalHT;
+  
+  // 4. Final Total
+  const totalTTC = subtotalTTC + shippingPrice;
 
   doc.rect(0, 0, doc.page.width, doc.page.height).fill(BRAND_COLORS.background);
 
@@ -128,10 +137,10 @@ async function generateInvoicePDF(orderData) {
   const totalsX = 330;
   doc.fillColor(BRAND_COLORS.muted).font('Helvetica').fontSize(11);
   doc.text('Sous-total HT', totalsX, y);
-  doc.fillColor(BRAND_COLORS.text).text(formatPrice(totalHT), 475, y, { width: 80, align: 'right' });
+  doc.fillColor(BRAND_COLORS.text).text(formatPrice(subtotalHT), 475, y, { width: 80, align: 'right' });
   y += 18;
   doc.fillColor(BRAND_COLORS.muted).text('TVA (20%)', totalsX, y);
-  doc.fillColor(BRAND_COLORS.text).text(formatPrice(tva), 475, y, { width: 80, align: 'right' });
+  doc.fillColor(BRAND_COLORS.text).text(formatPrice(tvaItems), 475, y, { width: 80, align: 'right' });
   y += 18;
   doc.fillColor(BRAND_COLORS.muted).text('Livraison', totalsX, y);
   doc.fillColor(BRAND_COLORS.text).text(formatPrice(shippingPrice), 475, y, { width: 80, align: 'right' });
