@@ -170,11 +170,6 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user || isAuthenticated === false) {
-      redirectToAuth();
-      return;
-    }
-
     // Validate form (sets red borders and scrolls if invalid)
     const isFormValid = validateForm();
 
@@ -208,6 +203,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
           zip: formData.zip,
           city: formData.city
         },
+        create_account: formData.createAccount,
         coupon_code: appliedCoupon ? appliedCoupon.code : undefined,
         shipping_method: selectedShipping.id,
         shipping_price: deliveryCost,
@@ -218,7 +214,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       console.log('[CHECKOUT] clic bouton');
       console.log('[CHECKOUT] orderData =', orderData);
 
-      // 1. Créer la commande en attente dans la BDD (génère aussi le RIB en backend)
+      // 1. Créer la commande en attente dans la BDD
       const orderResponse = await createOrder(orderData);
       const orderId = orderResponse.orderId;
       const reference = orderResponse.reference || buildOrderReference(orderId);
@@ -457,15 +453,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               </div>
             )}
             <button
-              type={user ? "submit" : "button"}
+              type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting && user ? 'opacity-70' : 'hover:-translate-y-1'}`}
+              className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping) && !isSubmitting ? 'opacity-70' : 'hover:-translate-y-1'}`}
               onClick={(e) => {
-                if (!user || isAuthenticated === false) {
-                  e.preventDefault();
-                  redirectToAuth();
-                  return;
-                }
                 if (!isValid || shippingOptions.length === 0 || !selectedShipping) {
                   setShowIncompleteError(true);
                 }
@@ -477,7 +468,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                   Génération en cours...
                 </>
               ) : (
-                <>{user ? "VALIDER ET PAYER VIA REVOLUT" : "SE CONNECTER POUR COMMANDER"}</>
+                <>Continuer vers le paiement</>
               )}
             </button>
             <p className="text-center text-xs text-text-muted mt-3">

@@ -343,7 +343,6 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
       <WhyDoiryshop />
       <Products onAddToCart={handleAddToCart} />
       <Ranges />
-      <BrandStorySection />
       <FAQ />
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cartItems={cartItems} products={allProducts} onAddProduct={handleAddToCart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} onCheckout={handleCheckout} />
     </>

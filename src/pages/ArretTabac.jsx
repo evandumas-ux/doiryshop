@@ -221,7 +221,6 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
         onLogout={onLogout}
         cartItemsCount={cartItemsCount}
         user={user}
-        simplified={true}
       />
 
       <CartDrawer 
