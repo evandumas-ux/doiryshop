@@ -94,13 +94,24 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
         }
 
         /* --- Global Widget Layout Fixes --- */
-        #Zone_Widget .MR-ParcelShopPicker {
-            max-width: 1000px !important;
-            margin: 0 auto !important;
+        #Zone_Widget .MR-ParcelShopPicker,
+        #Zone_Widget .MR-Widget {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
             float: none !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 20px !important;
+        }
+
+        /* --- Text Visibility Fix --- */
+        #Zone_Widget .MR-List,
+        #Zone_Widget .MR-List *,
+        #Zone_Widget [class*="adresse"],
+        #Zone_Widget [class*="ville"],
+        #Zone_Widget .MR-parcelshop * {
+            color: #222222 !important;
         }
 
         /* --- Search Bar Fixes (Overlap & Spacing) --- */
@@ -158,6 +169,7 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
             #Zone_Widget .MR-results-container {
                 display: flex !important;
                 flex-direction: row !important;
+                width: 100% !important;
                 min-height: 500px !important;
                 border: 1px solid #eee !important;
                 border-radius: 16px !important;
