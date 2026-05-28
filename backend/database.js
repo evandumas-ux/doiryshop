@@ -248,7 +248,7 @@ db.serialize(() => {
       {
         slug: 'lessentiel-base-pure-vrac',
         names: ['L\'Essentiel Vrac 30g', 'L\'Essentiel - Base Pure en Vrac (30g)'],
-        useCases: ['Remplace le tabac dans un joint', 'Pour rouleurs de clopes naturelles', 'Transition tabac → plantes', 'Mélange CBD sans nicotine'],
+        useCases: ['Substitut de tabac pour vos mélanges botaniques', 'Pour des rituels à rouler naturels et raffinés', 'Transition tabac → plantes', 'Mélange CBD sans nicotine'],
       },
       {
         slug: 'linstant-pre-roules-x3',

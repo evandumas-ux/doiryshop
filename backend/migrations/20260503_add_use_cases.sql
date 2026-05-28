@@ -1,7 +1,7 @@
 ALTER TABLE products ADD COLUMN use_cases TEXT;
 
 UPDATE products
-SET use_cases = '["Remplace le tabac dans un joint","Pour rouleurs de clopes naturelles","Transition tabac → plantes","Mélange CBD sans nicotine"]'
+SET use_cases = '["Substitut de tabac pour vos mélanges botaniques","Pour des rituels à rouler naturels et raffinés","Transition tabac → plantes","Mélange CBD sans nicotine"]'
 WHERE name = 'L''Essentiel Vrac 30g';
 
 UPDATE products

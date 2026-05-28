@@ -7,7 +7,7 @@ const db = new sqlite3.Database(dbPath);
 const seeds = [
   {
     slug: 'lessentiel-base-pure-vrac',
-    useCases: ['Remplace le tabac dans un joint', 'Pour rouleurs de clopes naturelles', 'Transition tabac → plantes', 'Mélange CBD sans nicotine'],
+    useCases: ['Substitut de tabac pour vos mélanges botaniques', 'Pour des rituels à rouler naturels et raffinés', 'Transition tabac → plantes', 'Mélange CBD sans nicotine'],
   },
   {
     slug: 'linstant-pre-roules-x3',

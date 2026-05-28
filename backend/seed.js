@@ -33,7 +33,7 @@ const products = [
     "competitor_price": 14.9,
     "competitor_label": "Plantes à rouler premium du marché (30g)",
     "tagline_subtitle": "Feuilles de framboisier séchées à rouler — alternative tabac 100% naturelle.",
-    "use_cases": "[\"Remplace le tabac dans un joint\",\"Pour rouleurs de clopes naturelles\",\"Transition tabac → plantes\",\"Mélange CBD sans nicotine\"]",
+    "use_cases": "[\"Substitut de tabac pour vos mélanges botaniques\",\"Pour des rituels à rouler naturels et raffinés\",\"Transition tabac → plantes\",\"Mélange CBD sans nicotine\"]",
     "weight_g": 80,
     "height_cm": 5,
     "width_cm": 9,
