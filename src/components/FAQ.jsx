@@ -14,11 +14,11 @@ const FAQ = () => {
     },
     {
       q: "Quels sont vos délais de livraison ?",
-      a: 'Toutes les commandes sont expédiées sous 24h à 48h ouvrées. La livraison prend ensuite généralement 2 à 3 jours via Colissimo ou lettre suivie, et 3 à 5 jours en point relais.',
+      a: 'Toutes les commandes sont expédiées sous 24h à 48h ouvrées. La livraison prend ensuite généralement 2 à 3 jours ouvrés via Colissimo Domicile ou lettre suivie.',
     },
     {
       q: "La livraison est-elle vraiment offerte ?",
-      a: 'Oui, la livraison est offerte en point relais dès 35 € d’achat pour la France métropolitaine. L’option s’affiche automatiquement dans votre panier.',
+      a: 'Oui, la livraison à domicile est offerte dès 45 € d’achat pour la France métropolitaine. L’option s’applique automatiquement à votre panier.',
     },
     {
       q: "Le colis est-il discret ?",

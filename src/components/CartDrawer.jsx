@@ -7,6 +7,20 @@ const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { m
 export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct, onRemove, onUpdateQuantity, onCheckout }) => {
   const subtotal = cartItems.reduce((acc, item) => acc + (parseFloat(item.price) * parseInt(item.quantity)), 0);
   const freeShippingThreshold = 45;
+
+  const totalWeight = cartItems.reduce((acc, item) => acc + (Number(item.weight || item.weight_g || 50) * parseInt(item.quantity)), 0);
+
+  let shippingCost = 0;
+  if (subtotal < freeShippingThreshold && cartItems.length > 0) {
+    if (totalWeight <= 250) {
+      shippingCost = 3.50;
+    } else if (totalWeight <= 500) {
+      shippingCost = 4.90;
+    } else {
+      shippingCost = 6.90; // Fallback
+    }
+  }
+
   const remaining = Math.max(0, freeShippingThreshold - subtotal);
   const crossSellProduct = remaining > 0
     ? products
@@ -64,9 +78,19 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct,
 
             {cartItems.length > 0 && (
               <div className="p-6 bg-surface border-t border-surface-border">
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-text font-medium">Sous-total</span>
-                  <span className="text-2xl font-serif font-medium text-accent">{formatPrice(subtotal)}</span>
+                <div className="space-y-1 mb-6">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-text-light">Sous-total</span>
+                    <span className="text-text-light font-medium">{formatPrice(subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-text-light">Livraison à domicile</span>
+                    <span className="text-text-light font-medium">{shippingCost === 0 ? 'Offerte' : formatPrice(shippingCost)}</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-3 mt-2 border-t border-surface-border">
+                    <span className="text-text font-semibold">Total TTC</span>
+                    <span className="text-2xl font-serif font-bold text-accent">{formatPrice(subtotal + shippingCost)}</span>
+                  </div>
                 </div>
                 <div className="mb-4">
                   {subtotal >= freeShippingThreshold ? (

@@ -198,10 +198,9 @@ const SHIPPING_OPTIONS = {
     delay: 'J+2 à J+3 ouvrés',
     maxWeight: 2000,
     tiers: [
-      { maxWeight: 100,  price: 3.50 },
-      { maxWeight: 250,  price: 4.90 },
-      { maxWeight: 500,  price: 5.90 },
-      { maxWeight: 2000, price: 8.50 } // Fallback for higher weights
+      { maxWeight: 250,  price: 3.50 },
+      { maxWeight: 500,  price: 4.90 },
+      { maxWeight: 2000, price: 6.90 } // Fallback for higher weights
     ]
   }
 };

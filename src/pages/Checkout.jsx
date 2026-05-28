@@ -411,41 +411,26 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             <section className="bg-surface p-6 md:p-8 rounded-3xl border border-surface-border">
               <h2 className="font-serif text-2xl mb-6 text-text">Livraison</h2>
 
-              {loadingShipping && (
-                <p className="text-sm text-text-light mt-4">Calcul des frais de livraison...</p>
-              )}
-              {shippingError && (
-                <p className="text-sm text-primary mt-4">{shippingError}</p>
-              )}
-
-              {shippingOptions.length > 0 && !loadingShipping && (
-                <div className="mt-4">
-                  {shippingOptions.map(opt => (
-                    <div key={opt.id} className="bg-background border border-primary/20 rounded-xl p-5 shadow-sm">
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                            <ShieldCheck size={20} />
-                          </div>
-                          <div>
-                            <strong className="text-text block">{opt.label}</strong>
-                            <p className="text-xs text-text-muted">{opt.delay}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          {opt.free ? (
-                            <div className="flex flex-col items-end">
-                              <span className="text-emerald-500 font-bold">GRATUIT</span>
-                              <span className="text-xs text-text-muted line-through">{opt.originalPrice.toFixed(2)} €</span>
-                            </div>
-                          ) : (
-                            <span className="text-accent font-bold text-lg">{opt.price.toFixed(2)} €</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+              {loadingShipping ? (
+                <p className="text-sm text-text-light">Calcul des frais de livraison...</p>
+              ) : shippingError ? (
+                <p className="text-sm text-primary">{shippingError}</p>
+              ) : selectedShipping ? (
+                <div className="flex justify-between items-center py-2">
+                   <div className="flex items-center gap-3 text-text font-medium text-lg">
+                     <ShieldCheck size={22} className="text-primary" />
+                     <span>Livraison à domicile</span>
+                   </div>
+                   <span className="text-accent font-bold text-xl">
+                     {selectedShipping.price === 0 ? (
+                       <span className="text-emerald-500">GRATUIT</span>
+                     ) : (
+                       `${selectedShipping.price.toFixed(2)} €`
+                     )}
+                   </span>
                 </div>
+              ) : (
+                <p className="text-sm text-text-muted italic">Veuillez renseigner vos coordonnées pour calculer la livraison</p>
               )}
             </section>
 
@@ -547,10 +532,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                   <span>{parseFloat(subtotal).toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between text-text-light">
-                  <span>Frais de livraison</span>
+                  <span>Livraison à domicile</span>
                   <span>
                     {loadingShipping ? (
-                      'Calcul en cours⬦'
+                      'Calcul en cours...'
                     ) : selectedShipping ? (
                       selectedShipping.price === 0 ? (
                         <span style={{ color: '#4ade80' }}>Offerte</span>
@@ -558,7 +543,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                         <span>{Number(selectedShipping.price).toFixed(2)} €</span>
                       )
                     ) : (
-                      <span></span>
+                      <span>-</span>
                     )}
                   </span>
                 </div>
