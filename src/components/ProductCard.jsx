@@ -87,7 +87,11 @@ const ProductCard = ({ product, onAddToCart }) => {
       )}
       <Link to={`/produit/${product.id}`} className="block cursor-pointer">
         <div className="aspect-[4/3] bg-background overflow-hidden relative">
-          <img src={firstImage} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" />
+          <img 
+            src={firstImage} 
+            alt={`Paquet de pré-roulés botaniques Doiry Shop - ${product.name}`} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" 
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-surface/70 via-transparent to-transparent" />
         </div>
         <div className="p-6">

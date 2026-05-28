@@ -26,7 +26,7 @@ const ProductGallery = ({ images: rawImages, productName }) => {
   if (images.length === 0) {
     return (
       <div className="aspect-square bg-surface rounded-3xl overflow-hidden shadow-xl border border-surface-border relative">
-        <img src="/placeholders/product-default.png" alt={productName} className="w-full h-full object-cover" />
+        <img src="/placeholders/product-default.png" alt={`Produit Doiry Shop - ${productName}`} className="w-full h-full object-cover" />
       </div>
     );
   }
@@ -41,7 +41,7 @@ const ProductGallery = ({ images: rawImages, productName }) => {
           <MotionImg
             key={currentIndex}
             src={images[currentIndex]}
-            alt={`${productName} - Vue ${currentIndex + 1}`}
+            alt={`Produit Doiry Shop - ${productName} - Vue ${currentIndex + 1}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
