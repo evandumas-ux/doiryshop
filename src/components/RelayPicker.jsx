@@ -69,6 +69,11 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
       
       widgetLoaded.current = true;
       setLoading(false);
+
+      // Forcer le recalcul de la taille de la carte après un court délai
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 500);
     };
 
     loadScripts();
@@ -76,6 +81,24 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
 
   return (
     <div className="mt-4 bg-white rounded-2xl overflow-hidden border border-surface-border">
+      <style>{`
+        #Zone_Widget {
+            display: block !important;
+            width: 100% !important;
+            min-height: 600px !important;
+            background: #ffffff !important;
+            clear: both;
+        }
+        #Zone_Widget input[type="text"], 
+        #Zone_Widget .MR-search-input,
+        #Zone_Widget input {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+            border: 1px solid #cccccc !important;
+            padding: 4px 8px !important;
+        }
+      `}</style>
+
       {loading && (
         <div className="flex items-center justify-center p-8 text-text-light text-sm">
           <Loader2 className="animate-spin mr-2" size={18} /> Chargement de la carte...
