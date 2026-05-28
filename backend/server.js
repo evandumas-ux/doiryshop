@@ -188,19 +188,19 @@ const requireAdmin = (req, res, next) => {
 };
 
 
-// ─── TARIFS LA POSTE 2026 (source officielle laposte.fr) ───────────────────
+// ─── TARIFS MONDIAL RELAY 2026 ─────────────────────────────────────────────
 
 const SHIPPING_OPTIONS = {
   HOME_DELIVERY: {
     id: 'HOME_DELIVERY',
-    label: 'Livraison à domicile',
-    description: 'Livraison suivie à votre domicile',
-    delay: 'J+2 à J+3 ouvrés',
+    label: 'Mondial Relay à Domicile',
+    description: 'Livraison suivie à votre domicile via Mondial Relay',
+    delay: 'J+3 à J+5 ouvrés',
     maxWeight: 2000,
     tiers: [
-      { maxWeight: 250,  price: 3.50 },
-      { maxWeight: 500,  price: 4.90 },
-      { maxWeight: 2000, price: 6.90 } // Fallback for higher weights
+      { maxWeight: 500,  price: 6.49 },
+      { maxWeight: 1000, price: 8.49 },
+      { maxWeight: 2000, price: 9.99 }
     ]
   },
   MONDIAL_RELAY: {
@@ -208,12 +208,11 @@ const SHIPPING_OPTIONS = {
     label: 'Point Relais Mondial Relay',
     description: 'Livraison dans le point relais de votre choix',
     delay: 'J+3 à J+5 ouvrés',
-    maxWeight: 20000,
+    maxWeight: 2000,
     tiers: [
-      { maxWeight: 500,  price: 3.90 },
-      { maxWeight: 1000, price: 4.90 },
-      { maxWeight: 2000, price: 5.90 },
-      { maxWeight: 5000, price: 9.90 }
+      { maxWeight: 500,  price: 4.10 },
+      { maxWeight: 1000, price: 5.99 },
+      { maxWeight: 2000, price: 7.99 }
     ]
   }
 };
