@@ -75,7 +75,7 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
+      user_id INTEGER,
       produits TEXT NOT NULL, /* JSON array */
       total REAL NOT NULL,
       statut_paiement TEXT DEFAULT 'payé',
