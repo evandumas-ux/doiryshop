@@ -92,13 +92,106 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
             background: #ffffff !important;
             clear: both;
         }
+
+        /* --- Global Widget Layout Fixes --- */
+        #Zone_Widget .MR-ParcelShopPicker {
+            max-width: 1000px !important;
+            margin: 0 auto !important;
+            float: none !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+        }
+
+        /* --- Search Bar Fixes (Overlap & Spacing) --- */
+        #Zone_Widget .MR-search-container {
+            margin-bottom: 15px !important;
+            padding: 10px !important;
+            background: #f8f8f8 !important;
+            border-radius: 12px !important;
+            display: block !important;
+            text-align: center !important;
+        }
+
         #Zone_Widget input[type="text"], 
         #Zone_Widget .MR-search-input,
         #Zone_Widget input {
             color: #000000 !important;
             background-color: #ffffff !important;
-            border: 1px solid #cccccc !important;
-            padding: 4px 8px !important;
+            border: 1px solid #ddd !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            margin: 5px !important;
+            width: auto !important;
+            min-width: 150px !important;
+            display: inline-block !important;
+        }
+
+        #Zone_Widget input:focus {
+            border-color: #7a9e7e !important;
+            outline: none !important;
+        }
+
+        #Zone_Widget button, 
+        #Zone_Widget .MR-button,
+        #Zone_Widget [type="button"] {
+            margin: 5px !important;
+            padding: 8px 16px !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            background: #5C141F !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+        }
+
+        #Zone_Widget button:hover {
+            background: #721924 !important;
+            transform: translateY(-1px) !important;
+        }
+
+        /* --- List & Map split layout (Desktop) --- */
+        @media (min-width: 768px) {
+            #Zone_Widget .MR-results-container {
+                display: flex !important;
+                flex-direction: row !important;
+                min-height: 500px !important;
+                border: 1px solid #eee !important;
+                border-radius: 16px !important;
+                overflow: hidden !important;
+            }
+            
+            #Zone_Widget .MR-list-container {
+                width: 35% !important;
+                max-height: 500px !important;
+                overflow-y: auto !important;
+                border-right: 1px solid #eee !important;
+                background: #fff !important;
+            }
+
+            #Zone_Widget .MR-map-container {
+                width: 65% !important;
+                min-height: 500px !important;
+            }
+        }
+
+        /* --- Individual Result Styling --- */
+        #Zone_Widget .MR-parcelshop {
+            padding: 12px !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+            cursor: pointer !important;
+        }
+
+        #Zone_Widget .MR-parcelshop:hover {
+            background-color: #f9fbf9 !important;
+        }
+
+        #Zone_Widget .MR-parcelshop.selected {
+            background-color: #f0f5f0 !important;
+            border-left: 4px solid #7a9e7e !important;
         }
       `}</style>
       {loading && (

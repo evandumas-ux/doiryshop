@@ -459,9 +459,9 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                             <div className="flex items-start gap-3 p-3 bg-white rounded-xl border border-primary/20 shadow-sm">
                               <MapPin size={18} className="text-primary shrink-0 mt-1" />
                               <div className="text-sm">
-                                <div className="font-bold text-text">{selectedRelay.name}</div>
-                                <div className="text-text-light">{selectedRelay.address}</div>
-                                <div className="text-text-muted text-xs">{selectedRelay.zip} {selectedRelay.city}</div>
+                                <div className="font-bold text-[#1a1a1a]">{selectedRelay.name}</div>
+                                <div className="text-[#333333]">{selectedRelay.address}</div>
+                                <div className="text-[#666666] text-xs">{selectedRelay.zip} {selectedRelay.city}</div>
                                 <button 
                                   type="button" 
                                   onClick={(e) => {
