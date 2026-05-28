@@ -326,16 +326,16 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
         </div>
       </header>
 
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-        {/* Formulaire */}
-        <div className="lg:col-span-7 order-last lg:order-first">
-          <div className="mb-8 flex items-center justify-between text-sm font-medium text-text-muted">
-            <span className="text-primary font-bold">1. Coordonnées & Livraison</span>
-            <span className="flex-1 h-px bg-surface-border mx-4"></span>
-            <span>2. Paiement sécurisé</span>
-          </div>
+      <main className="flex-1 max-w-6xl w-full mx-auto p-4 md:p-8">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12" noValidate>
+          {/* Formulaire - Partie 1: Coordonnées & Livraison */}
+          <div className="lg:col-span-7 order-2 lg:order-1 space-y-10">
+            <div className="mb-8 flex items-center justify-between text-sm font-medium text-text-muted">
+              <span className="text-primary font-bold">1. Coordonnées & Livraison</span>
+              <span className="flex-1 h-px bg-surface-border mx-4"></span>
+              <span>2. Paiement sécurisé</span>
+            </div>
 
-          <form onSubmit={handleSubmit} className="space-y-10" noValidate>
             {birthdayBonus.active && (
               <section className="bg-primary/10 border border-primary/30 p-5 rounded-2xl">
                 <p className="text-primary font-semibold text-sm">Joyeux anniversaire ! -25% appliqué automatiquement sur votre commande.</p>
@@ -475,11 +475,10 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                               </div>
                             </div>
                           ) : (
-                            <RelayPicker 
-                              zip={formData.zip} 
-                              country={formData.countryCode} 
-                              onSelect={setSelectedRelay} 
-                            />
+                            <div className="text-sm text-primary font-medium flex items-center gap-2 py-2">
+                              <MapPin size={16} />
+                              Veuillez sélectionner votre point relais sur la carte ci-dessous
+                            </div>
                           )}
                         </div>
                       )}
@@ -490,9 +489,164 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                 <p className="text-sm text-text-muted italic">Veuillez renseigner vos coordonnées pour calculer la livraison</p>
               )}
             </section>
+          </div>
 
+          {/* Récapitulatif */}
+          <div className="lg:col-span-5 relative order-1 lg:order-2">
+            <div className="sticky top-28 space-y-6">
+
+              <div className="bg-surface p-6 md:p-8 rounded-3xl border border-surface-border">
+                <h3 className="font-serif text-xl mb-6 text-accent">Récapitulatif</h3>
+                <div className="space-y-4 mb-6">
+                  {cartItems.map(item => (
+                    <div key={item.id} className="flex gap-4 items-center">
+                      <div className="relative">
+                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-xl bg-background border border-surface-border" />
+                        <span className="absolute -top-2 -right-2 w-5 h-5 bg-primary text-white border border-surface-border rounded-full flex items-center justify-center text-xs font-bold">{item.quantity}</span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-text">{item.name}</h4>
+                        <p className="text-sm text-text-light">{item.price} €</p>
+                      </div>
+                      <div className="font-medium text-accent">{(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} €</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Code promo section */}
+                <div className="mb-6 pt-4 border-t border-surface-border">
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 size={16} className="text-emerald-500" />
+                        <span className="text-emerald-400 font-medium text-sm">Code {appliedCoupon.code} appliqué</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-emerald-400 font-bold">- {discountAmount.toFixed(2)} €</span>
+                        <button type="button" onClick={handleRemovePromo} className="text-emerald-500 hover:text-emerald-300 p-1">
+                          <X size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={promoCode}
+                          onChange={e => setPromoCode(e.target.value.toUpperCase())}
+                          placeholder="Code promo"
+                          className="flex-1 px-4 h-11 bg-background border border-surface-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm text-text placeholder:text-text-muted uppercase"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleApplyPromo}
+                          disabled={!promoCode.trim() || isApplyingPromo}
+                          className="px-4 h-11 bg-surface-light border border-surface-border text-text hover:bg-surface-border transition-colors rounded-xl font-medium text-sm disabled:opacity-50 flex items-center justify-center min-w-[100px]"
+                        >
+                          {isApplyingPromo ? <div className="w-4 h-4 border-2 border-text/30 border-t-text rounded-full animate-spin" /> : "Appliquer"}
+                        </button>
+                      </div>
+                      {promoError && <p className="text-primary text-xs mt-2 flex items-center gap-1"><AlertCircle size={12} /> {promoError}</p>}
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t border-surface-border pt-4 space-y-3 mt-6">
+                  <div className="flex justify-between text-text-light">
+                    <span>Sous-total</span>
+                    <span>{parseFloat(subtotal).toFixed(2)} €</span>
+                  </div>
+                  <div className="flex justify-between text-text-light">
+                    <span>Livraison {selectedShipping?.id === 'MONDIAL_RELAY' ? 'en point relais' : 'à domicile'}</span>
+                    <span>
+                      {loadingShipping ? (
+                        'Calcul en cours...'
+                      ) : selectedShipping ? (
+                        selectedShipping.price === 0 ? (
+                          <span style={{ color: '#4ade80' }}>Offerte</span>
+                        ) : (
+                          <span>{Number(selectedShipping.price).toFixed(2)} €</span>
+                        )
+                      ) : (
+                        <span>-</span>
+                      )}
+                    </span>
+                  </div>
+                  {birthdayBonus.active && (
+                    <div className="flex justify-between text-primary font-medium">
+                      <span>Réduction membre anniversaire (-25%)</span>
+                      <span>- {birthdayDiscount.toFixed(2)} €</span>
+                    </div>
+                  )}
+                  {appliedCoupon && (
+                    <div className="flex justify-between text-emerald-400 font-medium">
+                      <span>Réduction ({appliedCoupon.code})</span>
+                      <span>- {discountAmount.toFixed(2)} €</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center text-xl font-serif font-bold pt-4 border-t border-surface-border text-accent">
+                    <span>Total TTC</span>
+                    <span>{parseFloat(total).toFixed(2)} €</span>
+                  </div>
+                </div>
+
+                <div className="pt-5 mt-6 border-t border-surface-border">
+                  <PaymentBadges size="sm" className="justify-center text-text-muted" />
+                </div>
+              </div>
+
+              {/* Badges de réassurance */}
+              <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10 space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="p-2 bg-surface rounded-full text-primary shadow-sm"><Lock size={20} /></div>
+                  <div>
+                    <h4 className="font-medium text-sm text-text">Paiement chiffré et protégé</h4>
+                    <p className="text-xs text-text-muted mt-1">Données chiffrées (SSL 256-bits). Vos coordonnées bancaires ne sont jamais stockées.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="p-2 bg-surface rounded-full text-accent shadow-sm"><ShieldCheck size={20} /></div>
+                  <div>
+                    <h4 className="font-medium text-sm text-text">Sans nicotine</h4>
+                    <p className="text-xs text-text-muted mt-1">Plantes sélectionnées avec soin et informations produit claires.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="p-2 bg-surface rounded-full text-primary shadow-sm"><Heart size={20} /></div>
+                  <div>
+                    <h4 className="font-medium text-sm text-text">Qualité artisanale contrôlée</h4>
+                    <p className="text-xs text-text-muted mt-1">Disponible 7j/7 pour vous accompagner dans votre démarche de bien-être.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Micro Témoignage */}
+              <div className="p-5 border border-surface-border rounded-2xl bg-surface/50 relative">
+                <span className="text-4xl text-accent/20 font-serif absolute top-2 left-3">"</span>
+                <p className="text-sm font-light italic relative z-10 text-text-light">
+                  Le colis est arrivé très vite et de manière hyper discrète. La qualité est au rendez-vous. Merci !
+                  <br /><strong className="text-text mt-2 block not-italic font-medium">Thomas V. (Achat vérifié)</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Widget Mondial Relay Full Width */}
+          {selectedShipping?.id === 'MONDIAL_RELAY' && !selectedRelay && (
+            <div className="lg:col-span-12 order-3 animate-in fade-in slide-in-from-top-4 duration-500">
+              <RelayPicker 
+                zip={formData.zip} 
+                country={formData.countryCode} 
+                onSelect={setSelectedRelay} 
+              />
+            </div>
+          )}
+
+          {/* Bouton de validation final */}
+          <div className="lg:col-span-7 order-4 space-y-6">
             {showIncompleteError && (
-              <div className="mb-4 p-3 bg-primary/10 border border-primary/20 rounded-xl text-primary text-sm flex items-center justify-center gap-2 font-medium">
+              <div className="p-3 bg-primary/10 border border-primary/20 rounded-xl text-primary text-sm flex items-center justify-center gap-2 font-medium">
                 <AlertCircle size={18} />
                 Veuillez remplir tous les champs obligatoires
               </div>
@@ -519,150 +673,8 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
             <p className="text-center text-xs text-text-muted mt-3">
               En passant commande, vous acceptez nos <Link to="/cgv" className="underline hover:text-primary transition-colors">CGV</Link> et notre <Link to="/politique-remboursement" className="underline hover:text-primary transition-colors">politique de remboursement</Link>.
             </p>
-          </form>
-        </div>
-
-        {/* Récapitulatif */}
-        <div className="lg:col-span-5 relative order-first lg:order-last">
-          <div className="sticky top-28 space-y-6">
-
-            <div className="bg-surface p-6 md:p-8 rounded-3xl border border-surface-border">
-              <h3 className="font-serif text-xl mb-6 text-accent">Récapitulatif</h3>
-              <div className="space-y-4 mb-6">
-                {cartItems.map(item => (
-                  <div key={item.id} className="flex gap-4 items-center">
-                    <div className="relative">
-                      <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-xl bg-background border border-surface-border" />
-                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-primary text-white border border-surface-border rounded-full flex items-center justify-center text-xs font-bold">{item.quantity}</span>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-text">{item.name}</h4>
-                      <p className="text-sm text-text-light">{item.price} €</p>
-                    </div>
-                    <div className="font-medium text-accent">{(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} €</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Code promo section */}
-              <div className="mb-6 pt-4 border-t border-surface-border">
-                {appliedCoupon ? (
-                  <div className="flex items-center justify-between p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 size={16} className="text-emerald-500" />
-                      <span className="text-emerald-400 font-medium text-sm">Code {appliedCoupon.code} appliqué</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-emerald-400 font-bold">- {discountAmount.toFixed(2)} €</span>
-                      <button type="button" onClick={handleRemovePromo} className="text-emerald-500 hover:text-emerald-300 p-1">
-                        <X size={16} />
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={promoCode}
-                        onChange={e => setPromoCode(e.target.value.toUpperCase())}
-                        placeholder="Code promo"
-                        className="flex-1 px-4 h-11 bg-background border border-surface-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm text-text placeholder:text-text-muted uppercase"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleApplyPromo}
-                        disabled={!promoCode.trim() || isApplyingPromo}
-                        className="px-4 h-11 bg-surface-light border border-surface-border text-text hover:bg-surface-border transition-colors rounded-xl font-medium text-sm disabled:opacity-50 flex items-center justify-center min-w-[100px]"
-                      >
-                        {isApplyingPromo ? <div className="w-4 h-4 border-2 border-text/30 border-t-text rounded-full animate-spin" /> : "Appliquer"}
-                      </button>
-                    </div>
-                    {promoError && <p className="text-primary text-xs mt-2 flex items-center gap-1"><AlertCircle size={12} /> {promoError}</p>}
-                  </div>
-                )}
-              </div>
-
-              <div className="border-t border-surface-border pt-4 space-y-3 mt-6">
-                <div className="flex justify-between text-text-light">
-                  <span>Sous-total</span>
-                  <span>{parseFloat(subtotal).toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between text-text-light">
-                  <span>Livraison {selectedShipping?.id === 'MONDIAL_RELAY' ? 'en point relais' : 'à domicile'}</span>
-                  <span>
-                    {loadingShipping ? (
-                      'Calcul en cours...'
-                    ) : selectedShipping ? (
-                      selectedShipping.price === 0 ? (
-                        <span style={{ color: '#4ade80' }}>Offerte</span>
-                      ) : (
-                        <span>{Number(selectedShipping.price).toFixed(2)} €</span>
-                      )
-                    ) : (
-                      <span>-</span>
-                    )}
-                  </span>
-                </div>
-                {birthdayBonus.active && (
-                  <div className="flex justify-between text-primary font-medium">
-                    <span>Réduction membre anniversaire (-25%)</span>
-                    <span>- {birthdayDiscount.toFixed(2)} €</span>
-                  </div>
-                )}
-                {appliedCoupon && (
-                  <div className="flex justify-between text-emerald-400 font-medium">
-                    <span>Réduction ({appliedCoupon.code})</span>
-                    <span>- {discountAmount.toFixed(2)} €</span>
-                  </div>
-                )}
-                <div className="flex justify-between items-center text-xl font-serif font-bold pt-4 border-t border-surface-border text-accent">
-                  <span>Total TTC</span>
-                  <span>{parseFloat(total).toFixed(2)} €</span>
-                </div>
-              </div>
-
-              <div className="pt-5 mt-6 border-t border-surface-border">
-                <PaymentBadges size="sm" className="justify-center text-text-muted" />
-              </div>
-            </div>
-
-            {/* Badges de réassurance */}
-            <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10 space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="p-2 bg-surface rounded-full text-primary shadow-sm"><Lock size={20} /></div>
-                <div>
-                  <h4 className="font-medium text-sm text-text">Paiement chiffré et protégé</h4>
-                  <p className="text-xs text-text-muted mt-1">Données chiffrées (SSL 256-bits). Vos coordonnées bancaires ne sont jamais stockées.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="p-2 bg-surface rounded-full text-accent shadow-sm"><ShieldCheck size={20} /></div>
-                <div>
-                  <h4 className="font-medium text-sm text-text">Sans nicotine</h4>
-                  <p className="text-xs text-text-muted mt-1">Plantes sélectionnées avec soin et informations produit claires.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="p-2 bg-surface rounded-full text-primary shadow-sm"><Heart size={20} /></div>
-                <div>
-                  <h4 className="font-medium text-sm text-text">Qualité artisanale contrôlée</h4>
-                  <p className="text-xs text-text-muted mt-1">Disponible 7j/7 pour vous accompagner dans votre démarche de bien-être.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Micro Témoignage */}
-            <div className="p-5 border border-surface-border rounded-2xl bg-surface/50 relative">
-              <span className="text-4xl text-accent/20 font-serif absolute top-2 left-3">"</span>
-              <p className="text-sm font-light italic relative z-10 text-text-light">
-                Le colis est arrivé très vite et de manière hyper discrète. La qualité est au rendez-vous. Merci !
-                <br /><strong className="text-text mt-2 block not-italic font-medium"> Thomas V. (Achat vérifié)</strong>
-              </p>
-            </div>
-
           </div>
-        </div>
+        </form>
       </main>
 
       {/* Footer minimal (checkout only) */}

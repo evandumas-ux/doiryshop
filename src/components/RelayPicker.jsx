@@ -85,7 +85,10 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
         #Zone_Widget {
             display: block !important;
             width: 100% !important;
+            max-width: 100% !important;
             min-height: 600px !important;
+            margin-top: 20px;
+            margin-bottom: 20px;
             background: #ffffff !important;
             clear: both;
         }
@@ -98,7 +101,6 @@ const RelayPicker = ({ zip, country = 'FR', onSelect }) => {
             padding: 4px 8px !important;
         }
       `}</style>
-
       {loading && (
         <div className="flex items-center justify-center p-8 text-text-light text-sm">
           <Loader2 className="animate-spin mr-2" size={18} /> Chargement de la carte...
