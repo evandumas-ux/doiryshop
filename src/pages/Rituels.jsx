@@ -29,7 +29,7 @@ const productGuides = [
     label: 'A utiliser en premier',
     title: 'Pré-roulés botaniques',
     subtitle: 'Le geste prêt, sans nicotine.',
-    image: '/images/etui_preroules.png',
+    image: '/images/pack-5-open.png',
     icon: Flame,
     intro:
       "Les pré-roulés Doiry sont pensés pour les moments où l’envie arrive vite : une pause, une tension, une soirée, une transition. Vous gardez la gestuelle, la fumée texturée, la combustion lente, mais vous sortez du réflexe tabac.",
@@ -67,7 +67,7 @@ const productGuides = [
     label: 'Le vrac pour fumer',
     title: 'Vrac Botanique Doiry',
     subtitle: 'L’alternative pure au tabac dans vos mélanges.',
-    image: '/images/pochon_kraft_noir.png',
+    image: '/images/vrac preroll.png',
     icon: Leaf,
     intro:
       "Le Vrac Botanique Doiry est fait pour rouler, doser et composer. Il remplace le tabac industriel dans vos mélanges, notamment avec vos fleurs de CBD, afin de préserver les arômes, éviter la nicotine et reprendre le contrôle de ce que vous consommez.",
@@ -106,7 +106,7 @@ const productGuides = [
     label: 'Pour boire',
     title: 'Infusions Doiry',
     subtitle: 'Le rituel chaud pour ancrer le corps.',
-    image: '/images/boite_infusion_kraft.png',
+    image: '/images/vracthe.png',
     icon: Sun,
     intro:
       "Les infusions Doiry accompagnent les moments où le corps a besoin de chaleur, de clarté ou d’un retour au calme. Elles ne remplacent pas le geste fumé : elles l’encadrent, l’adoucissent et créent une routine plus complète.",
@@ -138,7 +138,7 @@ const productGuides = [
     label: 'Pour commencer',
     title: 'Coffrets Doiry',
     subtitle: 'Le parcours complet pour installer un nouveau rythme.',
-    image: '/images/coffret_complet_flatlay.png',
+    image: '/images/coffretfumer.png',
     icon: Package,
     intro:
       "Les coffrets rassemblent les gestes essentiels : découvrir, tester, comparer, puis choisir son rituel. Ils sont faits pour celles et ceux qui veulent une transition guidée, belle et simple à suivre.",

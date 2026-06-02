@@ -10,7 +10,7 @@ const descriptions = {
     sélectionnées à la main, séchées à l'air libre. Douces, discrètes, naturelles.
     Roulez votre propre rituel — sans tabac, sans nicotine. Juste le geste,
     purifié.`,
-    img: '/images/pochon_kraft_noir.png'
+    img: '/images/vrac preroll.png'
   },
 
   // L'Instant x5
@@ -18,14 +18,14 @@ const descriptions = {
     desc: `Le format des convaincus. Cinq cônes pré-remplis,
     prêts à l'emploi. Glissez-en un dans votre poche le matin, sortez-le le soir.
     Propre. Discret. Naturel. Notre best-seller.`,
-    img: '/images/etui_preroules.png'
+    img: '/images/pack-5-open.png'
   },
 
   // L'Instant x3
   "linstant-pre-roules-x3": {
     desc: `Le format test. Trois cônes pré-remplis pour découvrir
     Doiryshop sans engagement. Idéal pour un premier essai ou un cadeau.`,
-    img: '/images/etui_preroules.png'
+    img: '/images/pack-3-open.png'
   },
 
   // Coffret Transition
@@ -33,7 +33,7 @@ const descriptions = {
     desc: `Tout pour rouler, rien à chercher. Pochon,
     feuilles non blanchies, filtres en carton, briquet Clipper noir. Le kit
     complet pour ceux qui veulent reprendre le contrôle — proprement.`,
-    img: '/images/coffret_complet_flatlay.png'
+    img: '/images/coffretfumer.png'
   },
 
   // L'Élixir Nocturne 50g
@@ -41,7 +41,7 @@ const descriptions = {
     desc: `Feuilles de framboisier et camomille.
     Deux plantes, un seul but : calmer. Infusez 10 minutes, laissez faire.
     Le sommeil ne se force pas — il s'accompagne.`,
-    img: '/images/boite_infusion_kraft.png'
+    img: '/images/vracthe.png'
   },
 
   // Boîte 20 infusettes
