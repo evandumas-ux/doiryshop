@@ -10,7 +10,6 @@ const ScrollToTop = () => {
       window.history.scrollRestoration = 'manual';
     }
 
-    // Si on a un hash (ex: #boutique), on laisse le scroll aller vers l'ancre
     if (hash) {
       const id = hash.replace('#', '');
       // Petit délai pour s'assurer que le composant est bien rendu
@@ -21,8 +20,17 @@ const ScrollToTop = () => {
         }
       }, 100);
     } else {
-      // Sinon, on remonte tout en haut instantanément
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      // On remonte tout en haut
+      // Utilisation d'un petit timeout pour s'assurer que le nouveau composant est monté
+      const timer = setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'instant' // On veut un saut immédiat pour éviter l'effet de scroll inverse
+        });
+      }, 0);
+      
+      return () => clearTimeout(timer);
     }
   }, [pathname, hash]);
 

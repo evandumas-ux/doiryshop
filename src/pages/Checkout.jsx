@@ -7,11 +7,11 @@ import { createOrder, getUserProfile, getLoyaltyPoints, verifyCoupon, getShippin
 import PaymentBadges from '../components/PaymentBadges';
 import SEO from '../components/SEO';
 import RelayPicker from '../components/RelayPicker';
+import ReassuranceLayer from '../components/ReassuranceLayer';
 import { buildOrderReference, buildRevolutMeUrl } from '../utils/revolutPayment';
 const MotionDiv = motion.div;
 const Checkout = ({ cartItems, setCartItems, user }) => {
-  const { isAuthenticated, signIn } = useLogto();
-  const redirectToAuth = () => signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL || `${window.location.origin}/callback`);
+  const { signIn } = useLogto();
   const subtotal = cartItems.reduce((acc, item) => acc + (parseFloat(item.price) * parseInt(item.quantity)), 0);
 
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -320,7 +320,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
       <header className="w-full bg-surface border-b border-surface-border py-5 px-6 z-10 sticky top-0">
         <div className="max-w-6xl mx-auto flex items-center justify-center">
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img src="/logo.jpg" alt="Doiry Shop" className="h-10 w-auto rounded-lg" />
+            <img src="/favicon.jpg" alt="Doiry Shop" className="h-10 w-auto rounded-lg" />
             <span className="font-display text-lg font-bold tracking-widest text-primary hidden sm:block">DOIRY SHOP</span>
           </Link>
         </div>
@@ -655,7 +655,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
               type="submit"
               disabled={isSubmitting}
               className={`w-full bg-[#5C141F] text-white py-5 rounded-2xl font-serif text-xl hover:bg-[#721924] transition-all transform shadow-lg flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${(!isValid || shippingOptions.length === 0 || !selectedShipping || (selectedShipping.id === 'MONDIAL_RELAY' && !selectedRelay)) && !isSubmitting ? 'opacity-70' : 'hover:-translate-y-1'}`}
-              onClick={(e) => {
+              onClick={() => {
                 if (!isValid || shippingOptions.length === 0 || !selectedShipping) {
                   setShowIncompleteError(true);
                 }
@@ -670,6 +670,7 @@ const Checkout = ({ cartItems, setCartItems, user }) => {
                 <>Continuer vers le paiement</>
               )}
             </button>
+            <ReassuranceLayer className="justify-center items-center" />
             <p className="text-center text-xs text-text-muted mt-3">
               En passant commande, vous acceptez nos <Link to="/cgv" className="underline hover:text-primary transition-colors">CGV</Link> et notre <Link to="/politique-remboursement" className="underline hover:text-primary transition-colors">politique de remboursement</Link>.
             </p>

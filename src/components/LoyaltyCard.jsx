@@ -19,7 +19,7 @@ const LEVEL_META = {
   chasseur: {
     label: 'Chasseur',
     next: 'aigle_royal',
-    image: '/aigle.png',
+    image: '/favicon.jpg',
     threshold: 300,
   },
   aigle_royal: {

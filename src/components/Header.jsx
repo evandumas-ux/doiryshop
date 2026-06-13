@@ -21,17 +21,17 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
     <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-background/95 backdrop-blur-xl shadow-lg shadow-black/20 py-3' : 'bg-transparent py-5'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <Link to="/" onClick={() => window.scrollTo(0, 0)} className="flex items-center gap-3 group">
-          <img src="/logo.jpg" alt="Doiry Shop" className="h-10 md:h-12 w-auto rounded-lg group-hover:scale-105 transition-transform duration-300" />
-          <span className="font-display text-lg md:text-xl font-bold tracking-widest text-primary hidden sm:block">DOIRY SHOP</span>
+          <img src="/favicon.jpg" alt="Doiry Shop" className="h-9 w-9 object-contain rounded-lg group-hover:scale-105 transition-transform duration-500 shadow-lg shadow-black/20" />
+          <span className="font-serif text-lg md:text-xl font-light tracking-[0.4em] text-white hidden sm:block">DOIRY SHOP</span>
         </Link>
         {!simplified && (
-          <nav className="hidden md:flex gap-6 items-center">
-            <a href="/#pourquoi" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Pourquoi</a>
-            <a href="/#gammes" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Gammes</a>
-            <Link to="/about" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Notre histoire</Link>
-            <Link to="/rituels" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Les Rituels</Link>
-            <Link to="/boutique" className="text-sm font-medium tracking-widest uppercase text-text-light hover:text-accent transition-colors duration-300">Boutique</Link>
-            <Link to="/arret-tabac" className="text-sm font-medium tracking-widest uppercase text-text-muted hover:text-accent transition-colors duration-300">Arrêt du Tabac</Link>
+          <nav className="hidden md:flex gap-8 items-center">
+            <a href="/#pourquoi" className="nav-link-premium text-[13px] font-serif tracking-premium text-text-light hover:text-accent">Pourquoi ?</a>
+            <a href="/#gammes" className="nav-link-premium text-[13px] font-serif tracking-premium text-text-light hover:text-accent">Gammes</a>
+            <Link to="/about" className="nav-link-premium text-[13px] font-serif tracking-premium text-text-light hover:text-accent">Notre Histoire</Link>
+            <Link to="/rituels" className="nav-link-premium text-[13px] font-serif tracking-premium text-text-light hover:text-accent">Les Rituels</Link>
+            <Link to="/boutique" className="nav-link-premium text-[13px] font-serif tracking-premium text-text-light hover:text-accent">Boutique</Link>
+            <Link to="/arret-tabac" className="nav-link-premium text-[13px] font-serif tracking-premium text-text-muted hover:text-accent">Arrêt du Tabac</Link>
           </nav>
         )}
         <div className="hidden md:flex items-center gap-3">
@@ -64,12 +64,12 @@ export const Header = ({ onOpenCart, onOpenLogin, onLogout, cartItemsCount, user
           <MotionNav initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="md:hidden absolute top-full left-0 w-full bg-background-light border-b border-surface-border p-6 flex flex-col gap-4 shadow-2xl">
             {!simplified && (
               <>
-                <a href="/#pourquoi" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Pourquoi</a>
-                <a href="/#gammes" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Gammes</a>
-                <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Notre histoire</Link>
-                <Link to="/rituels" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Les Rituels</Link>
-                <Link to="/boutique" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light uppercase tracking-widest font-serif">Boutique</Link>
-                <Link to="/arret-tabac" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-muted uppercase tracking-widest font-serif">Arrêt du Tabac</Link>
+                <a href="/#pourquoi" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light tracking-premium font-serif">Pourquoi ?</a>
+                <a href="/#gammes" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light tracking-premium font-serif">Gammes</a>
+                <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light tracking-premium font-serif">Notre Histoire</Link>
+                <Link to="/rituels" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light tracking-premium font-serif">Les Rituels</Link>
+                <Link to="/boutique" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-light tracking-premium font-serif">Boutique</Link>
+                <Link to="/arret-tabac" onClick={() => setIsMenuOpen(false)} className="text-lg text-text-muted tracking-premium font-serif">Arrêt du Tabac</Link>
                 <hr className="border-surface-border my-2" />
               </>
             )}

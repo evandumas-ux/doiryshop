@@ -11,6 +11,9 @@ import PaymentBadges from '../components/PaymentBadges';
 import UseCasePills from '../components/UseCasePills';
 import Header from '../components/Header';
 import CartDrawer from '../components/CartDrawer';
+import ReassuranceLayer from '../components/ReassuranceLayer';
+import PhotoLightbox from '../components/PhotoLightbox';
+
 const Navbar = Header;
 const MotionDiv = motion.div;
 const MotionImg = motion.img;
@@ -18,68 +21,6 @@ const MotionButton = motion.button;
 const MotionSpan = motion.span;
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-
-const ProductGallery = ({ images: rawImages, productName }) => {
-  const images = (rawImages || []).filter(img => typeof img === 'string' && img.trim() !== '');
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  if (images.length === 0) {
-    return (
-      <div className="aspect-square bg-surface rounded-3xl overflow-hidden shadow-xl border border-surface-border relative">
-        <img src="/placeholders/product-default.png" alt={`Produit Doiry Shop - ${productName}`} className="w-full h-full object-cover" />
-      </div>
-    );
-  }
-
-  const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));
-  const handleNext = () => setCurrentIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
-
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="aspect-square bg-surface rounded-3xl overflow-hidden shadow-xl border border-surface-border relative group">
-        <AnimatePresence mode="wait">
-          <MotionImg
-            key={currentIndex}
-            src={images[currentIndex]}
-            alt={`Produit Doiry Shop - ${productName} - Vue ${currentIndex + 1}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="w-full h-full object-cover"
-          />
-        </AnimatePresence>
-        
-        {images.length > 1 && (
-          <>
-            <button onClick={handlePrev} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur shadow-md flex items-center justify-center text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:scale-105 z-10">
-              <ChevronRight size={20} className="rotate-180" />
-            </button>
-            <button onClick={handleNext} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur shadow-md flex items-center justify-center text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:scale-105 z-10">
-              <ChevronRight size={20} />
-            </button>
-          </>
-        )}
-      </div>
-      
-      {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {images.map((img, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`relative shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                currentIndex === idx ? 'border-primary shadow-md' : 'border-transparent opacity-70 hover:opacity-100'
-              }`}
-            >
-              <img src={img} alt="" className="w-full h-full object-cover" />
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
@@ -147,17 +88,138 @@ const formatCoffretDescription = (description) => {
     </div>
   );
 };
-const ProductFAQItem = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="border-b border-surface-border py-4">
-      <button onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen} className="w-full flex justify-between items-center text-left gap-4 hover:text-accent transition-colors">
-        <span className="font-serif text-lg text-text">{question}</span>
-        <ChevronRight className={`transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-90 text-accent' : 'text-text-muted'}`} size={20} />
-      </button>
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-        <p className="text-text-light font-light leading-relaxed">{answer}</p>
+
+const ProductGallery = ({ images: rawImages, productName }) => {
+  const images = (rawImages || []).filter(img => typeof img === 'string' && img.trim() !== '');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+  if (images.length === 0) {
+    return (
+      <div className="aspect-[4/5] bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl border border-white/5 relative flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-red-950/20 to-transparent pointer-events-none" />
+        <img src="/placeholders/product-default.png" alt={productName} className="relative z-10 w-4/5 h-4/5 object-contain" />
       </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="flex flex-col-reverse md:flex-row gap-4 lg:gap-6">
+        {images.length > 1 && (
+          <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto scrollbar-hide py-1 md:max-h-[500px] shrink-0">
+            {images.map((img, idx) => (
+              <button
+                key={idx}
+                onMouseEnter={() => setCurrentIndex(idx)}
+                onClick={() => setCurrentIndex(idx)}
+                className={`relative w-16 h-20 md:w-20 md:h-24 rounded-xl overflow-hidden border-2 transition-all duration-300 shrink-0 ${
+                  currentIndex === idx 
+                    ? 'border-accent shadow-lg scale-105 z-10' 
+                    : 'border-white/5 opacity-40 hover:opacity-100 hover:border-white/20'
+                }`}
+              >
+                <img src={img} alt="" className="w-full h-full object-contain bg-neutral-900/50 p-1" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div 
+          className="flex-1 relative aspect-[4/5] bg-neutral-950 rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 flex items-center justify-center group cursor-zoom-in"
+          onClick={() => setIsLightboxOpen(true)}
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-white/5 to-transparent pointer-events-none transition-opacity duration-700 group-hover:opacity-20" />
+          
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full h-full flex items-center justify-center p-8 lg:p-12"
+            >
+              <img
+                src={images[currentIndex]}
+                alt={productName}
+                className="w-full h-full object-contain select-none drop-shadow-2xl"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {images.length > 1 && (
+            <div className="absolute inset-x-4 bottom-6 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="flex gap-2 bg-black/40 backdrop-blur-md rounded-full p-1.5 border border-white/10">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setCurrentIndex(prev => prev === 0 ? images.length -1 : prev - 1); }}
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors text-white"
+                >
+                  <ChevronRight size={18} className="rotate-180" />
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setCurrentIndex(prev => prev === images.length -1 ? 0 : prev + 1); }}
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors text-white"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+              <span className="bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[10px] uppercase tracking-widest text-white/70 font-bold">
+                {currentIndex + 1} / {images.length}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <PhotoLightbox 
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        photos={images}
+        currentIndex={currentIndex}
+        onNavigate={(direction) => {
+          if (direction === -1) {
+            setCurrentIndex(prev => prev === 0 ? images.length -1 : prev - 1);
+          } else {
+            setCurrentIndex(prev => prev === images.length -1 ? 0 : prev + 1);
+          }
+        }}
+      />
+    </>
+  );
+};
+
+const BotanicalAccordion = ({ title, children, defaultOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b border-neutral-900 last:border-0">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full py-6 flex justify-between items-center text-left group"
+      >
+        <span className={`text-sm uppercase tracking-[0.2em] font-medium transition-colors duration-300 ${isOpen ? 'text-accent' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
+          {title}
+        </span>
+        <Plus 
+          size={18} 
+          className={`text-neutral-600 transition-transform duration-500 ease-out ${isOpen ? 'rotate-45 text-accent' : ''}`} 
+        />
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="pb-8 text-neutral-400 font-light leading-relaxed text-[15px]">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -169,15 +231,11 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState('description');
   const [reviewStats, setReviewStats] = useState({ total: 0, moyenne: 0 });
   const [suggestions, setSuggestions] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
   useEffect(() => {
-    window.scrollTo(0, 0);
     fetch(`${API_URL}/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -201,47 +259,8 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
       .catch(() => {});
   }, [id]);
 
-  useEffect(() => {
-    if (!product) return;
-    if (import.meta.env.DEV) {
-      console.log('[ProductDetail] product.use_cases:', product.use_cases);
-    }
-  }, [product]);
-
-  const tags = useMemo(() => parseTags(product?.tags), [product]);
-  const safeSlug = product?.slug || '';
-  
-  let emotionalBadge = null;
-  if (safeSlug === 'elixir-nocturne-infusion-vrac' || safeSlug.includes('elixir-nocturne')) emotionalBadge = "PROFIL APAISANT";
-  else if (safeSlug === 'coffret-transition-kit-roulage') emotionalBadge = "ASSEMBLÉ ì LA MAIN";
-  else if (tags.includes('pre-roules') || safeSlug.includes('pre-roules')) emotionalBadge = "PRÊT À L'EMPLOI";
-  else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "IDÉAL CADEAU";
-
-  const isSubstitut = tags.includes('substitut');
-  const isVracBotanique = product?.categorie === 'vrac' || tags.includes('vrac') || safeSlug.includes('vrac');
-  const isTea = tags.includes('tisanes');
-  const stockMessage = product ? getStockMessage(product.stock) : null;
-  const isCoffretDescription = /coffret transition|coffret sérénité/i.test(product?.name || '');
-  const ritualSuggestions = useMemo(() => {
-    if (!product) return [];
-    const productTags = parseTags(product.tags);
-    return suggestions
-      .filter((item) => item.id !== product.id && Number(item.stock) > 0)
-      .map((item) => {
-        const itemTags = parseTags(item.tags);
-        let score = 0;
-        if (item.categorie === product.categorie) score += 3;
-        score += itemTags.filter((tag) => productTags.includes(tag)).length;
-        if (product.categorie === 'tisanes' && ['kits', 'vrac'].includes(item.categorie)) score += 1;
-        if (product.categorie !== 'tisanes' && item.categorie === 'tisanes') score += 1;
-        return { ...item, score };
-      })
-      .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score || Number(a.price) - Number(b.price))
-      .slice(0, 3);
-  }, [product, suggestions]);
-
   const handleAddToCart = () => {
+    if (!product) return;
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
@@ -256,172 +275,23 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const handleAddSuggestedProduct = (suggestedProduct) => {
-    if (!suggestedProduct || Number(suggestedProduct.stock) <= 0) return;
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === suggestedProduct.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === suggestedProduct.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [
-        ...prev,
-        {
-          id: suggestedProduct.id,
-          name: suggestedProduct.name,
-          price: suggestedProduct.price,
-          image_url: suggestedProduct.image_url,
-          image: suggestedProduct.image_url,
-          quantity: 1,
-        },
-      ];
-    });
-    setIsCartOpen(true);
-  };
+  const productTags = useMemo(() => parseTags(product?.tags), [product]);
+  const isTea = useMemo(() => productTags.includes('tisanes') || product?.categorie === 'tisanes', [productTags, product]);
 
-  const handleBuyNow = () => {
-    handleAddToCart();
-    setTimeout(() => navigate('/checkout'), 300);
-  };
+  if (loading) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
+    </div>
+  );
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
-          <p className="text-text-muted text-sm">Chargement du produit...</p>
-        </div>
-      </div>
-    );
-  }
+  if (!product) return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6">
+      <p className="text-neutral-400 font-light italic">L&apos;élixir recherché est introuvable.</p>
+      <Link to="/" className="text-accent hover:underline uppercase tracking-widest text-xs font-bold">Retour à la boutique</Link>
+    </div>
+  );
 
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
-        <p className="text-text-light text-lg">Produit introuvable.</p>
-        <Link to="/" className="text-primary hover:underline">Retour a l'accueil</Link>
-      </div>
-    );
-  }
-
-  const productUrl = `https://doiryshop.com/produit/${product.id}`;
-  const productDescription = product.description || `Découvrez ${product.name} sur Doiry Shop.`;
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: productDescription,
-    image: product.image_url,
-    offers: {
-      '@type': 'Offer',
-      price: Number(product.price).toFixed(2),
-      priceCurrency: 'EUR',
-      availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-    },
-  };
-
-  if (reviewStats.total > 0) {
-    structuredData.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: String(reviewStats.moyenne),
-      reviewCount: String(reviewStats.total),
-    };
-  }
-
-  const tabContent = {
-    description: (
-      <div className="text-text-light font-light leading-relaxed space-y-4">
-        {isCoffretDescription ? formatCoffretDescription(product.description) : (
-          <div className="space-y-4">
-            <p className="font-medium text-text text-lg">{product.short_description || product.name}</p>
-            <p>{product.description || "Un assemblage végétal conçu pour offrir une alternative claire."}</p>
-            <p>Ce produit se présente sous un format optimisé pour garantir une conservation idéale et une prise en main immédiate. ì l'usage, la texture se veut homogène et la sensation maîtrisée, pour accompagner vos moments de détente sans les inconvénients de la nicotine.</p>
-            <p>Pensé aussi bien pour une fin de journée apaisée que pour un usage régulier, il s'adresse à ceux qui souhaitent maintenir un geste familier tout en optant pour une composition transparente.</p>
-          </div>
-        )}
-      </div>
-    ),
-    composition: (
-      <div className="text-text-light font-light leading-relaxed space-y-4">
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div className="p-4 bg-surface rounded-xl border border-surface-border">
-            <h4 className="font-serif text-text font-medium mb-3 flex items-center gap-2">
-              <Leaf size={16} className="text-green-400" /> Détail de la composition
-            </h4>
-            {product.composition_details ? (
-              <p className="text-sm">{product.composition_details}</p>
-            ) : (
-              <ul className="text-sm space-y-2">
-                <li>⬢ Base : {isSubstitut ? 'Feuilles de framboisier et plantes douces' : 'Plantes à infusion'}</li>
-                <li>⬢ Additifs : Aucun</li>
-                <li>⬢ Nicotine : 0mg</li>
-                <li>⬢ Traitement : Séchage naturel</li>
-              </ul>
-            )}
-          </div>
-          <div className="p-4 bg-surface rounded-xl border border-surface-border">
-            <h4 className="font-serif text-text font-medium mb-3 flex items-center gap-2">
-              <Package size={16} className="text-accent" /> Préparation
-            </h4>
-            <p className="text-sm">Chaque composant est sélectionné pour garantir l'absence de résidus inutiles, assurant ainsi une texture homogène et une utilisation stable.</p>
-          </div>
-        </div>
-      </div>
-    ),
-    informations: (
-      <div className="text-text-light font-light leading-relaxed space-y-4">
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div className="p-4 border border-surface-border rounded-xl">
-            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Format physique</span>
-            <span className="text-text font-medium">{product.unit_label ? product.unit_label : 'Conditionnement standard'}</span>
-          </div>
-          <div className="p-4 border border-surface-border rounded-xl">
-            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Poids net</span>
-            <span className="text-text font-medium">{product.weight_grams ? `${product.weight_grams} g` : 'Donnée à compléter'}</span>
-          </div>
-          <div className="p-4 border border-surface-border rounded-xl">
-            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Rythme d'usage suggéré</span>
-            <span className="text-text font-medium">{product.usage_indication || 'Adaptable selon vos besoins réguliers.'}</span>
-          </div>
-          <div className="p-4 border border-surface-border rounded-xl">
-            <span className="block text-xs text-text-muted uppercase tracking-wider mb-1">Conservation</span>
-            <span className="text-text font-medium">{product.conservation_tips || 'ì conserver au sec et à l\'abri de la lumière.'}</span>
-          </div>
-        </div>
-      </div>
-    ),
-    utilisation: (
-      <div className="text-text-light font-light leading-relaxed space-y-4">
-        {product.mode_utilisation && <p>{product.mode_utilisation}</p>}
-        <div className="space-y-3">
-          {(isTea
-            ? [
-                { step: '1', text: "Faites chauffer l'eau sans la porter à ébullition trop forte." },
-                { step: '2', text: 'Dosez selon la recommandation indiquée sur le produit.' },
-                { step: '3', text: 'Laissez infuser le temps conseillé, puis prenez le temps de ralentir.' },
-                { step: '4', text: 'Conservez le sachet ou le pochon dans un endroit sec.' },
-              ]
-            : [
-                { step: '1', text: "Utilisez votre base ou votre pré-roulé au moment qui vous convient." },
-                { step: '2', text: 'Avancez doucement pour garder un geste simple et confortable.' },
-                { step: '3', text: 'Refermez proprement le conditionnement après usage.' },
-                { step: '4', text: "Conservez le produit à l'abri de l'humidité et de la lumière." },
-              ]).map((item) => (
-            <div key={item.step} className="flex gap-4 items-start p-3 rounded-xl hover:bg-surface/50 transition-colors">
-              <span className="w-8 h-8 rounded-full bg-primary/10 text-primary font-serif font-bold text-sm flex items-center justify-center shrink-0">
-                {item.step}
-              </span>
-              <p className="text-sm pt-1">{item.text}</p>
-            </div>
-          ))}
-        </div>
-        <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-4">
-          <p className="text-sm text-primary font-medium">Produit réservé aux personnes majeures (+18 ans).</p>
-        </div>
-      </div>
-    ),
-  };
+  const discountAmount = product.old_price ? Math.round(((product.old_price - product.price) / product.old_price) * 100) : 0;
 
   return (
     <>
@@ -429,392 +299,232 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         onOpenCart={() => setIsCartOpen(true)} 
         onOpenLogin={() => navigate('/login')} 
         onLogout={() => {}} 
-        cartItemsCount={cartItemsCount} 
+        cartItemsCount={cartItems.reduce((acc, i) => acc + i.quantity, 0)} 
         user={user} 
       />
-      <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="min-h-screen bg-background pt-24 pb-20 sm:pb-20">
-        <SEO title={`${product.name} | Doiry Shop`} description={productDescription} image={product.image_url} url={productUrl} type="product">
-          <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
-        </SEO>
+      
+      <main className="min-h-screen bg-background pt-32 pb-24">
+        <SEO title={`${product.name} | Doiry Shop`} description={product.description} image={product.image_url} />
 
-        <div className="max-w-7xl mx-auto px-6 mb-8">
-          <nav className="flex items-center gap-2 text-xs text-text-muted">
-            <Link to="/" className="hover:text-accent transition-colors">Accueil</Link>
-            <ChevronRight size={12} />
-            <a href="/#boutique" className="hover:text-accent transition-colors">Produits</a>
-            <ChevronRight size={12} />
-            <span className="text-text-light">{product.name}</span>
-          </nav>
-        </div>
-
-        <section className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-5 lg:gap-16 items-start">
-            <MotionDiv initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }} className="relative">
-              {product.is_best_value && (
-                <div className="absolute top-4 left-4 bg-[#8B7355] text-white text-xs font-bold px-4 py-1.5 rounded-md z-10 shadow-lg">
-                  Meilleur choix
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+            
+            {/* Left Column: Sticky Gallery */}
+            <div className="lg:sticky lg:top-32 space-y-8">
+              <ProductGallery images={product.images?.length > 0 ? product.images : [product.image_url]} productName={product.name} />
+              
+              <div className="hidden lg:grid grid-cols-2 gap-6 opacity-40">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck size={18} className="text-accent" />
+                  <span className="text-[10px] uppercase tracking-widest text-white">Sécurité Totale</span>
                 </div>
-              )}
-              {emotionalBadge && !product.is_best_value && (
-                <div className="absolute top-4 right-4 bg-background/80 backdrop-blur-sm border border-surface-border text-text-light px-3 py-1.5 rounded text-[10px] font-bold tracking-widest z-10 uppercase shadow-lg">
-                  {emotionalBadge}
+                <div className="flex items-center gap-3">
+                  <Package size={18} className="text-accent" />
+                  <span className="text-[10px] uppercase tracking-widest text-white">Colis Discret</span>
                 </div>
-              )}
-                <ProductGallery images={product.images && product.images.length > 0 ? product.images : (product.image_url ? [product.image_url] : [])} productName={product.name} />
-            </MotionDiv>
+              </div>
+            </div>
 
-            <MotionDiv initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }} className="flex flex-col">
-              {stockMessage && (
-                <div className="flex flex-wrap items-center gap-3 mb-5">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-background border border-surface-border text-text-light">
-                    {stockMessage}
-                  </span>
-                </div>
-              )}
-
-              {product.tagline && (
-                <span className="text-accent text-sm font-semibold uppercase tracking-[0.2em] mb-2">
-                  {product.tagline}
+            {/* Right Column: Information & Purchase */}
+            <div className="flex flex-col">
+              {/* Category Badge */}
+              <div className="mb-4">
+                <span className="text-[10px] uppercase tracking-[0.3em] font-bold py-1 px-3 border border-white/10 rounded-full text-neutral-500 inline-block">
+                  {product.categorie === 'vrac' ? 'Botanique en Vrac' : product.categorie === 'pre-roules' ? 'Pré-Roulés Premium' : 'Tisanes & Rituels'}
                 </span>
-              )}
+              </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-text mb-2 leading-tight">{product.name}</h1>
-              {product.tagline_subtitle && (
-                <p className="text-sm text-text-muted italic mb-4">{product.tagline_subtitle}</p>
-              )}
+              {/* Title & Reviews */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-6 leading-[1.1] tracking-wide">
+                {product.name}
+              </h1>
 
               {reviewStats.total > 0 && (
-                <div className="flex items-center gap-2 mb-4">
-                  <StarRating rating={reviewStats.moyenne} size={16} />
-                  <span className="text-sm text-text-muted">
-                    {reviewStats.moyenne.toFixed(1)} · {reviewStats.total} avis
+                <div className="flex items-center gap-3 mb-8">
+                  <StarRating rating={reviewStats.moyenne} size={14} />
+                  <span className="text-xs text-neutral-500 uppercase tracking-widest">
+                    {reviewStats.moyenne.toFixed(1)} / 5 — {reviewStats.total} avis clients
                   </span>
                 </div>
               )}
 
-              <div className="product-price-container">
-                <div className="flex items-baseline gap-4">
-                  <span className="product-price-current">{formatPrice(product.price)} TTC</span>
-                  {product.stock > 0 ? (
-                    <span className="text-sm text-text-muted">{stockMessage || 'En stock'}</span>
-                  ) : (
-                    <span className="text-sm text-red-400 font-medium">Rupture de stock</span>
+              {/* Pricing Section (CRO Optimized) */}
+              <div className="mb-10 space-y-1">
+                <div className="flex items-center gap-4">
+                  <span className="text-5xl md:text-6xl font-serif text-accent tracking-tight">
+                    {formatPrice(product.price)}
+                  </span>
+                  {product.old_price && (
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl text-neutral-600 line-through decoration-neutral-700">
+                        {formatPrice(product.old_price)}
+                      </span>
+                      <span className="text-xs font-bold px-2 py-0.5 bg-accent/10 text-accent rounded uppercase tracking-wider">
+                        -{discountAmount}%
+                      </span>
+                    </div>
                   )}
                 </div>
-                {product.price_per_unit && product.unit_label && (
-                  <p className="text-xs text-text-muted mt-[-0.25rem]">
-                    soit {formatPrice(product.price_per_unit)} / {product.unit_label === 'pre-roule' ? 'pré-roulé' : product.unit_label}
+                {product.price_per_unit && (
+                  <p className="text-[10px] uppercase tracking-widest text-neutral-500 ml-1">
+                    soit {formatPrice(product.price_per_unit)} / {product.unit_label || 'unité'}
                   </p>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-6 mt-4">
-                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
-                  <ShieldCheck size={14} className="mr-1.5 text-accent" /> Sans nicotine
-                </span>
-                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
-                  <Leaf size={14} className="mr-1.5 text-primary" /> Assemblé avec soin
-                </span>
-                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface border border-surface-border text-xs font-medium text-text-light">
-                  <Package size={14} className="mr-1.5 text-accent" /> Prêt à l'emploi
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-5 mb-6 mt-2">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center border-2 border-surface-border rounded-xl overflow-hidden bg-surface">
-                      <button onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="px-4 py-3 text-text hover:bg-surface-light hover:text-accent transition-colors">
-                        <Minus size={16} />
-                      </button>
-                      <span className="px-6 py-3 font-medium text-lg min-w-[56px] text-center text-text font-serif">{quantity}</span>
-                      <button onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))} className="px-4 py-3 text-text hover:bg-surface-light hover:text-accent transition-colors">
-                        <Plus size={16} />
-                      </button>
-                    </div>
-                    {quantity === 2 && (
-                      <span className="text-xs text-accent/80 font-medium bg-accent/10 px-3 py-1.5 rounded-full whitespace-nowrap">
-                        Format souvent choisi
-                      </span>
-                    )}
+              {/* Action Block */}
+              <div className="space-y-6 mb-12">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center h-14 border border-white/10 rounded-2xl bg-neutral-900/50 backdrop-blur-sm px-2">
+                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors">
+                      <Minus size={14} />
+                    </button>
+                    <span className="w-12 text-center font-serif text-lg text-white">{quantity}</span>
+                    <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors">
+                      <Plus size={14} />
+                    </button>
                   </div>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <MotionButton whileTap={{ scale: 0.97 }} onClick={handleAddToCart} disabled={product.stock <= 0} className={`w-full flex items-center justify-center gap-3 py-4 rounded-xl font-medium text-lg transition-all duration-300 shadow-lg ${
-                    added ? 'bg-[#8b1a1a] text-white shadow-[#8b1a1a]/25' : product.stock > 0 ? 'bg-[#8b1a1a] text-white hover:bg-[#6e1515] shadow-[#8b1a1a]/25' : 'bg-surface text-text-muted cursor-not-allowed shadow-none'
-                  }`}>
+                  
+                  <MotionButton 
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleAddToCart}
+                    disabled={product.stock <= 0}
+                    className={`flex-1 h-14 rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all duration-500 shadow-2xl shadow-accent/5 flex items-center justify-center gap-3 ${
+                      added ? 'bg-emerald-500 text-neutral-950' : product.stock > 0 ? 'bg-accent text-neutral-950 hover:brightness-110 hover:shadow-accent/20' : 'bg-neutral-900 text-neutral-600 cursor-not-allowed'
+                    }`}
+                  >
                     <AnimatePresence mode="wait">
                       {added ? (
-                        <MotionSpan key="added" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
-                          <CheckCircle2 size={20} /> Ajouté !
+                        <MotionSpan key="added" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} className="flex items-center gap-2">
+                          <CheckCircle2 size={18} /> Ajouté au Panier
                         </MotionSpan>
                       ) : (
-                        <MotionSpan key="add" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center gap-2">
-                          <ShoppingCart size={20} /> Ajouter au panier
+                        <MotionSpan key="add" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} className="flex items-center gap-2">
+                          <ShoppingCart size={18} /> Ajouter au Panier
                         </MotionSpan>
                       )}
                     </AnimatePresence>
                   </MotionButton>
-
-                  <button onClick={handleBuyNow} disabled={product.stock <= 0} className="w-full flex items-center justify-center gap-3 py-4 rounded-xl font-medium text-lg bg-primary text-white hover:bg-primary-dark transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed">
-                    <Zap size={18} /> Commander maintenant
-                  </button>
                 </div>
+
+                <ReassuranceLayer className="justify-start gap-8" />
               </div>
 
-              {isVracBotanique && (
-                <div className="mb-6 rounded-2xl border border-primary/25 bg-[#0d0d0d] p-5 shadow-lg shadow-black/20 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('/bg_texture.png')] bg-cover bg-center opacity-[0.04] pointer-events-none" />
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-2 mb-3 text-accent">
-                      <Leaf size={18} />
-                      <h2 className="font-serif text-xl text-text">L'alternative pure pour vos mélanges</h2>
-                    </div>
-                    <p className="text-sm md:text-base leading-7 text-text-light font-light">
-                      « Ne gâchez plus les bienfaits et les arômes de vos fleurs de CBD avec du tabac chimique chargé de nicotine. Notre Vrac Botanique est le substitut ultime : 100% naturel, sans aucune substance addictive, avec une combustion douce et un goût subtil qui respecte vos plantes. Reprenez le contrôle de votre rituel. »
+              {/* Accordions Section */}
+              <div className="border-t border-neutral-900 pt-2">
+                <BotanicalAccordion title="Description de l'Élixir" defaultOpen={true}>
+                  <div className="space-y-4">
+                    <p className="text-lg text-neutral-200 font-serif leading-relaxed italic">
+                      &quot;{product.tagline || 'Un moment suspendu, entre force et douceur.'}&quot;
                     </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {['Sans nicotine', '100% naturel', 'Mix CBD', 'Combustion douce'].map((item) => (
-                        <span key={item} className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-text-light">
-                          {item}
-                        </span>
-                      ))}
+                    <p>{product.short_description || product.description}</p>
+                    <UseCasePills useCases={parseTags(product.use_cases)} />
+                  </div>
+                </BotanicalAccordion>
+
+                <BotanicalAccordion title="Le Rituel de Consommation">
+                  <div className="space-y-4">
+                    <p>Pour apprécier pleinement les nuances de cet assemblage, nous recommandons une approche lente et attentive.</p>
+                    <ul className="space-y-3">
+                      <li className="flex gap-4 items-start">
+                        <span className="text-accent font-serif text-xl leading-none">01</span>
+                        <p>Préparez votre environnement : une lumière douce et un moment pour vous.</p>
+                      </li>
+                      <li className="flex gap-4 items-start">
+                        <span className="text-accent font-serif text-xl leading-none">02</span>
+                        <p>{product.mode_utilisation || 'Utilisez une petite quantité pour commencer et appréciez la combustion douce.'}</p>
+                      </li>
+                      <li className="flex gap-4 items-start">
+                        <span className="text-accent font-serif text-xl leading-none">03</span>
+                        <p>Refermez soigneusement le pochon pour préserver les huiles essentielles des plantes.</p>
+                      </li>
+                    </ul>
+                  </div>
+                </BotanicalAccordion>
+
+                <BotanicalAccordion title="Composition & Origine">
+                  <div className="grid sm:grid-cols-2 gap-8">
+                    <div>
+                      <h4 className="text-white text-xs uppercase tracking-widest mb-3 font-bold">Ingrédients</h4>
+                      <p className="text-sm font-light leading-relaxed">
+                        {product.name.includes("L'Essentiel") || productTags.includes('pre-roules') 
+                          ? "100% Feuilles de framboisier (Rubus idaeus). Sélectionnées pour leur finesse et leur séchage optimal."
+                          : isTea 
+                            ? "Camomille matricaire et feuilles de framboisier. Un mélange équilibré pour un rituel apaisant."
+                            : (product.composition_details || "Plantes sèches sélectionnées (Framboisier, Molène, Guimauve) — Sans tabac, sans nicotine, sans additifs.")
+                        }
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="text-white text-xs uppercase tracking-widest mb-3 font-bold">Engagement</h4>
+                      <p className="text-sm font-light leading-relaxed">
+                        Récolte responsable et assemblage à la main. Garanti sans nicotine, sans tabac et sans aucun ajout chimique ou arôme artificiel.
+                      </p>
                     </div>
                   </div>
-                </div>
-              )}
+                </BotanicalAccordion>
 
-              <div className="text-text-light font-light leading-relaxed text-base mb-6">
-                <UseCasePills useCases={
-                  isSubstitut ? ["Alternative végétale", "Séchage naturel", "Format adapté"] :
-                  isTea ? ["Infusion douce", "Sans excitant"] :
-                  ["Prêt à l'emploi", "Soin et qualité"]
-                } className="mb-4" />
-                {isCoffretDescription ? formatCoffretDescription(product.short_description || product.description) : (product.short_description || product.description)}
-              </div>
-              
-              {product.categorie === 'pre-roules' && (
-                <p className="text-xs text-text-muted mb-8 -mt-4 italic">
-                  Ce produit ne contient ni tabac ni nicotine. Vente réservée aux personnes majeures.
-                </p>
-              )}
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-                {[
-                  { icon: <ShieldCheck size={18} />, label: 'Sans nicotine' },
-                  { icon: <Package size={18} />, label: 'Expédition sous 24h' },
-                  { icon: <Lock size={18} />, label: 'Paiement sécurisé' },
-                  { icon: isTea ? <Gift size={18} /> : <Wind size={18} />, label: isTea ? 'Coffrets soignés' : 'Rituel discret' },
-                ].map((item) => (
-                  <div key={item.label} className="flex flex-col items-center text-center gap-2 p-4 bg-surface/50 rounded-xl border border-surface-border">
-                    <span className="text-accent">{item.icon}</span>
-                    <span className="text-[11px] text-text-muted leading-tight">{item.label}</span>
+                <BotanicalAccordion title="Livraison & Retours">
+                  <div className="space-y-4 text-sm">
+                    <p>Expédition via <strong>Mondial Relay</strong> uniquement. Votre colis est déposé sous 24h ouvrées dans un emballage neutre et discret.</p>
+                    <div className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+                      <Clock size={18} className="text-accent shrink-0" />
+                      <p className="text-xs">France : 3-5 jours ouvrés en Point Relais. <br/> Europe : 5-7 jours ouvrés.</p>
+                    </div>
+                    <p className="text-xs opacity-50 italic">Pour des raisons d'hygiène et de sécurité, les retours ne sont acceptés que si le sceau de garantie est intact.</p>
                   </div>
-                ))}
+                </BotanicalAccordion>
               </div>
-            </MotionDiv>
-          </div>
-        </section>
-
-        <section className="max-w-7xl mx-auto px-6 mt-20">
-          <MotionDiv initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="flex border-b border-surface-border mb-8 gap-1 overflow-x-auto scrollbar-hide">
-              {[
-                { key: 'description', label: 'Description' },
-                { key: 'composition', label: 'Composition' },
-                { key: 'informations', label: 'Informations' },
-                { key: 'utilisation', label: 'Utilisation' },
-                ...(reviewStats.total > 0 ? [{ key: 'reviews', label: `Avis clients (${reviewStats.total})` }] : []),
-              ].map((tab) => (
-                <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`relative px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === tab.key ? 'text-accent' : 'text-text-muted hover:text-text-light'}`}>
-                  {tab.label}
-                  {activeTab === tab.key && (
-                    <MotionDiv layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
-                  )}
-                </button>
-              ))}
             </div>
+          </div>
+        </div>
 
-            <AnimatePresence mode="wait">
-              <MotionDiv key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.25 }} className={activeTab === 'reviews' ? '' : 'max-w-3xl'}>
-                {activeTab === 'reviews' ? <ProductReviews productId={id} user={user} /> : tabContent[activeTab]}
-              </MotionDiv>
-            </AnimatePresence>
-          </MotionDiv>
-        </section>
-
-        {ritualSuggestions.length > 0 && (
-          <section className="py-14 bg-background">
-            <div className="max-w-7xl mx-auto px-6">
-              <MotionDiv initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-                <p className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-2">Suggestion</p>
-                <h2 className="text-2xl md:text-3xl font-serif text-text">Complétez votre rituel</h2>
-              </MotionDiv>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {ritualSuggestions.map((item) => {
-                  const image =
-                    item?.images && item.images.length > 0
-                      ? item.images[0]
-                      : (item.image_url || '/placeholders/product-default.png');
-                  const outOfStock = Number(item.stock) <= 0;
-
-                  return (
-                    <Link
-                      key={item.id}
-                      to={`/produit/${item.id}`}
-                      className="group bg-surface border border-surface-border rounded-2xl overflow-hidden hover:border-accent/30 transition-colors"
-                    >
-                      <div className="flex gap-4 p-4">
-                        <div className="w-20 h-20 rounded-xl overflow-hidden bg-background border border-surface-border shrink-0">
-                          <img src={image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        </div>
-                        <div className="min-w-0 flex-1 flex flex-col justify-between">
-                          <div className="min-w-0">
-                            <h3 className="font-serif text-text text-lg leading-snug truncate">{item.name}</h3>
-                            <p className="text-text-muted text-sm mt-1">
-                              {item.short_description || item.description}
-                            </p>
-                          </div>
-                          <div className="flex items-center justify-between gap-3 mt-3">
-                            <p className="text-accent font-serif text-lg">{formatPrice(item.price)}</p>
-                            <button
-                              type="button"
-                              disabled={outOfStock}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleAddSuggestedProduct(item);
-                              }}
-                              className={`h-9 px-3 rounded-xl text-sm font-medium transition-colors ${
-                                outOfStock
-                                  ? 'bg-surface-light text-text-muted border border-surface-border cursor-not-allowed'
-                                  : 'bg-[#8b1a1a] text-white hover:bg-[#6e1515]'
-                              }`}
-                            >
-                              Ajouter au panier
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
+        {/* Suggestions Section */}
+        {suggestions.length > 0 && (
+          <section className="mt-32 max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="mb-12">
+              <span className="text-accent text-[10px] uppercase tracking-[0.4em] font-bold mb-4 block">Découverte</span>
+              <h2 className="text-3xl font-serif text-white tracking-wide">Complétez votre rituel</h2>
+            </div>
+            
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              {suggestions.filter(s => s.id !== product.id).slice(0, 4).map((item) => (
+                <Link key={item.id} to={`/produit/${item.id}`} className="group space-y-4">
+                  <div className="aspect-[4/5] bg-neutral-900 rounded-2xl overflow-hidden border border-white/5 relative">
+                    <img src={item.image_url} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-serif text-lg group-hover:text-accent transition-colors">{item.name}</h3>
+                    <p className="text-accent text-sm mt-1">{formatPrice(item.price)}</p>
+                  </div>
+                </Link>
+              ))}
             </div>
           </section>
         )}
+      </main>
 
-        <section className="mt-24 py-20 bg-background-light relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-              <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">
-                {isTea ? 'Le moment calme' : 'Le geste autrement'}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-serif text-text mb-4">
-                {isTea ? "Une routine d'infusion simple à installer" : 'Une base végétale pensée pour la transition'}
-              </h2>
-              <p className="text-text-light font-light max-w-2xl mx-auto text-lg">
-                {isTea
-                  ? "Des compositions courtes, un usage lisible et des formats qui s'adaptent facilement aux soirs chargés comme aux pauses lentes."
-                  : "Des références faites pour conserver le rituel tout en simplifiant la composition et en gardant un repère clair : sans nicotine."}
-              </p>
-            </MotionDiv>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
-                {
-                  icon: <Leaf className="w-8 h-8 text-primary" />,
-                  title: isTea ? 'Mélanges lisibles' : 'Feuilles de framboisier',
-                  description: isTea ? 'Des plantes identifiées clairement, sans narration floue.' : 'Une base végétale douce, sélectionnée pour accompagner le geste.',
-                },
-                {
-                  icon: <ShieldCheck className="w-8 h-8 text-accent" />,
-                  title: 'Sans nicotine',
-                  description: "Un point de repère simple pour différencier la gamme et garder une lecture claire du produit.",
-                },
-                {
-                  icon: <Clock className="w-8 h-8 text-primary" />,
-                  title: isTea ? 'Rituel du soir' : 'Format quotidien',
-                  description: isTea ? 'Des formats vrac ou infusettes faciles à intégrer à une routine calme.' : 'Des formats vrac, pré-roulés et coffrets adaptés aux usages du quotidien.',
-                },
-                {
-                  icon: isTea ? <Gift className="w-8 h-8 text-accent" /> : <Wind className="w-8 h-8 text-accent" />,
-                  title: isTea ? 'Prêt à offrir' : 'Composition plus simple',
-                  description: isTea ? 'Boites, pochons et coffrets soignes pour soi ou pour offrir.' : 'Moins de surcharge, plus de lisibilite, dans un conditionnement propre.',
-                },
-              ].map((item) => (
-                <MotionDiv key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bg-surface p-8 rounded-2xl border border-surface-border text-center hover:border-accent/20 transition-all duration-500">
-                  <div className="inline-flex p-4 bg-primary/10 rounded-full mb-5">{item.icon}</div>
-                  <h3 className="text-xl font-serif font-semibold mb-3 text-text">{item.title}</h3>
-                  <p className="text-text-light font-light leading-relaxed">{item.description}</p>
-                </MotionDiv>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="max-w-3xl mx-auto px-6 py-20 mt-10 border-t border-surface-border">
-          <h2 className="text-2xl md:text-3xl font-serif text-text mb-8 text-center">Questions fréquentes</h2>
-          <div className="space-y-2">
-            <ProductFAQItem 
-              question="Ce produit est-il légal ?"
-              answer="Oui. La totalité de notre gamme respecte le cadre légal en vigueur. Nos produits ne contiennent aucune substance prohibée, ni tabac, ni CBD au-delà des normes autorisées le cas échéant, ni nicotine."
-            />
-            <ProductFAQItem 
-              question="Que contient concrètement ce produit ?"
-              answer={`Ce produit est constitué à 100% de plantes naturelles. Il n'y a aucun agent de texture, de saveur ou de conservation artificiel. Juste la plante, séchée et préparée.`}
-            />
-            <ProductFAQItem 
-              question="ì quelle fréquence puis-je l'utiliser ?"
-              answer="L'utilisation dépend de vos besoins personnels. Étant donné l'absence de nicotine, ce produit ne crée pas de dépendance physique. Vous pouvez l'utiliser pour remplacer progressivement un ancien rituel ou pour une pause ponctuelle."
-            />
-            <ProductFAQItem 
-              question="Combien de temps se conserve-t-il ?"
-              answer="S'il est maintenu dans son emballage d'origine, à l'abri de la lumière et de l'humidité, le produit conserve ses propriétés et sa texture optimale pendant plusieurs mois."
-            />
-          </div>
-        </section>
-
-        <section className="py-16">
-          <div className="max-w-3xl mx-auto px-6 text-center">
-            <p className="text-text-light font-light mb-6">
-              Vous avez des questions ? Écrivez-nous à <strong className="text-accent">contact@doiryshop.com</strong>
-            </p>
-            <Link to="/" className="inline-flex items-center gap-2 text-primary font-medium hover:text-primary-light transition-colors">
-              <ArrowLeft size={16} /> Voir tous nos produits
-            </Link>
-          </div>
-        </section>
-      </MotionDiv>
-
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl border-t border-surface-border p-4 flex items-center gap-3 sm:hidden">
-        <div className="flex-1">
-          <p className="font-serif font-medium text-accent text-lg">{formatPrice(product.price)}</p>
-          <p className="text-[11px] text-text-muted">{product.stock > 0 ? 'En stock' : 'Rupture'}</p>
-        </div>
-        <button onClick={handleAddToCart} disabled={product.stock <= 0} className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-medium transition-all ${
-          added ? 'bg-[#8b1a1a] text-white' : product.stock > 0 ? 'bg-[#8b1a1a] text-white hover:bg-[#6e1515] shadow-lg shadow-[#8b1a1a]/25' : 'bg-surface text-text-muted cursor-not-allowed'
-        }`}>
-          {added ? <><CheckCircle2 size={18} /> Ajouté !</> : <><ShoppingCart size={18} /> Ajouter au panier</>}
-        </button>
-      </div>
-
+      {/* Cart Drawer & Reviews Integration */}
       <CartDrawer 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)} 
         cartItems={cartItems} 
         products={suggestions} 
-        onAddProduct={handleAddSuggestedProduct} 
+        onAddProduct={(p) => {
+           setCartItems(prev => {
+             const ex = prev.find(i => i.id === p.id);
+             if (ex) return prev.map(i => i.id === p.id ? {...i, quantity: i.quantity + 1} : i);
+             return [...prev, { ...p, quantity: 1, image: p.image_url }];
+           });
+        }} 
         onRemove={(id) => setCartItems(prev => prev.filter(item => item.id !== id))} 
-        onUpdateQuantity={(id, change) => {
+        onUpdateQuantity={(id, delta) => {
           setCartItems(prev => prev.map(item => {
             if (item.id !== id) return item;
-            const nextQ = item.quantity + change;
-            return nextQ > 0 ? { ...item, quantity: nextQ } : null;
+            const nq = item.quantity + delta;
+            return nq > 0 ? {...item, quantity: nq} : null;
           }).filter(Boolean));
-        }} 
+        }}
         onCheckout={() => navigate('/checkout')} 
       />
     </>

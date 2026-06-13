@@ -91,43 +91,47 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
         user={user}
       />
 
-      <main className="max-w-7xl mx-auto px-6 py-12 pt-32">
-        <div className="text-center mb-16">
-          <span className="text-accent text-xs font-semibold tracking-[0.25em] uppercase mb-4 block">Catalogue</span>
-          <h1 className="text-4xl md:text-5xl font-serif text-text mb-4">Nos produits</h1>
-          <p className="text-text-light font-light max-w-2xl mx-auto text-lg leading-relaxed">
-            Une sélection concise, lisible et faite pour accompagner un changement d'habitude sans bruit inutile.
+      <main className="max-w-7xl mx-auto px-8 py-24 pt-48">
+        <div className="text-center mb-24">
+          <span className="text-accent text-[11px] font-medium tracking-premium mb-6 block">Collection Exclusive</span>
+          <h1 className="text-5xl md:text-6xl font-serif text-text mb-8 tracking-premium">Le Catalogue Doiry</h1>
+          <p className="text-text-muted max-w-2xl mx-auto font-light text-lg leading-relaxed">
+            Une sélection de rituels botaniques choisis avec une rigueur absolue pour accompagner vos moments de clarté.
           </p>
         </div>
 
-        <div className="flex flex-col items-center mb-12">
-          <div className="flex items-center gap-2 p-1.5 bg-surface rounded-2xl border border-surface-border overflow-x-auto scrollbar-hide max-w-full">
-            <div className="px-4 py-2 flex items-center gap-2 text-text-muted border-r border-surface-border mr-2 shrink-0">
-              <Filter size={16} />
-              <span className="text-xs font-semibold tracking-wider uppercase">Filtrer</span>
-            </div>
+        <div className="flex flex-col items-center mb-20">
+          <div className="flex items-center gap-10 p-2 overflow-x-auto scrollbar-hide max-w-full">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`relative px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${activeCategory === category.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-text-muted hover:text-text hover:bg-surface-light'
-                  }`}
+                className={`relative py-3 text-[12px] font-serif tracking-premium transition-all duration-700 whitespace-nowrap ${
+                  activeCategory === category.id ? 'text-text' : 'text-text-muted hover:text-text-light'
+                }`}
               >
                 {category.label}
+                {activeCategory === category.id && (
+                  <motion.div
+                    layoutId="activeFilterBoutique"
+                    className="absolute -bottom-1 left-0 right-0 h-[1px] bg-accent"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
+                  />
+                )}
               </button>
             ))}
           </div>
-          <p className="text-text-muted text-xs mt-4 font-light italic">
-            {`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} affiché${filteredProducts.length > 1 ? 's' : ''}`}
+          <p className="text-text-muted text-[10px] mt-8 font-light italic tracking-premium">
+            {`${filteredProducts.length} Rituel${filteredProducts.length > 1 ? 's' : ''} disponible${filteredProducts.length > 1 ? 's' : ''}`}
           </p>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+          <div className="flex items-center justify-center min-h-[600px]">
+            <div className="w-12 h-12 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
           </div>
         ) : (
-          <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <motion.div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 max-w-7xl mx-auto">
             <AnimatePresence mode="popLayout">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />

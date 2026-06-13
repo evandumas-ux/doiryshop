@@ -127,7 +127,7 @@ export default function Inscription({ setUser }) {
         <div className="bg-surface/90 backdrop-blur-xl border border-surface-border shadow-2xl shadow-black/30 rounded-[24px] p-6 sm:p-10">
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/logo.jpg" alt="DOIRY SHOP" className="w-20 h-20 object-contain rounded-xl" />
+              <img src="/favicon.jpg" alt="DOIRY SHOP" className="w-20 h-20 object-contain rounded-lg" />
               <span className="font-display text-2xl font-bold tracking-widest text-primary">DOIRY SHOP</span>
             </Link>
             <h1 className="text-2xl font-serif font-bold text-text mt-4">

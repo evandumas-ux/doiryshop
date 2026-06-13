@@ -109,6 +109,7 @@ db.serialize(() => {
     }
     if (!existingCols.includes('tracking_number')) {
       db.run("ALTER TABLE orders ADD COLUMN tracking_number TEXT", () => {});
+      db.run("ALTER TABLE orders ADD COLUMN status TEXT DEFAULT 'pending'", () => {});
     }
     if (!existingCols.includes('shipping_relay_id')) {
       db.run("ALTER TABLE orders ADD COLUMN shipping_relay_id TEXT", () => {});

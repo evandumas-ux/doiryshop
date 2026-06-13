@@ -1,18 +1,45 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @layer base {
   body {
-    @apply bg-background text-text font-sans antialiased;
+    @apply bg-background text-text font-sans antialiased overflow-x-hidden;
+    background: radial-gradient(circle at 50% -20%, #1a1a1a 0%, #0a0a0a 100%);
     selection {
-      @apply bg-primary text-white;
+      @apply bg-accent/30 text-white;
     }
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif text-text tracking-wide;
+    @apply font-serif text-text tracking-premium leading-tight;
+    text-transform: none !important; /* Enforce mixed-case across all headers */
   }
 
+  p {
+    @apply leading-relaxed text-text-light font-light;
+  }
+
+  /* Studio Lighting Overlay */
+  .studio-lighting {
+    background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 70%);
+  }
+
+  /* Navigation Underline Pattern */
+  .nav-link-premium {
+    @apply relative py-1 transition-all duration-300;
+  }
+  .nav-link-premium::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[1px] bg-accent transition-all duration-300;
+  }
+  .nav-link-premium:hover::after, .nav-link-premium.active::after {
+    @apply w-full;
+  }
+  
   /* Gold text utility */
   .text-gold-gradient {
     background: linear-gradient(135deg, #e8d5a3, #C9A84C, #e8d5a3);
@@ -76,6 +103,11 @@
 
 .glow-gold {
   box-shadow: 0 0 40px rgba(201, 168, 76, 0.08), 0 0 80px rgba(201, 168, 76, 0.04);
+}
+
+/* Glassmorphism Refined */
+.glass-premium {
+  @apply bg-black/40 backdrop-blur-2xl border border-white/5 shadow-2xl;
 }
 
 /* Hide scrollbar for horizontal scroll containers */

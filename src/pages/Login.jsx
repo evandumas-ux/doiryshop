@@ -90,7 +90,7 @@ export default function Login({ user, setUser }) {
           
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/logo.jpg" alt="DOIRY SHOP" className="w-20 h-20 object-contain rounded-xl" />
+              <img src="/favicon.jpg" alt="DOIRY SHOP" className="w-20 h-20 object-contain rounded-lg" />
               <span className="font-display text-2xl font-bold tracking-widest text-primary">DOIRY SHOP</span>
             </Link>
             <p className="text-text-muted text-sm mt-3">Bienvenue dans votre espace privilégié</p>

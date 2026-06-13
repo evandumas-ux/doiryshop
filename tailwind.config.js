@@ -34,9 +34,19 @@ export default {
         }
       },
       fontFamily: {
-        serif: ['Cinzel', 'serif'],
-        sans: ['Inter', 'sans-serif'],
-        display: ['Cinzel Decorative', 'serif'],
+        serif: ['"Playfair Display"', 'Cinzel', 'serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+        display: ['"Playfair Display"', 'serif'],
+      },
+      letterSpacing: {
+        tightest: '-.075em',
+        tighter: '-.05em',
+        tight: '-.025em',
+        normal: '0',
+        wide: '.05em',
+        wider: '.1em',
+        widest: '.25em',
+        premium: '.15em',
       },
       backgroundImage: {
         'hieroglyphs': "url('/bg_texture.png')",

@@ -137,14 +137,14 @@ app.use((req, res, next) => {
  */
 const verifyToken = (req, res, next) => {
   const token = req.cookies?.token || req.headers.authorization?.replace("Bearer ", "");
-  
+
   if (!token) {
     return res.status(401).json({ error: 'Token manquant' });
   }
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    
+
     console.log('[AUTH] Requête authentifiée:', decoded.email, 'Role:', decoded.role);
 
     req.user = {
@@ -319,7 +319,7 @@ app.put('/api/admin/orders/:id/tracking', verifyToken, requireAdmin, (req, res) 
     function(err) {
       if (err) return res.status(500).json({ error: err.message });
       if (this.changes === 0) return res.status(404).json({ error: 'Commande introuvable' });
-      
+
       // Envoyer l'email d'expédition
       db.get('SELECT * FROM orders WHERE id = ?', [req.params.id], (err, order) => {
         if (!err && order) {
@@ -336,11 +336,6 @@ app.put('/api/admin/orders/:id/tracking', verifyToken, requireAdmin, (req, res) 
     }
   );
 });
-
-
-// ============================================================
-// ROUTES AUTHENTIFICATION (Legacy - Login/Register local)
-// ============================================================
 
 // ============================================================
 // ROUTES AUTHENTIFICATION (Custom Registration)
@@ -540,23 +535,28 @@ app.post('/api/auth/login', authLimiter, (req, res) => {
     }
 
     // Générer un token JWT
-    const token = jwt.sign(
-      { id: user.id, email: user.email, name: user.name, role: user.role },
-      SECRET_KEY,
-      { expiresIn: '7d' }
-    );
+    try {
+      const token = jwt.sign(
+        { id: user.id, email: user.email, name: user.name, role: user.role },
+        SECRET_KEY,
+        { expiresIn: '7d' }
+      );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
-    });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
+      });
 
-    res.json({
-      message: 'Connexion réussie',
-      user: { id: user.id, name: user.name, email: user.email, role: user.role }
-    });
+      res.json({
+        message: 'Connexion réussie',
+        user: { id: user.id, name: user.name, email: user.email, role: user.role }
+      });
+    } catch (tokenErr) {
+      console.error('[AUTH] Erreur signature token:', tokenErr.message);
+      res.status(500).json({ error: 'Erreur lors de la génération de la session.' });
+    }
   });
 });
 
@@ -1155,27 +1155,37 @@ app.get('/api/orders/:orderId/invoice', verifyToken, (req, res) => {
  */
 app.post('/api/orders', optionalAuth, async (req, res) => {
   try {
+    const userId = req.user ? req.user.id : null;
     console.log('[ORDER] req.user complet:', req.user);
-    console.log('[ORDER] user_id extrait:', req.user?.id);
+    console.log('[ORDER] user_id extrait:', userId);
 
     const { produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price: client_shipping_price, coupon_code, shipping_relay_id, shipping_relay_data, relay_selection_mode, relay_address_text, relay_info } = req.body;
 
-    let emailClient = "";
-    if (typeof adresse_livraison === 'string') {
-      try { emailClient = JSON.parse(adresse_livraison).email; } catch(e){}
-    } else if (adresse_livraison) {
-      emailClient = adresse_livraison.email;
+    // VALIDATION SÉCURITÉ : produits doit être un array JSON valide avec IDs numériques
+    let validatedProduits = [];
+    try {
+      validatedProduits = typeof produits === 'string' ? JSON.parse(produits) : produits;
+      if (!Array.isArray(validatedProduits)) throw new Error('Produits must be an array');
+      validatedProduits = validatedProduits.map(p => {
+        const id = Number(p.id);
+        if (isNaN(id)) throw new Error('Invalid product ID');
+        return { 
+          id, 
+          quantity: Number(p.quantity) || 1, 
+          price: Number(p.price) || 0, 
+          weight: Number(p.weight || p.weight_g) || 50,
+          name: String(p.name || '').slice(0, 100) 
+        };
+      });
+    } catch (e) {
+      return res.status(400).json({ error: 'Format de produits invalide: ' + e.message });
     }
 
-    const userId = req.user?.id || null;
-    const finalEmail = req.user?.email || emailClient;
+    const parsedAdresse = typeof adresse_livraison === 'string' ? JSON.parse(adresse_livraison) : (adresse_livraison || {});
+    const finalEmail = req.user ? req.user.email : parsedAdresse.email;
 
-    if (!finalEmail) {
-      return res.status(400).json({ error: 'Impossible d\'identifier le client (email manquant)' });
-    }
-
-    if (!produits || !total) {
-      return res.status(400).json({ error: 'Les champs "produits" et "total" sont requis.' });
+    if (typeof total !== 'number' || total < 0) {
+      return res.status(400).json({ error: 'Montant total invalide.' });
     }
 
     // Validation shipping
@@ -1185,8 +1195,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
     }
 
     // Recalcul shipping_price (SÉCURITÉ)
-    const items = Array.isArray(produits) ? produits : JSON.parse(produits);
-    const totalWeightGrams = items.reduce((sum, it) => sum + (Number(it.weight || it.weight_g) || 50) * (Number(it.quantity) || 1), 0);
+    const items = validatedProduits;
+    const totalWeightGrams = items.reduce((sum, it) => sum + (it.weight * (Number(it.quantity) || 1)), 0);
     const opt = SHIPPING_OPTIONS[shipping_method];
     
     // Calcul du sous-total pour la gratuité (cartTotal au sens du montant produits)
@@ -1202,10 +1212,10 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
     const query = `INSERT INTO orders (user_id, produits, total, statut_paiement, adresse_livraison, shipping_method, shipping_price, tracking_number, relay_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const params = [
       userId, // Peut être NULL pour les invités
-      typeof produits === 'string' ? produits : JSON.stringify(produits),
+      JSON.stringify(items),
       total,
       statut_paiement || 'en_attente',
-      typeof adresse_livraison === 'string' ? adresse_livraison : JSON.stringify(adresse_livraison || {}),
+      JSON.stringify(parsedAdresse),
       shipping_method,
       recalculatedShippingPrice,
       null, // tracking_number à NULL par défaut
@@ -1412,6 +1422,46 @@ app.put('/api/orders/:id/status', verifyToken, (req, res) => {
 
 app.use('/api/admin', adminLimiter);
 
+// ─── ROUTE : mise à jour du statut de la commande (admin) ───────────────────────
+app.put('/api/admin/orders/:id/status', verifyToken, requireAdmin, (req, res) => {
+  const { status } = req.body;
+  const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'En_attente', 'En_preparation', 'Expédiée', 'Livrée', 'Annulée'];
+  
+  if (!status || !validStatuses.includes(status)) {
+    return res.status(400).json({ error: 'Statut invalide ou manquant.' });
+  }
+
+  db.run(
+    'UPDATE orders SET status = ? WHERE id = ?',
+    [status, req.params.id],
+    function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Commande introuvable' });
+      res.json({ success: true, status });
+    }
+  );
+});
+
+// ─── ROUTE : mise à jour du statut de la commande (admin) ───────────────────────
+app.put('/api/admin/orders/:id/status', verifyToken, requireAdmin, (req, res) => {
+  const { status } = req.body;
+  const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'En_attente', 'En_preparation', 'Expédiée', 'Livrée', 'Annulée'];
+  
+  if (!status || !validStatuses.includes(status)) {
+    return res.status(400).json({ error: 'Statut invalide ou manquant.' });
+  }
+
+  db.run(
+    'UPDATE orders SET status = ? WHERE id = ?',
+    [status, req.params.id],
+    function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Commande introuvable' });
+      res.json({ success: true, status });
+    }
+  );
+});
+
 /**
  * GET /api/admin/orders
  * Récupère toutes les commandes (admin uniquement).
@@ -1419,7 +1469,7 @@ app.use('/api/admin', adminLimiter);
  */
 app.get('/api/admin/orders', verifyToken, requireAdmin, (req, res) => {
   const query = `
-    SELECT 
+    SELECT
       orders.id,
       orders.user_id,
       users.name AS client_name,
@@ -1427,6 +1477,7 @@ app.get('/api/admin/orders', verifyToken, requireAdmin, (req, res) => {
       orders.produits,
       orders.total,
       orders.statut_paiement,
+      orders.status,
       orders.adresse_livraison,
       orders.date_creation
     FROM orders
@@ -1502,9 +1553,10 @@ app.get('/api/admin/orders/:id', verifyToken, requireAdmin, (req, res) => {
 
     // Calcul des dimensions et du poids
     if (Array.isArray(order.produits) && order.produits.length > 0) {
-      const productIds = order.produits.map(p => p.id).filter(id => id);
+      const productIds = order.produits.map(p => Number(p.id)).filter(id => !isNaN(id));
       if (productIds.length > 0) {
-        db.all(`SELECT id, weight_g, length_cm, width_cm, height_cm FROM products WHERE id IN (${productIds.join(',')})`, [], (err, rows) => {
+        const placeholders = productIds.map(() => '?').join(',');
+        db.all(`SELECT id, weight_g, length_cm, width_cm, height_cm FROM products WHERE id IN (${placeholders})`, productIds, (err, rows) => {
           if (!err && rows) {
             const productMap = {};
             rows.forEach(r => productMap[r.id] = r);
@@ -2706,3 +2758,4 @@ const server = app.listen(3001, () => {
 server.on('error', (err) => {
   console.error('[SERVER ERROR]', err.message);
 });
+

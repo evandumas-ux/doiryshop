@@ -38,7 +38,7 @@ const AgeVerification = () => {
             className="w-full max-w-lg bg-surface border border-primary/30 rounded-2xl p-6 md:p-8 text-center shadow-2xl shadow-black/50"
           >
             <img
-              src="/logo.jpg"
+              src="/favicon.jpg"
               alt="Doiry Shop"
               className="w-16 h-16 md:w-20 md:h-20 object-contain rounded-xl mx-auto mb-5"
             />

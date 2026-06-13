@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import UseCasePills from './UseCasePills';
+import { ShoppingCart } from 'lucide-react';
 
 const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
@@ -36,10 +36,10 @@ const ProductCard = ({ product, onAddToCart }) => {
   const displayCategory = categoryMap[product.categorie] || product.categorie;
 
   let emotionalBadge = null;
-  if (safeSlug === 'elixir-nocturne-infusion-vrac' || safeSlug.includes('elixir-nocturne')) emotionalBadge = "PROFIL APAISANT";
-  else if (safeSlug === 'coffret-transition-kit-roulage') emotionalBadge = "ASSEMBLÉ À LA MAIN";
-  else if (tags.includes('pre-roules') || safeSlug.includes('pre-roules')) emotionalBadge = "PRÊT À L'EMPLOI";
-  else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "IDÉAL CADEAU";
+  if (safeSlug === 'elixir-nocturne-infusion-vrac' || safeSlug.includes('elixir-nocturne')) emotionalBadge = "Profil Apaisant";
+  else if (safeSlug === 'coffret-transition-kit-roulage') emotionalBadge = "Assemblé À La Main";
+  else if (tags.includes('pre-roules') || safeSlug.includes('pre-roules')) emotionalBadge = "Prêt À L'Emploi";
+  else if (safeSlug === 'coffret-serenite-kit-detente') emotionalBadge = "Idéal Cadeau";
 
   const firstImage = (product.images && product.images.length > 0) ? product.images[0] : (product.image_url || '/placeholders/product-default.png');
 
@@ -74,85 +74,91 @@ const ProductCard = ({ product, onAddToCart }) => {
   }
 
   return (
-    <motion.div layout initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} className="group bg-surface rounded-[28px] overflow-hidden border border-surface-border hover:border-accent/20 transition-all duration-500 relative flex flex-col">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.98 }} 
+      animate={{ opacity: 1, scale: 1 }} 
+      exit={{ opacity: 0, scale: 0.98 }} 
+      className="group bg-neutral-900/20 backdrop-blur-xl rounded-[2.5rem] overflow-hidden border border-white/5 hover:border-accent/30 transition-all duration-700 relative flex flex-col hover:scale-[1.01] hover:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)]"
+    >
       {product.is_best_value && (
-        <span className="absolute top-4 right-4 bg-primary text-white px-3 py-1.5 rounded text-[10px] font-bold tracking-widest z-10">
-          SÉLECTION PREMIUM
+        <span className="absolute top-8 right-8 bg-accent text-background px-5 py-2 rounded-full text-[10px] font-bold tracking-premium z-10 shadow-xl">
+          Sélection Premium
         </span>
       )}
       {emotionalBadge && !product.is_best_value && (
-        <span className="absolute top-4 right-4 bg-background/80 backdrop-blur-sm border border-surface-border text-text-light px-3 py-1.5 rounded text-[10px] font-bold tracking-widest z-10 uppercase">
+        <span className="absolute top-8 right-8 bg-white/5 backdrop-blur-xl border border-white/10 text-text-light px-5 py-2 rounded-full text-[10px] font-medium tracking-premium z-10">
           {emotionalBadge}
         </span>
       )}
-      <Link to={`/produit/${product.id}`} className="block cursor-pointer">
-        <div className="aspect-[4/3] bg-background overflow-hidden relative">
+      
+      <Link to={`/produit/${product.id}`} className="block cursor-pointer flex-1 flex flex-col">
+        <div className="aspect-[4/3] overflow-hidden relative">
           <img 
             src={firstImage} 
-            alt={`Paquet de pré-roulés botaniques Doiry Shop - ${product.name}`} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" 
+            alt={product.name} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out opacity-90 group-hover:opacity-100" 
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-surface/70 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
         </div>
-        <div className="p-6">
-          <div className="flex flex-wrap gap-2 mb-4">
-            <span className="text-[11px] px-2.5 py-1 rounded-full bg-background border border-surface-border text-text-light">
+        
+        <div className="px-12 pb-6 flex-1 flex flex-col">
+          <div className="flex flex-wrap gap-3 -mt-5 relative z-10 mb-10">
+            <span className="text-[10px] tracking-premium px-5 py-2 rounded-full bg-background/80 backdrop-blur-md border border-white/5 text-text-muted font-medium">
               {displayCategory}
             </span>
             {stockMessage && (
-              <span className="text-[11px] px-2.5 py-1 rounded-full bg-background border border-surface-border text-text-light">
+              <span className="text-[10px] tracking-premium px-5 py-2 rounded-full bg-primary/10 backdrop-blur-md border border-primary/20 text-primary-light font-bold">
                 {stockMessage}
               </span>
             )}
           </div>
-          <div className="flex justify-between gap-4 items-start mb-4">
-            <div>
-              <h3 className="text-2xl font-serif mb-1 text-text">{product.name}</h3>
-              {product.tagline && <p className="text-sm text-accent font-medium tracking-widest uppercase">{product.tagline}</p>}
-              {product.tagline_subtitle && <p className="text-sm text-text-muted italic mt-1 leading-snug">{product.tagline_subtitle}</p>}
-            </div>
-            <div className="text-right shrink-0">
-              <div className="product-price-current !text-xl !font-serif !text-accent after:!hidden">{formatPrice(product.price)}</div>
-              {product.price_per_unit && product.unit_label && (
-                <p className="text-[11px] text-text-muted mt-1">
-                  soit {formatPrice(product.price_per_unit)} / {product.unit_label === 'pre-roule' ? 'pré-roulé' : product.unit_label}
-                </p>
-              )}
-            </div>
+
+          <div className="pb-10 border-b border-white/5 mb-10">
+            <h3 className="text-2xl md:text-3xl font-serif text-text leading-tight tracking-premium">{product.name}</h3>
+            {product.tagline && <p className="text-[11px] text-accent/80 font-medium tracking-premium mt-4">{product.tagline}</p>}
           </div>
 
-          {showComparison && (
-            <div className="competitor-block mb-4 p-3 rounded-xl border border-surface-border bg-surface-light text-xs">
-              <div className="flex justify-between text-text-muted mb-1">
-                <span>{product.competitor_label || 'Moyenne observée ailleurs :'}</span>
-                <span className="line-through">{formatPrice(product.competitor_price)}</span>
-              </div>
-              <div className="flex justify-between text-green-400 font-medium">
-                <span>{product.savings_label || 'Économie estimée :'}</span>
-                <span className="savings">{formatPrice(saving)} (-{percent}%)</span>
-              </div>
+          <div className="mb-10 flex items-center justify-between">
+            <div className="flex items-baseline gap-5">
+              <div className="text-3xl font-serif text-text tracking-premium">{formatPrice(product.price)}</div>
+              {showComparison && (
+                <div className="flex items-center gap-4">
+                  <span className="text-base text-text-muted line-through tracking-premium font-light">{formatPrice(product.competitor_price)}</span>
+                  <span className="text-[11px] text-emerald-400 font-bold tracking-premium">-{percent}%</span>
+                </div>
+              )}
             </div>
-          )}
+            {product.price_per_unit && product.unit_label && (
+              <p className="text-[10px] text-text-muted tracking-premium font-light italic">
+                {formatPrice(product.price_per_unit)} / {product.unit_label === 'pre-roule' ? 'unité' : product.unit_label}
+              </p>
+            )}
+          </div>
 
-          <UseCasePills useCases={product.use_cases} limit={2} className="mb-4" />
-
-          <p className="text-text-light font-light leading-relaxed">{product.short_description || product.description}</p>
+          <p className="text-text-light font-light leading-relaxed text-base line-clamp-2 h-12 mb-10">{product.short_description || product.description}</p>
         </div>
       </Link>
 
-      <div className="px-6 pb-6 mt-auto">
+      <div className="px-12 pb-12 mt-auto">
         <button
           onClick={handleAddClick}
           disabled={product.stock <= 0}
-          className={`w-full py-4 rounded-xl font-medium transition-all ${
+          className={`w-full py-6 rounded-2xl text-[11px] tracking-premium font-bold transition-all duration-700 group/btn relative overflow-hidden ${
             product.stock <= 0
-              ? 'bg-surface-light text-text-muted border border-surface-border cursor-not-allowed'
+              ? 'bg-white/5 text-text-muted border border-white/5 cursor-not-allowed'
               : added
-                ? 'bg-[#8b1a1a] text-white shadow-md shadow-[#8b1a1a]/20'
-                : 'bg-[#8b1a1a] text-white hover:bg-[#6e1515] shadow-md shadow-[#8b1a1a]/20'
+                ? 'bg-emerald-500 text-white shadow-2xl shadow-emerald-500/20'
+                : 'bg-text text-background hover:bg-accent hover:text-background hover:shadow-2xl hover:shadow-accent/20'
           }`}
         >
-          {product.stock <= 0 ? 'Rupture de stock' : added ? '✓ Ajouté !' : 'Ajouter au panier'}
+          <span className="relative z-10 flex items-center justify-center gap-4">
+            {product.stock <= 0 ? 'En Rupture' : added ? '✓ Produit Ajouté' : (
+              <>
+                <ShoppingCart size={16} />
+                Ajouter au Panier
+              </>
+            )}
+          </span>
         </button>
       </div>
     </motion.div>

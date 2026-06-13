@@ -86,7 +86,7 @@ const MyOrders = ({ user, isInitializing }) => {
             <ArrowLeft size={18} /> <span className="font-medium hidden sm:inline">Mon profil</span>
           </Link>
           <Link to="/" className="flex items-center gap-3">
-            <img src="/logo.jpg" alt="DOIRY SHOP" className="h-10 w-auto rounded-lg" />
+            <img src="/favicon.jpg" alt="DOIRY SHOP" className="h-10 w-auto rounded-lg" />
             <span className="font-display font-bold tracking-widest text-primary hidden sm:block">DOIRY SHOP</span>
           </Link>
           <div className="w-[100px]"></div>

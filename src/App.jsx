@@ -63,7 +63,7 @@ const LogtoCallback = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center">
-        <img src="/logo.jpg" alt="DOIRY SHOP" className="w-16 h-16 object-contain rounded-xl mx-auto mb-4 animate-pulse" />
+        <img src="/favicon.jpg" alt="DOIRY SHOP" className="w-16 h-16 object-contain rounded-lg mx-auto mb-4 animate-pulse" />
         <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
         <p className="text-text-light">Connexion en cours...</p>
       </div>

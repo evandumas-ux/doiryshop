@@ -296,6 +296,20 @@ export const updateAdminOrderTracking = async (id, tracking_number) => {
   return data;
 };
 
+export const updateAdminOrderStatus = async (id, status) => {
+  const response = await fetch(`${API_URL}/admin/orders/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ status }),
+    credentials: 'include'
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+};
+
 // ====== PRODUITS ======
 
 export const getProducts = async () => {
