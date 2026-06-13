@@ -479,6 +479,8 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
           </div>
         </div>
 
+        <ProductReviews productId={product.id} user={user} />
+
         {/* Suggestions Section */}
         {suggestions.length > 0 && (
           <section className="mt-32 max-w-7xl mx-auto px-6 lg:px-12">

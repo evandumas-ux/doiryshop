@@ -19,16 +19,15 @@ const PremiumStory = ({ product, onAddToCart }) => {
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      setShowSticky(offset > 800);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
     const ctx = gsap.context(() => {
+      // Sticky Bar Toggle with ScrollTrigger
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top+=800 top",
+        end: "bottom top",
+        onToggle: self => setShowSticky(self.isActive)
+      });
+
       // Hero Animation
       gsap.from(".hero-content > *", {
         y: 60,

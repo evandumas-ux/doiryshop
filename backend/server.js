@@ -2095,12 +2095,8 @@ app.post('/api/products/:id/reviews', verifyToken, reviewUpload.array('photos', 
     ? req.files.slice(0, 3).map(f => `/uploads/reviews/${path.basename(f.path)}`)
     : [];
 
-  if (!note || note < 1 || note > 5) {
-    return res.status(400).json({ error: 'La note doit être entre 1 et 5.' });
-  }
-
-  // 1. Vérifier que l'utilisateur a une commande payée/expédiée contenant ce produit
-  db.all("SELECT produits, statut_paiement FROM orders WHERE user_id = ? AND statut_paiement IN ('payé', 'expédiée')", [userId], (err, orders) => {
+  // 1. Vérifier que l'utilisateur a une commande payée/expédiée/en_attente contenant ce produit
+  db.all("SELECT produits, statut_paiement FROM orders WHERE user_id = ? AND statut_paiement IN ('payé', 'expédiée', 'expédié', 'en_attente')", [userId], (err, orders) => {
     if (err) return res.status(500).json({ error: 'Erreur serveur.' });
 
     let hasOrdered = false;
@@ -2118,7 +2114,16 @@ app.post('/api/products/:id/reviews', verifyToken, reviewUpload.array('photos', 
       return res.status(403).json({ error: 'Vous devez avoir acheté ce produit pour laisser un avis.' });
     }
 
-    // 2. Vérifier s'il a déjà laissé un avis
+    // 2. Valider la note (après avoir vérifié l'achat pour le check dry-run du front)
+    if (!note || note < 1 || note > 5) {
+      // Si c'est un dry-run (note 0), on s'arrête ici avec un code spécial ou succès si l'achat est OK
+      if (req.body?.note === 0) {
+        return res.json({ canReview: true });
+      }
+      return res.status(400).json({ error: 'La note doit être entre 1 et 5.' });
+    }
+
+    // 3. Vérifier s'il a déjà laissé un avis
     db.get('SELECT id FROM reviews WHERE product_id = ? AND user_id = ?', [productId, userId], (err2, existing) => {
       if (err2) return res.status(500).json({ error: 'Erreur serveur.' });
 
