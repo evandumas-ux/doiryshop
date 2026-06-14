@@ -13,7 +13,7 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct,
   let shippingCost = 0;
   if (subtotal < freeShippingThreshold && cartItems.length > 0) {
     if (totalWeight <= 250) {
-      shippingCost = 3.50;
+      shippingCost = 4.10;
     } else if (totalWeight <= 500) {
       shippingCost = 4.90;
     } else {
@@ -69,7 +69,7 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct,
                           <h4 className="font-serif font-medium text-text truncate pr-2">{item.name}</h4>
                           <p className="text-sm text-accent font-semibold">{formatPrice(item.price)}</p>
                         </div>
-                        <button onClick={() => onRemove(item.id)} className="text-text-muted hover:text-primary transition-colors p-1"><Trash2 size={16} /></button>
+                        <button onClick={() => onRemove(item.id)} className="text-neutral-200 hover:text-primary transition-colors p-1"><Trash2 size={16} /></button>
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center bg-black/20 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden">
@@ -77,7 +77,7 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct,
                           <span className="text-xs font-bold w-6 text-center text-text">{item.quantity}</span>
                           <button onClick={() => onUpdateQuantity(item.id, 1)} className="px-3 py-1 text-text-light hover:text-white hover:bg-white/5 transition-colors">+</button>
                         </div>
-                        <p className="text-xs font-medium text-text-muted">{formatPrice(parseFloat(item.price) * item.quantity)}</p>
+                        <p className="text-xs font-medium text-neutral-200">{formatPrice(parseFloat(item.price) * item.quantity)}</p>
                       </div>
                     </div>
                   </div>
@@ -112,7 +112,7 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct,
                             className="w-12 h-12 object-cover rounded-lg shrink-0 border border-white/10"
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="text-[9px] text-text-muted tracking-premium font-bold mb-0.5">Compléter Mon Rituel</p>
+                            <p className="text-[9px] text-neutral-200 tracking-premium font-bold mb-0.5">Compléter Mon Rituel</p>
                             <p className="text-xs text-text font-medium truncate">{crossSellProduct.name}</p>
                             <p className="text-xs text-accent font-bold mt-0.5">{formatPrice(crossSellProduct.price)}</p>
                           </div>
@@ -126,11 +126,11 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct,
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center text-[11px] tracking-premium text-text-muted">
+                  <div className="flex justify-between items-center text-[11px] tracking-premium text-neutral-200">
                     <span>Sous-total</span>
                     <span>{formatPrice(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between items-center text-[11px] tracking-premium text-text-muted">
+                  <div className="flex justify-between items-center text-[11px] tracking-premium text-neutral-200">
                     <span>Livraison Estimée</span>
                     <span>{shippingCost === 0 ? <span className="text-emerald-400">Offerte</span> : formatPrice(shippingCost)}</span>
                   </div>
@@ -149,12 +149,12 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, products, onAddProduct,
                 
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div className="flex flex-col items-center text-center gap-1.5 opacity-60">
-                    <ShieldCheck size={14} className="text-text-muted" />
-                    <span className="text-[9px] text-text-muted leading-tight tracking-premium font-medium">Paiement 100% Sécurisé</span>
+                    <ShieldCheck size={14} className="text-neutral-200" />
+                    <span className="text-[9px] text-neutral-200 leading-tight tracking-premium font-medium">Paiement 100% Sécurisé</span>
                   </div>
                   <div className="flex flex-col items-center text-center gap-1.5 opacity-60">
-                    <Truck size={14} className="text-text-muted" />
-                    <span className="text-[9px] text-text-muted leading-tight tracking-premium font-medium">Livraison Discrète</span>
+                    <Truck size={14} className="text-neutral-200" />
+                    <span className="text-[9px] text-neutral-200 leading-tight tracking-premium font-medium">Livraison Discrète</span>
                   </div>
                 </div>
               </div>

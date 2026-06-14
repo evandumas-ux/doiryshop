@@ -73,7 +73,7 @@ const Products = ({ onAddToCart }) => {
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-24">
           <span className="text-accent text-[11px] font-medium tracking-premium mb-6 block">Collection Exclusive</span>
           <h2 className="text-5xl md:text-6xl font-serif mb-8 text-text tracking-premium">Le Catalogue Doiry</h2>
-          <p className="text-text-muted max-w-2xl mx-auto font-light text-lg leading-relaxed">Une sélection de rituels botaniques choisis avec une rigueur absolue pour accompagner vos moments de clarté.</p>
+          <p className="text-neutral-200 max-w-2xl mx-auto font-light text-lg leading-relaxed">Une sélection de rituels botaniques choisis avec une rigueur absolue pour accompagner vos moments de clarté.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col items-center mb-20">
@@ -85,7 +85,7 @@ const Products = ({ onAddToCart }) => {
                 className={`relative py-3 text-[12px] font-serif tracking-premium transition-all duration-700 whitespace-nowrap ${
                   activeCategory === category.id 
                     ? 'text-text' 
-                    : 'text-text-muted hover:text-text-light'
+                    : 'text-neutral-200 hover:text-text-light'
                 }`}
               >
                 {category.label}
@@ -99,7 +99,7 @@ const Products = ({ onAddToCart }) => {
               </button>
             ))}
           </div>
-          <p className="text-text-muted text-[10px] mt-8 font-light italic tracking-premium">
+          <p className="text-neutral-200 text-[10px] mt-8 font-light italic tracking-premium">
             {`${filteredProducts.length} Rituel${filteredProducts.length > 1 ? 's' : ''} disponible${filteredProducts.length > 1 ? 's' : ''}`}
           </p>
         </motion.div>
@@ -154,7 +154,7 @@ const GammesSection = () => {
         <div className="flex-1 p-16 lg:p-32 flex flex-col justify-center">
           <span className="text-accent text-[11px] font-medium tracking-[0.8em] mb-12 block uppercase opacity-60">Série 01</span>
           <h2 className="text-6xl md:text-8xl font-serif text-text mb-16 leading-[0.9] tracking-tighter">Le Rituel</h2>
-          <p className="text-text-muted text-xl md:text-2xl font-light leading-relaxed mb-20 max-w-xl">
+          <p className="text-neutral-200 text-xl md:text-2xl font-light leading-relaxed mb-20 max-w-xl">
             Accompagner le geste, préserver le sens. Une gamme pensée pour la transition pure, centrée sur la clarté de la feuille de framboisier.
           </p>
           <ul className="space-y-10 max-w-md">
@@ -165,7 +165,7 @@ const GammesSection = () => {
               "Gestuelle intacte, esprit libre"
             ].map((item, i) => (
               <li key={i} className="group cursor-default">
-                <span className="text-sm font-serif text-text-muted tracking-premium block mb-5 group-hover:text-text transition-colors duration-500">{item}</span>
+                <span className="text-sm font-serif text-neutral-200 tracking-premium block mb-5 group-hover:text-text transition-colors duration-500">{item}</span>
                 <div className="h-px w-full bg-white/5 group-hover:bg-accent/30 transition-all duration-1000" />
               </li>
             ))}
@@ -175,7 +175,7 @@ const GammesSection = () => {
            <img 
              src="/images/pack-5-open.png" 
              alt="Le Rituel" 
-             className="w-full h-full object-cover opacity-30 grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-50 transition-all duration-[3000ms] ease-out" 
+             className="w-full h-full object-cover opacity-60 brightness-[1.30] contrast-[1.02] transition-all duration-[3000ms] ease-out group-hover:scale-105 group-hover:opacity-90" 
            />
            <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent lg:block hidden" />
            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:hidden" />
@@ -187,18 +187,18 @@ const GammesSection = () => {
         <div className="flex-1 p-16 lg:p-32 flex flex-col justify-center">
           <span className="text-accent text-[11px] font-medium tracking-[0.8em] mb-12 block uppercase opacity-60 text-right">Série 02</span>
           <h2 className="text-6xl md:text-8xl font-serif text-text mb-16 leading-[0.9] tracking-tighter text-right">L'Apaisement</h2>
-          <p className="text-text-muted text-xl md:text-2xl font-light leading-relaxed mb-20 max-w-xl ml-auto text-right">
+          <p className="text-neutral-200 text-xl md:text-2xl font-light leading-relaxed mb-20 max-w-xl ml-auto text-right">
             Ancrer le corps, calmer l'esprit. Des infusions et rituels profonds pour les moments de retour à soi et de sérénité absolue.
           </p>
           <ul className="space-y-10 max-w-md ml-auto text-right">
             {[
-              "Compositions botaniques rares",
-              "Format vrac haute couture",
-              "Idéal pour les rituels nocturnes",
+              "Mélanges de fleurs entières",
+              "Séchage lent & artisanal",
+              "Sérénité & Détente profonde",
               "Sans aucun agent de texture"
             ].map((item, i) => (
               <li key={i} className="group cursor-default">
-                <span className="text-sm font-serif text-text-muted tracking-premium block mb-5 group-hover:text-text transition-colors duration-500">{item}</span>
+                <span className="text-sm font-serif text-neutral-200 tracking-premium block mb-5 group-hover:text-text transition-colors duration-500">{item}</span>
                 <div className="h-px w-full bg-white/5 group-hover:bg-accent/30 transition-all duration-1000" />
               </li>
             ))}
@@ -208,7 +208,7 @@ const GammesSection = () => {
            <img 
              src="/images/vracthe.png" 
              alt="L'Apaisement" 
-             className="w-full h-full object-cover opacity-30 grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-50 transition-all duration-[3000ms] ease-out" 
+             className="w-full h-full object-cover opacity-60 brightness-[1.30] contrast-[1.02] transition-all duration-[3000ms] ease-out group-hover:scale-105 group-hover:opacity-90" 
            />
            <div className="absolute inset-0 bg-gradient-to-l from-black via-transparent to-transparent lg:block hidden" />
            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:hidden" />

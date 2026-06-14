@@ -23,11 +23,11 @@ const UserDropdown = ({ user, onLogout }) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-2.5 px-3 py-1.5 rounded-full hover:bg-surface/80 transition-colors">
+      <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-2.5 px-3 py-1.5 rounded-full hover:bg-surface/80 text-neutral-200 hover:text-white transition-colors">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white text-sm font-bold shadow-md shadow-primary/20">
           {initials}
         </div>
-        <span className="text-sm font-medium text-text-light hidden lg:block">{user.prenom || user.name}</span>
+        <span className="text-sm font-medium hidden lg:block">{user.prenom || user.name}</span>
       </button>
 
       <AnimatePresence>
@@ -44,20 +44,20 @@ const UserDropdown = ({ user, onLogout }) => {
                   {initials}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-medium text-text text-sm truncate">{user.prenom ? `${user.prenom} ${user.nom || ''}` : user.name}</p>
+                  <p className="font-medium text-white text-sm truncate">{user.prenom ? `${user.prenom} ${user.nom || ''}` : user.name}</p>
                   {user.role === 'admin' && (
-                    <p className="text-xs text-text-muted truncate">{user.email}</p>
+                    <p className="text-xs text-neutral-400 truncate">{user.email}</p>
                   )}
                 </div>
               </div>
             </div>
 
             <div className="py-2">
-              <Link to="/profil" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm text-text-light hover:bg-primary/10 hover:text-primary transition-colors">
+              <Link to="/profil" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm text-neutral-200 hover:bg-primary/10 hover:text-white transition-colors">
                 <User size={16} />
                 Mon profil
               </Link>
-              <Link to="/mes-commandes" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm text-text-light hover:bg-primary/10 hover:text-primary transition-colors">
+              <Link to="/mes-commandes" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm text-neutral-200 hover:bg-primary/10 hover:text-white transition-colors">
                 <ShoppingCart size={16} />
                 Mes commandes
               </Link>

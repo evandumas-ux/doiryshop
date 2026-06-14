@@ -85,7 +85,7 @@ const SavingsCalculator = () => {
       
       <div className="grid md:grid-cols-3 gap-8 mb-4">
         <div className="space-y-4">
-          <label className="block text-xs text-text-muted font-serif tracking-premium uppercase ml-2">Cigarettes / jour</label>
+          <label className="block text-xs text-neutral-200 font-serif tracking-premium uppercase ml-2">Cigarettes / jour</label>
           <div className="flex items-center bg-background/50 border border-white/5 rounded-2xl px-6 py-4 focus-within:border-accent/30 transition-all">
             <input 
               type="number" 
@@ -97,7 +97,7 @@ const SavingsCalculator = () => {
           </div>
         </div>
         <div className="space-y-4">
-          <label className="block text-xs text-text-muted font-serif tracking-premium uppercase ml-2">Paquets / jour</label>
+          <label className="block text-xs text-neutral-200 font-serif tracking-premium uppercase ml-2">Paquets / jour</label>
           <div className="flex items-center bg-background/50 border border-white/5 rounded-2xl px-6 py-4 focus-within:border-accent/30 transition-all">
             <input 
               type="number" 
@@ -109,7 +109,7 @@ const SavingsCalculator = () => {
           </div>
         </div>
         <div className="space-y-4">
-          <label className="block text-xs text-text-muted font-serif tracking-premium uppercase ml-2">Prix du paquet (€)</label>
+          <label className="block text-xs text-neutral-200 font-serif tracking-premium uppercase ml-2">Prix du paquet (€)</label>
           <div className="flex items-center bg-background/50 border border-white/5 rounded-2xl px-6 py-4 focus-within:border-accent/30 transition-all">
             <input 
               type="number" 
@@ -121,11 +121,11 @@ const SavingsCalculator = () => {
           </div>
         </div>
       </div>
-      <p className="text-[11px] text-text-muted mb-12 italic tracking-wide">Base de calcul : 1 paquet = 20 cigarettes</p>
+      <p className="text-[11px] text-neutral-200 mb-12 italic tracking-wide">Base de calcul : 1 paquet = 20 cigarettes</p>
 
       <div className="grid grid-cols-3 gap-6">
         <div className="bg-background/40 rounded-3xl p-8 border border-white/5 text-center transition-all hover:bg-background/60">
-          <p className="text-[10px] text-text-muted font-serif tracking-premium uppercase mb-4">Par semaine</p>
+          <p className="text-[10px] text-neutral-200 font-serif tracking-premium uppercase mb-4">Par semaine</p>
           <p className="text-3xl font-serif text-text">{formatPrice(weeklySavings)}</p>
         </div>
         <div className="bg-accent/5 rounded-3xl p-8 border border-accent/20 text-center relative overflow-hidden group">
@@ -134,7 +134,7 @@ const SavingsCalculator = () => {
           <p className="text-4xl font-serif text-accent relative z-10 font-bold tracking-tight">{formatPrice(monthlySavings)}</p>
         </div>
         <div className="bg-background/40 rounded-3xl p-8 border border-white/5 text-center transition-all hover:bg-background/60">
-          <p className="text-[10px] text-text-muted font-serif tracking-premium uppercase mb-4">Par an</p>
+          <p className="text-[10px] text-neutral-200 font-serif tracking-premium uppercase mb-4">Par an</p>
           <p className="text-3xl font-serif text-text">{formatPrice(yearlySavings)}</p>
         </div>
       </div>
@@ -188,7 +188,7 @@ const FAQItem = ({ question, answer }) => {
     <div className="border-b border-surface-border py-4">
       <button onClick={handleToggle} aria-expanded={isOpen} aria-controls={`faq-answer-${question}`} className="w-full flex justify-between items-center text-left gap-4 hover:text-accent transition-colors">
         <span className="font-serif text-lg text-text">{question}</span>
-        <ChevronRight className={`transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-90 text-accent' : 'text-text-muted'}`} size={20} />
+        <ChevronRight className={`transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-90 text-accent' : 'text-neutral-200'}`} size={20} />
       </button>
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
         <p className="text-text-light font-light leading-relaxed">{answer}</p>
@@ -245,16 +245,16 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
           
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[#8b0000]/60 mb-12 block">
+              <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-rose-500 mb-12 block">
                 La décision qui change tout
               </span>
               
               <h1 className="text-5xl md:text-7xl font-serif text-white mb-12 leading-tight">
                 Ce que vous gagnez <br/>
-                <span className="text-neutral-500 italic">en arrêtant de fumer.</span>
+                <span className="text-neutral-300 italic">en arrêtant de fumer.</span>
               </h1>
               
-              <p className="text-lg md:text-xl text-neutral-400 font-light max-w-2xl mx-auto mb-16 leading-relaxed">
+              <p className="text-lg md:text-xl text-neutral-200 font-light max-w-2xl mx-auto mb-16 leading-relaxed">
                 Retrouvez du souffle, une respiration plus aisée, et réalisez des économies immédiates tout en abaissant vos risques à long terme. Le changement commence ici.
               </p>
               
@@ -284,7 +284,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
             <div className="text-center mb-24">
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#8b0000] block mb-6">ÉVOLUTION</span>
               <h2 className="text-4xl md:text-5xl font-serif text-white mb-8">Un corps qui récupère, étape par étape</h2>
-              <p className="text-neutral-500 max-w-2xl mx-auto font-light leading-relaxed">
+              <p className="text-neutral-300 max-w-2xl mx-auto font-light leading-relaxed">
                 Dès les premiers jours, votre organisme entame son processus de nettoyage. Les bénéfices documentés s'accumulent au fil du temps.
               </p>
             </div>
@@ -335,7 +335,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
             <div className="text-center mb-20">
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-neutral-600 block mb-6">FINANCES</span>
               <h2 className="text-4xl font-serif text-white mb-6">Le coût d'une habitude</h2>
-              <p className="text-neutral-500 font-light leading-relaxed">
+              <p className="text-neutral-300 font-light leading-relaxed">
                 Au-delà de la santé, l'arrêt du tabac représente un gain financier majeur.
               </p>
             </div>
@@ -351,7 +351,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               <HelpCircle size={24} />
             </div>
             <h3 className="text-3xl font-serif text-white mb-8">Pourquoi parler de l'arrêt du tabac ici ?</h3>
-            <p className="text-neutral-400 font-light leading-relaxed text-lg max-w-3xl mx-auto">
+            <p className="text-neutral-200 font-light leading-relaxed text-lg max-w-3xl mx-auto">
               Chez DoiryShop, nous refusons les fausses promesses. L'arrêt du tabac est un parcours personnel complexe. 
               Cependant, nous savons que l'une des plus grandes difficultés réside dans la perte du "rituel" quotidien ou du simple geste. 
               C'est pour cela que nous proposons une alternative douce et transparente, pour accompagner la transition gestuelle, sans la moindre trace de nicotine. 
@@ -365,8 +365,8 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
           <div className="absolute inset-0 bg-[url('/bg_texture.png')] bg-cover bg-center opacity-[0.015] pointer-events-none" />
           <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
             <Leaf className="w-12 h-12 text-[#8b0000] mx-auto mb-10 opacity-80" />
-            <h2 className="text-4xl font-serif text-white mb-8 leading-tight">Conserver le geste, <br/> <span className="text-neutral-500 italic">retirer la nicotine.</span></h2>
-            <p className="text-xl text-neutral-400 font-light leading-relaxed mb-16 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-serif text-white mb-8 leading-tight">Conserver le geste, <br/> <span className="text-neutral-300 italic">retirer la nicotine.</span></h2>
+            <p className="text-xl text-neutral-200 font-light leading-relaxed mb-16 max-w-2xl mx-auto">
               L'une des plus grandes difficultés lors de l'arrêt du tabac est la perte du rituel. DoiryShop s'inscrit comme une alternative végétale, pensée pour vous accompagner dans votre transition sans introduire de nouvelle dépendance à la nicotine.
             </p>
             
@@ -374,17 +374,17 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               <div className="bg-[#0A0A0A] p-10 rounded-3xl border border-white/5 hover:border-[#8b0000]/20 transition-all duration-500 group">
                 <CheckCircle2 className="w-8 h-8 text-[#8b0000] mb-6 group-hover:scale-110 transition-transform" />
                 <h4 className="text-xl font-serif text-white mb-4">100% Sans nicotine</h4>
-                <p className="text-sm text-neutral-500 leading-relaxed font-light">Pas d'entretien de l'addiction chimique.</p>
+                <p className="text-sm text-neutral-300 leading-relaxed font-light">Pas d'entretien de l'addiction chimique.</p>
               </div>
               <div className="bg-[#0A0A0A] p-10 rounded-3xl border border-white/5 hover:border-[#8b0000]/20 transition-all duration-500 group">
                 <CheckCircle2 className="w-8 h-8 text-[#8b0000] mb-6 group-hover:scale-110 transition-transform" />
                 <h4 className="text-xl font-serif text-white mb-4">Rituel préservé</h4>
-                <p className="text-sm text-neutral-500 leading-relaxed font-light">Garder le geste pour faciliter la transition.</p>
+                <p className="text-sm text-neutral-300 leading-relaxed font-light">Garder le geste pour faciliter la transition.</p>
               </div>
               <div className="bg-[#0A0A0A] p-10 rounded-3xl border border-white/5 hover:border-[#8b0000]/20 transition-all duration-500 group">
                 <CheckCircle2 className="w-8 h-8 text-[#8b0000] mb-6 group-hover:scale-110 transition-transform" />
                 <h4 className="text-xl font-serif text-white mb-4">Plantes naturelles</h4>
-                <p className="text-sm text-neutral-500 leading-relaxed font-light">Une composition lisible et transparente.</p>
+                <p className="text-sm text-neutral-300 leading-relaxed font-light">Une composition lisible et transparente.</p>
               </div>
             </div>
 
@@ -403,7 +403,7 @@ const ArretTabac = ({ user, setCartItems, cartItems, onLogout }) => {
               <Info className="w-6 h-6 text-[#8b0000] shrink-0 mt-1 opacity-60" />
               <div>
                 <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8b0000] mb-3">Avertissement important</h5>
-                <p className="text-sm text-neutral-500 leading-relaxed font-light italic">
+                <p className="text-sm text-neutral-300 leading-relaxed font-light italic">
                   Les produits proposés par DoiryShop ne sont pas des traitements médicaux ni des médicaments de sevrage. Ils constituent une alternative récréative ou rituelle sans nicotine. En cas de dépendance forte au tabac, l'accompagnement par un professionnel de santé (médecin, tabacologue) ou l'utilisation de substituts nicotiniques pharmaceutiques reste la démarche la plus recommandée.
                 </p>
               </div>

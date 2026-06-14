@@ -103,7 +103,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         
         <div className="px-12 pb-6 flex-1 flex flex-col">
           <div className="flex flex-wrap gap-3 -mt-5 relative z-10 mb-10">
-            <span className="text-[10px] tracking-premium px-5 py-2 rounded-full bg-background/80 backdrop-blur-md border border-white/5 text-text-muted font-medium">
+            <span className="text-[10px] tracking-premium px-5 py-2 rounded-full bg-background/80 backdrop-blur-md border border-white/5 text-neutral-200 font-medium">
               {displayCategory}
             </span>
             {stockMessage && (
@@ -119,18 +119,27 @@ const ProductCard = ({ product, onAddToCart }) => {
           </div>
 
           <div className="mb-10 flex items-center justify-between">
-            <div className="flex items-baseline gap-5">
-              <div className="text-3xl font-serif text-text tracking-premium">{formatPrice(product.price)}</div>
+            <div className="flex items-baseline gap-6">
+              <div className="text-3xl md:text-4xl font-serif text-text tracking-premium whitespace-nowrap flex items-baseline gap-1">
+                <span>{Number(product.price || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-2xl text-text/80">€</span>
+              </div>
               {showComparison && (
-                <div className="flex items-center gap-4">
-                  <span className="text-base text-text-muted line-through tracking-premium font-light">{formatPrice(product.competitor_price)}</span>
-                  <span className="text-[11px] text-emerald-400 font-bold tracking-premium">-{percent}%</span>
+                <div className="flex flex-col items-start">
+                  <div className="flex items-center gap-4 whitespace-nowrap">
+                    <span className="text-base text-neutral-200 line-through tracking-premium font-light flex items-baseline gap-1">
+                      <span>{Number(product.competitor_price || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span>€</span>
+                    </span>
+                    <span className="text-[11px] text-emerald-400 font-bold tracking-premium">-{percent}%</span>
+                  </div>
+                  <span className="text-[7px] md:text-[8px] text-neutral-500 uppercase tracking-[0.2em] leading-none mt-1 whitespace-nowrap">Moyenne concurrents</span>
                 </div>
               )}
             </div>
             {product.price_per_unit && product.unit_label && (
-              <p className="text-[10px] text-text-muted tracking-premium font-light italic">
-                {formatPrice(product.price_per_unit)} / {product.unit_label === 'pre-roule' ? 'unité' : product.unit_label}
+              <p className="text-[10px] text-neutral-200 tracking-premium font-light italic whitespace-nowrap">
+                {Number(product.price_per_unit || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € / {product.unit_label === 'pre-roule' ? 'unité' : product.unit_label}
               </p>
             )}
           </div>
@@ -145,7 +154,7 @@ const ProductCard = ({ product, onAddToCart }) => {
           disabled={product.stock <= 0}
           className={`w-full py-6 rounded-2xl text-[11px] tracking-premium font-bold transition-all duration-700 group/btn relative overflow-hidden ${
             product.stock <= 0
-              ? 'bg-white/5 text-text-muted border border-white/5 cursor-not-allowed'
+              ? 'bg-white/5 text-neutral-200 border border-white/5 cursor-not-allowed'
               : added
                 ? 'bg-emerald-500 text-white shadow-2xl shadow-emerald-500/20'
                 : 'bg-text text-background hover:bg-accent hover:text-background hover:shadow-2xl hover:shadow-accent/20'
