@@ -5,7 +5,7 @@ import {
   CheckCircle2, MoonStar, Filter
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import { getProducts, subscribeNewsletter } from '../services/api';
+import { getProducts, getWholesalePricing } from '../services/api';
 import SEO from '../components/SEO';
 import UseCasePills from '../components/UseCasePills';
 import Header from '../components/Header';
@@ -14,6 +14,8 @@ import ProductCard from '../components/ProductCard';
 import FAQ from '../components/FAQ';
 import PremiumStory from '../components/PremiumStory';
 import ErrorBoundary from '../components/ErrorBoundary';
+
+const { div: MotionDiv } = motion;
 
 const parseTags = (tags) => {
   if (Array.isArray(tags)) return tags;
@@ -32,10 +34,11 @@ const isMatchingCategory = (product, category) => {
   return product.categorie === category || tags.includes(category);
 };
 
-const Products = ({ onAddToCart }) => {
+const Products = ({ onAddToCart, user }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [wholesalePrices, setWholesalePrices] = useState({});
 
   const categories = [
     { id: 'all', label: 'Tous' },
@@ -52,6 +55,14 @@ const Products = ({ onAddToCart }) => {
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if ((user?.role || '') !== 'b2b') return;
+
+    getWholesalePricing()
+      .then((prices) => setWholesalePrices(prices || {}))
+      .catch(() => {});
+  }, [user?.role]);
 
   const filteredProducts = useMemo(
     () => products.filter((product) => isMatchingCategory(product, activeCategory)),
@@ -70,13 +81,13 @@ const Products = ({ onAddToCart }) => {
     <section id="boutique" className="pt-32 pb-48 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-accent/5 rounded-full blur-[250px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-24">
+        <MotionDiv initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-24">
           <span className="text-accent text-[11px] font-medium tracking-premium mb-6 block">Collection Exclusive</span>
           <h2 className="text-5xl md:text-6xl font-serif mb-8 text-text tracking-premium">Le Catalogue Doiry</h2>
           <p className="text-neutral-200 max-w-2xl mx-auto font-light text-lg leading-relaxed">Une sélection de rituels botaniques choisis avec une rigueur absolue pour accompagner vos moments de clarté.</p>
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col items-center mb-20">
+        <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col items-center mb-20">
           <div className="flex items-center gap-10 p-2 overflow-x-auto scrollbar-hide max-w-full">
             {categories.map((category) => (
               <button
@@ -90,7 +101,7 @@ const Products = ({ onAddToCart }) => {
               >
                 {category.label}
                 {activeCategory === category.id && (
-                  <motion.div
+                  <MotionDiv
                     layoutId="activeFilter"
                     className="absolute -bottom-1 left-0 right-0 h-[1px] bg-accent"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
@@ -102,15 +113,15 @@ const Products = ({ onAddToCart }) => {
           <p className="text-neutral-200 text-[10px] mt-8 font-light italic tracking-premium">
             {`${filteredProducts.length} Rituel${filteredProducts.length > 1 ? 's' : ''} disponible${filteredProducts.length > 1 ? 's' : ''}`}
           </p>
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
+        <MotionDiv className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
           <AnimatePresence mode="popLayout">
             {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+              <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} user={user} wholesalePrices={wholesalePrices} />
             ))}
           </AnimatePresence>
-        </motion.div>
+        </MotionDiv>
       </div>
     </section>
   );
@@ -218,7 +229,7 @@ const GammesSection = () => {
   );
 };
 
-export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) => {
+export const Landing = ({ cartItems, setCartItems, user, onLogout }) => {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
@@ -281,7 +292,7 @@ export const Landing = ({ cartItems, setCartItems, user, setUser, onLogout }) =>
         />
       </ErrorBoundary>
       <GammesSection />
-      <Products onAddToCart={handleAddToCart} />
+      <Products onAddToCart={handleAddToCart} user={user} />
       <BrandStorySection />
       <FAQ />
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cartItems={cartItems} products={allProducts} onAddProduct={handleAddToCart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} onCheckout={handleCheckout} />

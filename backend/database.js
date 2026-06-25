@@ -18,7 +18,7 @@ db.serialize(() => {
       email TEXT UNIQUE NOT NULL,
       password TEXT, /* Optional, used only for local fallback auth */
       logto_id TEXT UNIQUE,
-      role TEXT DEFAULT 'client',
+      role TEXT DEFAULT 'retail',
       prenom TEXT,
       nom TEXT,
       age INTEGER,
@@ -71,6 +71,12 @@ db.serialize(() => {
       }
     });
   });
+
+  // Normaliser les rôles historiques vers la nouvelle nomenclature.
+  db.run(
+    "UPDATE users SET role = 'retail' WHERE role IS NULL OR role = '' OR role = 'client'",
+    () => {}
+  );
 
   db.run(`
     CREATE TABLE IF NOT EXISTS orders (

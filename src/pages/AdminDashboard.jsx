@@ -6,7 +6,7 @@ import {
   ChevronUp, Eye, Search, Filter, TrendingUp, Clock,
   CheckCircle2, AlertCircle, ShoppingBag, ArrowLeft, Plus, Edit, Trash2, Star, MessageSquare, Feather, X
 } from 'lucide-react';
-import { getAdminOrders, getProducts, createProduct, updateProduct, deleteProduct, getAdminCoupons, createCoupon, updateCoupon, deleteCoupon, getAdminReviews, approveReview, deleteReview, getAdminLoyalty, updateAdminLoyalty, updateAdminOrderStatus } from '../services/api';
+import { getAdminOrders, getProducts, createProduct, updateProduct, deleteProduct, getAdminCoupons, createCoupon, updateCoupon, deleteCoupon, getAdminReviews, approveReview, deleteReview, getAdminLoyalty, updateAdminLoyalty, updateAdminOrderStatus, getAdminUsers, updateAdminUserRole } from '../services/api';
 import { useLogto } from '@logto/react';
 
 const ProductManager = () => {
@@ -868,6 +868,111 @@ const LoyaltyManager = () => {
   );
 };
 
+const UserManager = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [updatingUserId, setUpdatingUserId] = useState(null);
+  const [notice, setNotice] = useState('');
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const data = await getAdminUsers();
+      setUsers(data.users || []);
+    } catch (err) {
+      console.error('Erreur chargement utilisateurs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleRoleChange = async (targetUserId, role) => {
+    const previousUsers = users;
+    setUpdatingUserId(targetUserId);
+    setUsers((prev) => prev.map((u) => (u.id === targetUserId ? { ...u, role } : u)));
+    try {
+      await updateAdminUserRole(targetUserId, role);
+      setNotice('Rôle utilisateur mis à jour avec succès.');
+      setTimeout(() => setNotice(''), 2000);
+    } catch (err) {
+      setUsers(previousUsers);
+      alert(err.message || 'Erreur lors de la mise à jour du rôle.');
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
+
+  return (
+    <div className="bg-[#0f0f0f] rounded-2xl border border-white/10 shadow-xl overflow-hidden">
+      <div className="p-5 border-b border-white/10 flex items-center justify-between">
+        <h2 className="text-lg font-bold text-[#f5f5f0] flex items-center gap-2">
+          <Users size={20} className="text-[#d7caa4]" /> Utilisateurs
+        </h2>
+        {notice && (
+          <span className="text-xs px-3 py-1.5 rounded-full bg-[#1f3727] border border-[#3b6b4b] text-[#dff7e8]">
+            {notice}
+          </span>
+        )}
+      </div>
+
+      {loading ? (
+        <div className="p-10 text-center text-[#d9d9d2]">Chargement des utilisateurs...</div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#151515] text-[#c9c9bf] uppercase tracking-wider">
+              <tr>
+                <th className="px-6 py-4 font-semibold">Nom</th>
+                <th className="px-6 py-4 font-semibold">Email</th>
+                <th className="px-6 py-4 font-semibold">Type de compte</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/10 text-[#f5f5f0]">
+              {users.map((u) => {
+                const isAdmin = u.role === 'admin';
+                return (
+                  <tr key={u.id} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 font-medium">{u.name || 'Utilisateur'}</td>
+                    <td className="px-6 py-4 text-[#cfcfc2]">{u.email}</td>
+                    <td className="px-6 py-4">
+                      {isAdmin ? (
+                        <span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-[#2a2436] border border-[#5b4f77] text-[#d8cdf5]">
+                          Administrateur
+                        </span>
+                      ) : (
+                        <select
+                          value={u.role === 'b2b' ? 'b2b' : 'retail'}
+                          onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                          disabled={updatingUserId === u.id}
+                          className="px-3 py-2 rounded-xl bg-[#181818] border border-white/15 text-[#f5f5f0] focus:outline-none focus:ring-1 focus:ring-[#d7caa4] disabled:opacity-60"
+                        >
+                          <option value="retail">Client Retail</option>
+                          <option value="b2b">Professionnel B2B</option>
+                        </select>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              {users.length === 0 && (
+                <tr>
+                  <td colSpan="3" className="p-8 text-center text-[#b3b3a8]">
+                    Aucun utilisateur trouvé.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const StatCard = ({ icon: Icon, label, value, color, delay }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -1105,6 +1210,7 @@ const AdminDashboard = ({ user, onLogout }) => {
               <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-primary text-white rounded-full">{pendingReviewsCount}</span>
             )}
           </button>
+          <button onClick={() => setActiveTab('users')} className={`py-4 font-medium text-sm border-b-2 transition-colors ${activeTab === 'users' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Utilisateurs</button>
           <button onClick={() => setActiveTab('loyalty')} className={`py-4 font-medium text-sm border-b-2 transition-colors ${activeTab === 'loyalty' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Fidélité</button>
         </div>
       </div>
@@ -1280,6 +1386,10 @@ const AdminDashboard = ({ user, onLogout }) => {
 
         {activeTab === 'reviews' && (
           <ReviewManager />
+        )}
+
+        {activeTab === 'users' && (
+          <UserManager />
         )}
 
         {activeTab === 'loyalty' && (

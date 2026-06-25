@@ -150,7 +150,7 @@ const verifyToken = (req, res, next) => {
     req.user = {
       id:    decoded.id || decoded.sub || null,
       email: decoded.email || null,
-      role:  decoded.role || 'client',
+      role:  normalizeUserRole(decoded.role),
       name:  decoded.name || null
     };
     next();
@@ -171,7 +171,7 @@ const optionalAuth = (req, res, next) => {
     req.user = {
       id:    decoded.id || decoded.sub || null,
       email: decoded.email || null,
-      role:  decoded.role || 'client',
+      role:  normalizeUserRole(decoded.role),
       name:  decoded.name || null
     };
   } catch (err) {
@@ -181,8 +181,21 @@ const optionalAuth = (req, res, next) => {
 };
 
 const requireAdmin = (req, res, next) => {
-  if (!req.user || req.user.role !== 'admin') {
+  if (!req.user || normalizeUserRole(req.user.role) !== 'admin') {
     return res.status(403).json({ error: 'Accès interdit. Rôle administrateur requis.' });
+  }
+  next();
+};
+
+const normalizeUserRole = (role) => {
+  if (role === 'client') return 'retail';
+  if (role === 'admin' || role === 'b2b' || role === 'retail') return role;
+  return 'retail';
+};
+
+const requireB2B = (req, res, next) => {
+  if (!req.user || normalizeUserRole(req.user.role) !== 'b2b') {
+    return res.status(403).json({ error: 'Accès interdit. Compte B2B requis.' });
   }
   next();
 };
@@ -446,7 +459,7 @@ app.post('/api/auth/custom-verify', async (req, res) => {
 
         // Générer le token JWT pour connexion automatique
         const token = jwt.sign(
-          { id: user.id, email: user.email, name: user.name, role: user.role },
+          { id: user.id, email: user.email, name: user.name, role: normalizeUserRole(user.role) },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
@@ -460,7 +473,7 @@ app.post('/api/auth/custom-verify', async (req, res) => {
 
         res.json({
           message: 'Compte vérifié et connecté',
-          user: { id: user.id, name: user.name, email: user.email, role: user.role }
+          user: { id: user.id, name: user.name, email: user.email, role: normalizeUserRole(user.role) }
         });
       }
     );
@@ -537,7 +550,7 @@ app.post('/api/auth/login', authLimiter, (req, res) => {
     // Générer un token JWT
     try {
       const token = jwt.sign(
-        { id: user.id, email: user.email, name: user.name, role: user.role },
+        { id: user.id, email: user.email, name: user.name, role: normalizeUserRole(user.role) },
         SECRET_KEY,
         { expiresIn: '7d' }
       );
@@ -551,7 +564,7 @@ app.post('/api/auth/login', authLimiter, (req, res) => {
 
       res.json({
         message: 'Connexion réussie',
-        user: { id: user.id, name: user.name, email: user.email, role: user.role }
+        user: { id: user.id, name: user.name, email: user.email, role: normalizeUserRole(user.role) }
       });
     } catch (tokenErr) {
       console.error('[AUTH] Erreur signature token:', tokenErr.message);
@@ -690,6 +703,7 @@ app.get('/api/auth/me', verifyToken, (req, res) => {
     if (user.profil_complete !== undefined) {
       user.profil_complete = true; // ne plus bloquer
     }
+    user.role = normalizeUserRole(user.role);
     res.json({ user });
   });
 });
@@ -862,7 +876,7 @@ app.post('/api/auth/sync-social-login', (req, res) => {
 
       // Générer un JWT local pour cet utilisateur
       const token = jwt.sign(
-        { id: existingUser.id, email: existingUser.email, name: existingUser.name, role: existingUser.role },
+        { id: existingUser.id, email: existingUser.email, name: existingUser.name, role: normalizeUserRole(existingUser.role) },
         SECRET_KEY,
         { expiresIn: '7d' }
       );
@@ -879,7 +893,7 @@ app.post('/api/auth/sync-social-login', (req, res) => {
           id: existingUser.id,
           name: existingUser.name,
           email: existingUser.email,
-          role: existingUser.role,
+          role: normalizeUserRole(existingUser.role),
           prenom: existingUser.prenom,
           nom: existingUser.nom,
           profil_complete: true
@@ -890,7 +904,7 @@ app.post('/api/auth/sync-social-login', (req, res) => {
     // Nouvel utilisateur (Premier login via Social Login) : is_verified = 1 direct
     db.run(
       'INSERT INTO users (name, email, logto_id, role, is_verified, profil_complete) VALUES (?, ?, ?, ?, 1, 0)',
-      [name || '', email, logto_id || null, 'client'],
+      [name || '', email, logto_id || null, 'retail'],
       async function (err) {
         if (err) return res.status(500).json({ error: 'Erreur lors de la création du compte.' });
 
@@ -918,7 +932,7 @@ app.post('/api/auth/sync-social-login', (req, res) => {
         }
 
         const token = jwt.sign(
-          { id: newUserId, email, name, role: 'client' },
+          { id: newUserId, email, name, role: 'retail' },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
@@ -931,7 +945,7 @@ app.post('/api/auth/sync-social-login', (req, res) => {
         });
 
         res.status(201).json({
-          user: { id: newUserId, name, email, role: 'client', profil_complete: true }
+          user: { id: newUserId, name, email, role: 'retail', profil_complete: true }
         });
       }
     );
@@ -945,11 +959,12 @@ app.post('/api/auth/sync-social-login', (req, res) => {
 
 
 app.get('/api/user/profile', verifyToken, (req, res) => {
-  db.get('SELECT id, name, email, prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete FROM users WHERE id = ?', [req.user.id], (err, user) => {
+  db.get('SELECT id, name, email, role, prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete FROM users WHERE id = ?', [req.user.id], (err, user) => {
     if (err) return res.status(500).json({ error: 'Erreur serveur.' });
     if (!user) return res.status(404).json({ error: 'Email ou mot de passe incorrect.' });
 
     user.profil_complete = true; // ne plus bloquer
+    user.role = normalizeUserRole(user.role);
     res.json({ profile: user });
   });
 });
@@ -959,7 +974,7 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
   console.log("Body reçu:", JSON.stringify(req.body));
   console.log("User:", JSON.stringify(req.user));
 
-  const { name, email, prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete } = req.body;
+  const { name, email, role, prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete } = req.body;
 
   // Validation des données entrantes
   if (name !== undefined && typeof name === 'string' && name.trim() === '') {
@@ -972,9 +987,16 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
     }
   }
 
+  if (role !== undefined) {
+    const normalizedRole = normalizeUserRole(role);
+    if (!['retail', 'b2b'].includes(normalizedRole)) {
+      return res.status(400).json({ error: "Le rôle doit être 'retail' ou 'b2b'." });
+    }
+  }
+
   const query = `
     UPDATE users 
-    SET prenom = ?, nom = ?, age = ?, telephone = ?, adresse = ?, complement_adresse = ?, code_postal = ?, ville = ?, pays = ?, date_naissance = ?, avatar_url = ?, profil_complete = ?, name = COALESCE(?, name), email = COALESCE(?, email)
+    SET prenom = ?, nom = ?, age = ?, telephone = ?, adresse = ?, complement_adresse = ?, code_postal = ?, ville = ?, pays = ?, date_naissance = ?, avatar_url = ?, profil_complete = ?, role = COALESCE(?, role), name = COALESCE(?, name), email = COALESCE(?, email)
     WHERE id = ?
   `;
 
@@ -991,6 +1013,7 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
     date_naissance || null,
     avatar_url !== undefined ? avatar_url : null,
     profil_complete ? 1 : 0,
+    role !== undefined ? normalizeUserRole(role) : null,
     name !== undefined ? name : null,
     email !== undefined ? email : null,
     req.user.id
@@ -1004,11 +1027,12 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
     console.log(`[Profile UPDATE] user_id=${req.user.id}, profil_complete=${profil_complete ? 1 : 0}, changes=${this.changes}`);
 
     // Renvoyer le profil mis à jour pour que le frontend ait les bonnes données
-    db.get('SELECT id, name, email, prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete FROM users WHERE id = ?', [req.user.id], (err2, updatedUser) => {
+    db.get('SELECT id, name, email, role, prenom, nom, age, telephone, adresse, complement_adresse, code_postal, ville, pays, date_naissance, avatar_url, profil_complete FROM users WHERE id = ?', [req.user.id], (err2, updatedUser) => {
       if (err2 || !updatedUser) {
         return res.json({ message: 'Profil mis à jour avec succès.' });
       }
       updatedUser.profil_complete = !!updatedUser.profil_complete;
+      updatedUser.role = normalizeUserRole(updatedUser.role);
       console.log(`[Profile UPDATE] Verification: profil_complete en DB = ${updatedUser.profil_complete}`);
       res.json({ message: 'Profil mis à jour avec succès.', profile: updatedUser });
     });
@@ -1201,6 +1225,15 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
     
     // Calcul du sous-total pour la gratuité (cartTotal au sens du montant produits)
     const cartTotal = items.reduce((sum, it) => sum + (Number(it.price) * Number(it.quantity)), 0);
+    const isB2BUser = normalizeUserRole(req.user?.role) === 'b2b';
+    if (isB2BUser) {
+      const hasInvalidQuantity = items.some((it) => Number(it.quantity) < 5);
+      if (cartTotal < 150 || hasInvalidQuantity) {
+        return res.status(400).json({
+          error: 'Compte Professionnel : Minimum de commande de 150€ HT et 5 unités par référence requis.'
+        });
+      }
+    }
     const recalculatedShippingPrice = cartTotal >= FREE_SHIPPING_THRESHOLD
       ? 0
       : getShippingPrice(opt, totalWeightGrams);
@@ -1624,6 +1657,18 @@ app.patch('/api/admin/orders/:id/note', verifyToken, requireAdmin, (req, res) =>
 // ============================================================
 // ROUTES PRODUITS (Products)
 // ============================================================
+
+const WHOLESALE_PRICE_TIERS = Object.freeze({
+  'vrac-30g': 5.30,
+  'vrac-50g': 7.70,
+  'pack-10': 5.50,
+  'pack-20': 9.70,
+  'coffret-transition-kit-roulage': 13.90
+});
+
+app.get('/api/b2b/wholesale-pricing', verifyToken, requireB2B, (req, res) => {
+  res.json({ prices: WHOLESALE_PRICE_TIERS });
+});
 
 // Lister tous les produits (Public) — filtre optionnel par catégorie
 app.get('/api/products', (req, res) => {
@@ -2515,6 +2560,51 @@ app.post('/api/loyalty/use-referral', verifyToken, (req, res) => {
 });
 
 // ── GET /api/admin/loyalty ──
+app.get('/api/admin/users', verifyToken, requireAdmin, (req, res) => {
+  const query = `
+    SELECT id, name, email, role
+    FROM users
+    ORDER BY created_at DESC, id DESC
+  `;
+
+  db.all(query, [], (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erreur serveur.' });
+    const users = (rows || []).map((row) => ({
+      id: row.id,
+      name: row.name || 'Utilisateur',
+      email: row.email,
+      role: normalizeUserRole(row.role)
+    }));
+    res.json({ users });
+  });
+});
+
+app.put('/api/admin/users/:id/role', verifyToken, requireAdmin, (req, res) => {
+  const userId = Number(req.params.id);
+  const nextRole = normalizeUserRole(req.body?.role);
+
+  if (!Number.isInteger(userId) || userId <= 0) {
+    return res.status(400).json({ error: 'ID utilisateur invalide.' });
+  }
+  if (!['retail', 'b2b'].includes(nextRole)) {
+    return res.status(400).json({ error: "Le rôle doit être 'retail' ou 'b2b'." });
+  }
+
+  db.get('SELECT id, role FROM users WHERE id = ?', [userId], (err, existing) => {
+    if (err) return res.status(500).json({ error: 'Erreur serveur.' });
+    if (!existing) return res.status(404).json({ error: 'Utilisateur introuvable.' });
+    if (normalizeUserRole(existing.role) === 'admin') {
+      return res.status(403).json({ error: "Le rôle d'un administrateur ne peut pas être modifié." });
+    }
+
+    db.run('UPDATE users SET role = ? WHERE id = ?', [nextRole, userId], function (updateErr) {
+      if (updateErr) return res.status(500).json({ error: 'Erreur lors de la mise à jour du rôle.' });
+      if (this.changes === 0) return res.status(404).json({ error: 'Utilisateur introuvable.' });
+      res.json({ success: true, user: { id: userId, role: nextRole } });
+    });
+  });
+});
+
 app.get('/api/admin/loyalty', verifyToken, requireAdmin, (req, res) => {
   const query = `
     SELECT

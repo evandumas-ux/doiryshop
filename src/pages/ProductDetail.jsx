@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -13,16 +13,17 @@ import Header from '../components/Header';
 import CartDrawer from '../components/CartDrawer';
 import ReassuranceLayer from '../components/ReassuranceLayer';
 import PhotoLightbox from '../components/PhotoLightbox';
+import { getWholesalePricing } from '../services/api';
+import { formatEuro, getPricingTier } from '../utils/pricing';
 
 const Navbar = Header;
-const MotionDiv = motion.div;
-const MotionImg = motion.img;
-const MotionButton = motion.button;
-const MotionSpan = motion.span;
+const {
+  div: MotionDiv,
+  button: MotionButton,
+  span: MotionSpan,
+} = motion;
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-
-const formatPrice = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
 const parseTags = (tags) => {
   if (Array.isArray(tags)) return tags;
@@ -32,61 +33,6 @@ const parseTags = (tags) => {
   } catch {
     return [];
   }
-};
-
-const getStockMessage = (stock) => {
-  if (Number(stock) > 0 && Number(stock) < 10) return `Plus que ${stock} en stock`;
-  return null;
-};
-
-const formatCoffretDescription = (description) => {
-  if (!description || !description.includes('⬢')) {
-    return <p>{description}</p>;
-  }
-
-  const normalized = String(description).replace(/\r\n/g, '\n');
-  const sections = normalized
-    .split('✨ ')
-    .map((chunk) => chunk.trim())
-    .filter(Boolean)
-    .map((chunk) => {
-      const lines = chunk.split('\n').map((line) => line.trim()).filter(Boolean);
-      const title = lines[0] || '';
-      const body = lines.slice(1).join(' ');
-      const bullets = body
-        .split('⬢')
-        .map((item) => item.trim())
-        .filter(Boolean);
-      return { title, bullets };
-    })
-    .filter((section) => section.title || section.bullets.length > 0);
-
-  if (!sections.length) {
-    return (
-      <div className="space-y-2">
-        {normalized.split('⬢').map((item, index) => {
-          const line = item.trim();
-          if (!line) return null;
-          return <p key={`${line}-${index}`}>⬢ {line}</p>;
-        })}
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-5">
-      {sections.map((section) => (
-        <div key={section.title} className="space-y-2">
-          {section.title && <p className="font-medium text-text">{`✨  ${section.title}`}</p>}
-          <div className="space-y-1.5">
-            {section.bullets.map((bullet, bulletIndex) => (
-              <p key={`${bullet}-${bulletIndex}`}>⬢ {bullet}</p>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
 };
 
 const ProductGallery = ({ images: rawImages, productName }) => {
@@ -234,6 +180,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
   const [reviewStats, setReviewStats] = useState({ total: 0, moyenne: 0 });
   const [suggestions, setSuggestions] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [wholesalePrices, setWholesalePrices] = useState({});
 
   useEffect(() => {
     fetch(`${API_URL}/products/${id}`)
@@ -259,6 +206,23 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
       .catch(() => {});
   }, [id]);
 
+  useEffect(() => {
+    if ((user?.role || '') !== 'b2b') return;
+
+    getWholesalePricing()
+      .then((prices) => setWholesalePrices(prices || {}))
+      .catch(() => {});
+  }, [user?.role]);
+
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log('[ProductDetail] user.role =', user?.role);
+    }
+  }, [user?.role]);
+
+  const pricing = getPricingTier(product, user?.role, wholesalePrices);
+  const { isB2B, activePrice, retailStrikePrice, showUnitMetric, unitLabel } = pricing;
+
   const handleAddToCart = () => {
     if (!product) return;
     setCartItems((prev) => {
@@ -268,7 +232,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
           item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      return [...prev, { id: product.id, name: product.name, price: product.price, image_url: product.image_url, image: product.image_url, quantity }];
+      return [...prev, { id: product.id, name: product.name, price: activePrice, image_url: product.image_url, image: product.image_url, quantity }];
     });
     setAdded(true);
     setIsCartOpen(true);
@@ -286,12 +250,12 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
   if (!product) return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6">
-      <p className="text-neutral-400 font-light italic">L&apos;élixir recherché est introuvable.</p>
-      <Link to="/" className="text-accent hover:underline uppercase tracking-widest text-xs font-bold">Retour à la boutique</Link>
+      <p className="text-neutral-400 font-light italic">L&apos;Ã©lixir recherchÃ© est introuvable.</p>
+      <Link to="/" className="text-accent hover:underline uppercase tracking-widest text-xs font-bold">Retour Ã  la boutique</Link>
     </div>
   );
 
-  const discountAmount = product.old_price ? Math.round(((product.old_price - product.price) / product.old_price) * 100) : 0;
+  const discountAmount = retailStrikePrice ? Math.round(((retailStrikePrice - activePrice) / retailStrikePrice) * 100) : 0;
 
   return (
     <>
@@ -316,7 +280,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
               <div className="hidden lg:grid grid-cols-2 gap-6 opacity-40">
                 <div className="flex items-center gap-3">
                   <ShieldCheck size={18} className="text-accent" />
-                  <span className="text-[10px] uppercase tracking-widest text-white">Sécurité Totale</span>
+                  <span className="text-[10px] uppercase tracking-widest text-white">SÃ©curitÃ© Totale</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Package size={18} className="text-accent" />
@@ -330,7 +294,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
               {/* Category Badge */}
               <div className="mb-4">
                 <span className="text-[10px] uppercase tracking-[0.3em] font-bold py-1 px-3 border border-white/10 rounded-full text-neutral-500 inline-block">
-                  {product.categorie === 'vrac' ? 'Botanique en Vrac' : product.categorie === 'pre-roules' ? 'Pré-Roulés Premium' : 'Tisanes & Rituels'}
+                  {product.categorie === 'vrac' ? 'Botanique en Vrac' : product.categorie === 'pre-roules' ? 'PrÃ©-RoulÃ©s Premium' : 'Tisanes & Rituels'}
                 </span>
               </div>
 
@@ -343,7 +307,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 <div className="flex items-center gap-3 mb-8">
                   <StarRating rating={reviewStats.moyenne} size={14} />
                   <span className="text-xs text-neutral-500 uppercase tracking-widest">
-                    {reviewStats.moyenne.toFixed(1)} / 5 — {reviewStats.total} avis clients
+                    {reviewStats.moyenne.toFixed(1)} / 5 â€” {reviewStats.total} avis clients
                   </span>
                 </div>
               )}
@@ -351,13 +315,16 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
               {/* Pricing Section (CRO Optimized) */}
               <div className="mb-10 space-y-1">
                 <div className="flex items-center gap-4">
-                  <span className="text-5xl md:text-6xl font-serif text-accent tracking-tight">
-                    {formatPrice(product.price)}
+                  <span className="text-5xl md:text-6xl font-serif text-accent tracking-tight whitespace-nowrap leading-none">
+                    <span className="flex items-baseline gap-2">
+                      <span>{formatEuro(activePrice)}</span>
+                      {isB2B && <span className="text-sm uppercase tracking-[0.25em] text-neutral-400">TTC</span>}
+                    </span>
                   </span>
-                  {product.old_price && (
+                  {retailStrikePrice > activePrice && (
                     <div className="flex items-center gap-3">
                       <span className="text-xl text-neutral-600 line-through decoration-neutral-700">
-                        {formatPrice(product.old_price)}
+                        {formatEuro(retailStrikePrice)}
                       </span>
                       <span className="text-xs font-bold px-2 py-0.5 bg-accent/10 text-accent rounded uppercase tracking-wider">
                         -{discountAmount}%
@@ -365,9 +332,9 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                     </div>
                   )}
                 </div>
-                {product.price_per_unit && (
+                {showUnitMetric && (
                   <p className="text-[10px] uppercase tracking-widest text-neutral-500 ml-1">
-                    soit {formatPrice(product.price_per_unit)} / {product.unit_label || 'unité'}
+                    soit {formatEuro(product.price_per_unit)} / {unitLabel || 'unitÃ©'}
                   </p>
                 )}
               </div>
@@ -396,7 +363,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                     <AnimatePresence mode="wait">
                       {added ? (
                         <MotionSpan key="added" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} className="flex items-center gap-2">
-                          <CheckCircle2 size={18} /> Ajouté au Panier
+                          <CheckCircle2 size={18} /> AjoutÃ© au Panier
                         </MotionSpan>
                       ) : (
                         <MotionSpan key="add" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} className="flex items-center gap-2">
@@ -412,7 +379,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
               {/* Accordions Section */}
               <div className="border-t border-neutral-900 pt-2">
-                <BotanicalAccordion title="Description de l'Élixir" defaultOpen={true}>
+                <BotanicalAccordion title="Description de l'Ã‰lixir" defaultOpen={true}>
                   <div className="space-y-4">
                     <p className="text-lg text-neutral-200 font-serif leading-relaxed italic">
                       &quot;{product.tagline || 'Un moment suspendu, entre force et douceur.'}&quot;
@@ -424,19 +391,19 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
                 <BotanicalAccordion title="Le Rituel de Consommation">
                   <div className="space-y-4">
-                    <p>Pour apprécier pleinement les nuances de cet assemblage, nous recommandons une approche lente et attentive.</p>
+                    <p>Pour apprÃ©cier pleinement les nuances de cet assemblage, nous recommandons une approche lente et attentive.</p>
                     <ul className="space-y-3">
                       <li className="flex gap-4 items-start">
                         <span className="text-accent font-serif text-xl leading-none">01</span>
-                        <p>Préparez votre environnement : une lumière douce et un moment pour vous.</p>
+                        <p>PrÃ©parez votre environnement : une lumiÃ¨re douce et un moment pour vous.</p>
                       </li>
                       <li className="flex gap-4 items-start">
                         <span className="text-accent font-serif text-xl leading-none">02</span>
-                        <p>{product.mode_utilisation || 'Utilisez une petite quantité pour commencer et appréciez la combustion douce.'}</p>
+                        <p>{product.mode_utilisation || 'Utilisez une petite quantitÃ© pour commencer et apprÃ©ciez la combustion douce.'}</p>
                       </li>
                       <li className="flex gap-4 items-start">
                         <span className="text-accent font-serif text-xl leading-none">03</span>
-                        <p>Refermez soigneusement le pochon pour préserver les huiles essentielles des plantes.</p>
+                        <p>Refermez soigneusement le pochon pour prÃ©server les huiles essentielles des plantes.</p>
                       </li>
                     </ul>
                   </div>
@@ -445,20 +412,20 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                 <BotanicalAccordion title="Composition & Origine">
                   <div className="grid sm:grid-cols-2 gap-8">
                     <div>
-                      <h4 className="text-white text-xs uppercase tracking-widest mb-3 font-bold">Ingrédients</h4>
+                      <h4 className="text-white text-xs uppercase tracking-widest mb-3 font-bold">IngrÃ©dients</h4>
                       <p className="text-sm font-light leading-relaxed">
                         {product.name.includes("L'Essentiel") || productTags.includes('pre-roules') 
-                          ? "100% Feuilles de framboisier (Rubus idaeus). Sélectionnées pour leur finesse et leur séchage optimal."
+                          ? "100% Feuilles de framboisier (Rubus idaeus). SÃ©lectionnÃ©es pour leur finesse et leur sÃ©chage optimal."
                           : isTea 
-                            ? "Camomille matricaire et feuilles de framboisier. Un mélange équilibré pour un rituel apaisant."
-                            : (product.composition_details || "Plantes sèches sélectionnées (Framboisier, Molène, Guimauve) — Sans tabac, sans nicotine, sans additifs.")
+                            ? "Camomille matricaire et feuilles de framboisier. Un mÃ©lange Ã©quilibrÃ© pour un rituel apaisant."
+                            : (product.composition_details || "Plantes sÃ¨ches sÃ©lectionnÃ©es (Framboisier, MolÃ¨ne, Guimauve) â€” Sans tabac, sans nicotine, sans additifs.")
                         }
                       </p>
                     </div>
                     <div>
                       <h4 className="text-white text-xs uppercase tracking-widest mb-3 font-bold">Engagement</h4>
                       <p className="text-sm font-light leading-relaxed">
-                        Récolte responsable et assemblage à la main. Garanti sans nicotine, sans tabac et sans aucun ajout chimique ou arôme artificiel.
+                        RÃ©colte responsable et assemblage Ã  la main. Garanti sans nicotine, sans tabac et sans aucun ajout chimique ou arÃ´me artificiel.
                       </p>
                     </div>
                   </div>
@@ -466,12 +433,12 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 
                 <BotanicalAccordion title="Livraison & Retours">
                   <div className="space-y-4 text-sm">
-                    <p>Expédition via <strong>Mondial Relay</strong> uniquement. Votre colis est déposé sous 24h ouvrées dans un emballage neutre et discret.</p>
+                    <p>ExpÃ©dition via <strong>Mondial Relay</strong> uniquement. Votre colis est dÃ©posÃ© sous 24h ouvrÃ©es dans un emballage neutre et discret.</p>
                     <div className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
                       <Clock size={18} className="text-accent shrink-0" />
-                      <p className="text-xs">France : 3-5 jours ouvrés en Point Relais. <br/> Europe : 5-7 jours ouvrés.</p>
+                      <p className="text-xs">France : 3-5 jours ouvrÃ©s en Point Relais. <br/> Europe : 5-7 jours ouvrÃ©s.</p>
                     </div>
-                    <p className="text-xs opacity-50 italic">Pour des raisons d'hygiène et de sécurité, les retours ne sont acceptés que si le sceau de garantie est intact.</p>
+                    <p className="text-xs opacity-50 italic">Pour des raisons d'hygiÃ¨ne et de sÃ©curitÃ©, les retours ne sont acceptÃ©s que si le sceau de garantie est intact.</p>
                   </div>
                 </BotanicalAccordion>
               </div>
@@ -485,8 +452,8 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
         {suggestions.length > 0 && (
           <section className="mt-32 max-w-7xl mx-auto px-6 lg:px-12">
             <div className="mb-12">
-              <span className="text-accent text-[10px] uppercase tracking-[0.4em] font-bold mb-4 block">Découverte</span>
-              <h2 className="text-3xl font-serif text-white tracking-wide">Complétez votre rituel</h2>
+              <span className="text-accent text-[10px] uppercase tracking-[0.4em] font-bold mb-4 block">DÃ©couverte</span>
+              <h2 className="text-3xl font-serif text-white tracking-wide">ComplÃ©tez votre rituel</h2>
             </div>
             
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -497,7 +464,7 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
                   </div>
                   <div>
                     <h3 className="text-white font-serif text-lg group-hover:text-accent transition-colors">{item.name}</h3>
-                    <p className="text-accent text-sm mt-1">{formatPrice(item.price)}</p>
+                    <p className="text-accent text-sm mt-1">{formatEuro(item.price)}</p>
                   </div>
                 </Link>
               ))}
@@ -534,3 +501,6 @@ const ProductDetail = ({ cartItems, setCartItems, user }) => {
 };
 
 export default ProductDetail;
+
+
+

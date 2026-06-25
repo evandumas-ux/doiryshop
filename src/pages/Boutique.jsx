@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter } from 'lucide-react';
 import SEO from '../components/SEO';
-import { getProducts } from '../services/api';
+import { getProducts, getWholesalePricing } from '../services/api';
 import Header from '../components/Header';
 import CartDrawer from '../components/CartDrawer';
 import ProductCard from '../components/ProductCard';
+
+const { div: MotionDiv } = motion;
 
 const isMatchingCategory = (product, category) => {
   if (category === 'all') return true;
@@ -20,11 +22,12 @@ const isMatchingCategory = (product, category) => {
   return product.categorie === category || tags.includes(category);
 };
 
-export default function Boutique({ setCartItems, cartItems = [], user, setUser, onLogout }) {
+export default function Boutique({ setCartItems, cartItems = [], user, onLogout }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [wholesalePrices, setWholesalePrices] = useState({});
   const navigate = useNavigate();
 
   const cartItemsCount = (cartItems || []).reduce((acc, item) => acc + item.quantity, 0);
@@ -44,6 +47,14 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (user?.role !== 'b2b') return;
+
+    getWholesalePricing()
+      .then((prices) => setWholesalePrices(prices || {}))
+      .catch(() => {});
+  }, [user?.role]);
 
   const filteredProducts = useMemo(
     () => products.filter((product) => isMatchingCategory(product, activeCategory)),
@@ -112,7 +123,7 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
               >
                 {category.label}
                 {activeCategory === category.id && (
-                  <motion.div
+                  <MotionDiv
                     layoutId="activeFilterBoutique"
                     className="absolute -bottom-1 left-0 right-0 h-[1px] bg-accent"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
@@ -131,13 +142,13 @@ export default function Boutique({ setCartItems, cartItems = [], user, setUser, 
             <div className="w-12 h-12 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
           </div>
         ) : (
-          <motion.div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 max-w-7xl mx-auto">
+          <MotionDiv className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 max-w-7xl mx-auto">
             <AnimatePresence mode="popLayout">
               {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
+                <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} user={user} wholesalePrices={wholesalePrices} />
               ))}
             </AnimatePresence>
-          </motion.div>
+          </MotionDiv>
         )}
       </main>
 

@@ -310,6 +310,33 @@ export const updateAdminOrderStatus = async (id, status) => {
   return data;
 };
 
+export const getAdminUsers = async () => {
+  const response = await fetch(`${API_URL}/admin/users`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+};
+
+export const updateAdminUserRole = async (id, role) => {
+  const response = await fetch(`${API_URL}/admin/users/${id}/role`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ role }),
+    credentials: 'include'
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+};
+
 // ====== PRODUITS ======
 
 export const getProducts = async () => {
@@ -317,6 +344,16 @@ export const getProducts = async () => {
   const data = await response.json();
   if (!response.ok) throw new Error(data.error);
   return data.products;
+};
+
+export const getWholesalePricing = async () => {
+  const response = await fetch(`${API_URL}/b2b/wholesale-pricing`, {
+    method: 'GET',
+    credentials: 'include'
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Accès refusé aux tarifs B2B');
+  return data.prices || {};
 };
 
 export const subscribeNewsletter = async (email, source = 'footer') => {
